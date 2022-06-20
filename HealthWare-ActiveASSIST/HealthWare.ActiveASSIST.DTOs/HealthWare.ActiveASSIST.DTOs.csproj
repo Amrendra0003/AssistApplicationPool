@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FoolProof.Core" Version="1.1.10" />
+    <PackageReference Include="HealthwareCoreLib" Version="1.0.36" />
+    <PackageReference Include="HealthwareCoreMultiTenancyEntitiesLib" Version="1.0.37" />
+    <PackageReference Include="HealthwareCoreMultiTenancyLib" Version="1.0.37" />
+    <PackageReference Include="HealthwareCoreMultiTenancyServicesLib" Version="1.0.37" />
+    <PackageReference Include="HealthwareCoreWebLib" Version="1.0.35" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+</Project>

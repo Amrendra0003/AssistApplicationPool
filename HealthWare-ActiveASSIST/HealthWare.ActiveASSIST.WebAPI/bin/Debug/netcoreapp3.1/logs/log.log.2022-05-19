@@ -1,0 +1,296 @@
+INFO  2022-05-19 10:38:13,741 [1] System.Object - Start up time: 00:00:00.2762925
+
+INFO  2022-05-19 10:38:21,722 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 10:38:22,025 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (23ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 10:38:22,068 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (22ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 10:38:22,079 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 10:38:22,087 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 10:38:22,125 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+
+INFO  2022-05-19 10:38:22,146 [1] Microsoft.EntityFrameworkCore.Migrations - No migrations were applied. The database is already up to date.
+
+INFO  2022-05-19 10:38:22,164 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 10:38:22,171 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 10:38:22,176 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 10:38:22,180 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 10:38:22,184 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 10:38:22,191 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+
+INFO  2022-05-19 10:38:22,195 [1] Microsoft.EntityFrameworkCore.Migrations - No migrations were applied. The database is already up to date.
+
+INFO  2022-05-19 10:38:23,110 [1] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager - User profile is available. Using 'D:\Users\pratapsingh_amrendra\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+
+INFO  2022-05-19 10:38:23,597 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 10:38:24,079 [12] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (43ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [r].[Id], [r].[RoleName]
+FROM [Roles] AS [r]
+WHERE [r].[RoleName] = @__normalizedRoleName_0
+
+INFO  2022-05-19 10:38:24,111 [10] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (4ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [r].[Id], [r].[RoleName]
+FROM [Roles] AS [r]
+WHERE [r].[RoleName] = @__normalizedRoleName_0
+
+INFO  2022-05-19 10:38:24,319 [1] Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+
+INFO  2022-05-19 10:38:24,323 [1] Microsoft.Hosting.Lifetime - Hosting environment: Development
+
+INFO  2022-05-19 10:38:24,336 [1] Microsoft.Hosting.Lifetime - Content root path: D:\ActivaAssist\SourceCode\healthware_activeASSISTRollBack\HealthWare-ActiveASSIST\HealthWare.ActiveASSIST.WebAPI
+
+INFO  2022-05-19 10:38:24,399 [4] Microsoft.AspNetCore.Hosting.Diagnostics - Request starting HTTP/1.1 GET http://localhost:21021/swagger/index.html  
+
+WARN  2022-05-19 10:38:24,462 [4] Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware - Failed to determine the https port for redirect.
+
+INFO  2022-05-19 10:38:25,914 [8] Microsoft.AspNetCore.Hosting.Diagnostics - Request finished in 1520.7486ms 200 text/html;charset=utf-8
+
+INFO  2022-05-19 10:38:27,093 [10] Microsoft.AspNetCore.Hosting.Diagnostics - Request starting HTTP/1.1 GET http://localhost:21021/swagger/v1/swagger.json  
+
+INFO  2022-05-19 10:38:27,586 [10] Microsoft.AspNetCore.Hosting.Diagnostics - Request finished in 479.6533ms 200 application/json;charset=utf-8
+
+INFO  2022-05-19 17:43:46,574 [1] System.Object - Start up time: 00:00:00.2205810
+
+INFO  2022-05-19 17:43:53,912 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 17:43:54,270 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (38ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 17:43:54,325 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (27ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 17:43:54,335 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 17:43:54,344 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 17:43:54,370 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+
+INFO  2022-05-19 17:43:54,392 [1] Microsoft.EntityFrameworkCore.Migrations - No migrations were applied. The database is already up to date.
+
+INFO  2022-05-19 17:43:54,418 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 17:43:54,425 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 17:43:54,429 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 17:43:54,436 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 17:43:54,441 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 17:43:54,457 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+
+INFO  2022-05-19 17:43:54,469 [1] Microsoft.EntityFrameworkCore.Migrations - No migrations were applied. The database is already up to date.
+
+INFO  2022-05-19 17:43:55,302 [1] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager - User profile is available. Using 'D:\Users\pratapsingh_amrendra\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+
+INFO  2022-05-19 17:43:55,561 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 17:43:56,039 [4] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (68ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [r].[Id], [r].[RoleName]
+FROM [Roles] AS [r]
+WHERE [r].[RoleName] = @__normalizedRoleName_0
+
+INFO  2022-05-19 17:43:56,078 [4] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (3ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [r].[Id], [r].[RoleName]
+FROM [Roles] AS [r]
+WHERE [r].[RoleName] = @__normalizedRoleName_0
+
+INFO  2022-05-19 17:43:56,302 [1] Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+
+INFO  2022-05-19 17:43:56,323 [1] Microsoft.Hosting.Lifetime - Hosting environment: Development
+
+INFO  2022-05-19 17:43:56,328 [1] Microsoft.Hosting.Lifetime - Content root path: D:\ActivaAssist\SourceCode\healthware_activeASSISTRollBack\HealthWare-ActiveASSIST\HealthWare.ActiveASSIST.WebAPI
+
+INFO  2022-05-19 17:43:56,368 [4] Microsoft.AspNetCore.Hosting.Diagnostics - Request starting HTTP/1.1 GET http://localhost:21021/swagger/index.html  
+
+WARN  2022-05-19 17:43:56,432 [4] Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware - Failed to determine the https port for redirect.
+
+INFO  2022-05-19 17:43:56,937 [6] Microsoft.AspNetCore.Hosting.Diagnostics - Request finished in 571.731ms 200 text/html;charset=utf-8
+
+INFO  2022-05-19 17:43:57,538 [9] Microsoft.AspNetCore.Hosting.Diagnostics - Request starting HTTP/1.1 GET http://localhost:21021/swagger/v1/swagger.json  
+
+INFO  2022-05-19 17:43:57,894 [9] Microsoft.AspNetCore.Hosting.Diagnostics - Request finished in 354.7025ms 200 application/json;charset=utf-8
+
+INFO  2022-05-19 19:21:30,258 [1] System.Object - Start up time: 00:00:00.1803515
+
+INFO  2022-05-19 19:21:36,800 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 19:21:37,232 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (32ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 19:21:37,274 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (21ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 19:21:37,282 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 19:21:37,287 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 19:21:37,310 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+
+INFO  2022-05-19 19:21:37,340 [1] Microsoft.EntityFrameworkCore.Migrations - No migrations were applied. The database is already up to date.
+
+INFO  2022-05-19 19:21:37,405 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 19:21:37,417 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 19:21:37,422 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 19:21:37,427 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 19:21:37,431 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 19:21:37,438 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+
+INFO  2022-05-19 19:21:37,443 [1] Microsoft.EntityFrameworkCore.Migrations - No migrations were applied. The database is already up to date.
+
+INFO  2022-05-19 19:21:38,094 [1] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager - User profile is available. Using 'D:\Users\pratapsingh_amrendra\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+
+INFO  2022-05-19 19:21:38,328 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 19:21:38,746 [4] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (42ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [r].[Id], [r].[RoleName]
+FROM [Roles] AS [r]
+WHERE [r].[RoleName] = @__normalizedRoleName_0
+
+INFO  2022-05-19 19:21:38,774 [4] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [r].[Id], [r].[RoleName]
+FROM [Roles] AS [r]
+WHERE [r].[RoleName] = @__normalizedRoleName_0
+
+INFO  2022-05-19 19:21:38,978 [1] Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+
+INFO  2022-05-19 19:21:39,002 [1] Microsoft.Hosting.Lifetime - Hosting environment: Development
+
+INFO  2022-05-19 19:21:39,007 [1] Microsoft.Hosting.Lifetime - Content root path: D:\ActivaAssist\SourceCode\healthware_activeASSISTRollBack\HealthWare-ActiveASSIST\HealthWare.ActiveASSIST.WebAPI
+
+INFO  2022-05-19 19:21:39,049 [10] Microsoft.AspNetCore.Hosting.Diagnostics - Request starting HTTP/1.1 GET http://localhost:21021/swagger/index.html  
+
+WARN  2022-05-19 19:21:39,123 [10] Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware - Failed to determine the https port for redirect.
+
+INFO  2022-05-19 19:21:39,501 [7] Microsoft.AspNetCore.Hosting.Diagnostics - Request finished in 454.2858ms 200 text/html;charset=utf-8
+
+INFO  2022-05-19 19:21:40,065 [4] Microsoft.AspNetCore.Hosting.Diagnostics - Request starting HTTP/1.1 GET http://localhost:21021/swagger/v1/swagger.json  
+
+INFO  2022-05-19 19:21:40,402 [11] Microsoft.AspNetCore.Hosting.Diagnostics - Request finished in 336.9566ms 200 application/json;charset=utf-8
+
+INFO  2022-05-19 19:25:52,595 [1] System.Object - Start up time: 00:00:00.1603290
+
+INFO  2022-05-19 19:25:59,000 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 19:25:59,378 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (37ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 19:25:59,441 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (28ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 19:25:59,468 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (10ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 19:25:59,474 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 19:25:59,508 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+
+INFO  2022-05-19 19:25:59,533 [1] Microsoft.EntityFrameworkCore.Migrations - No migrations were applied. The database is already up to date.
+
+INFO  2022-05-19 19:25:59,553 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 19:25:59,566 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 19:25:59,572 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 19:25:59,581 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT 1
+
+INFO  2022-05-19 19:25:59,594 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
+
+INFO  2022-05-19 19:25:59,608 [1] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT [MigrationId], [ProductVersion]
+FROM [__EFMigrationsHistory]
+ORDER BY [MigrationId];
+
+INFO  2022-05-19 19:25:59,615 [1] Microsoft.EntityFrameworkCore.Migrations - No migrations were applied. The database is already up to date.
+
+INFO  2022-05-19 19:26:00,414 [1] Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager - User profile is available. Using 'D:\Users\pratapsingh_amrendra\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+
+INFO  2022-05-19 19:26:00,634 [1] Microsoft.EntityFrameworkCore.Infrastructure - Entity Framework Core 5.0.9 initialized 'PatientDbContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+
+INFO  2022-05-19 19:26:01,092 [12] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (47ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [r].[Id], [r].[RoleName]
+FROM [Roles] AS [r]
+WHERE [r].[RoleName] = @__normalizedRoleName_0
+
+INFO  2022-05-19 19:26:01,146 [12] Microsoft.EntityFrameworkCore.Database.Command - Executed DbCommand (2ms) [Parameters=[@__normalizedRoleName_0='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+SELECT TOP(1) [r].[Id], [r].[RoleName]
+FROM [Roles] AS [r]
+WHERE [r].[RoleName] = @__normalizedRoleName_0
+
+INFO  2022-05-19 19:26:01,393 [1] Microsoft.Hosting.Lifetime - Application started. Press Ctrl+C to shut down.
+
+INFO  2022-05-19 19:26:01,408 [1] Microsoft.Hosting.Lifetime - Hosting environment: Development
+
+INFO  2022-05-19 19:26:01,416 [1] Microsoft.Hosting.Lifetime - Content root path: D:\ActivaAssist\SourceCode\healthware_activeASSISTRollBack\HealthWare-ActiveASSIST\HealthWare.ActiveASSIST.WebAPI
+
+INFO  2022-05-19 19:26:01,459 [5] Microsoft.AspNetCore.Hosting.Diagnostics - Request starting HTTP/1.1 GET http://localhost:21021/swagger/index.html  
+
+WARN  2022-05-19 19:26:01,520 [5] Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware - Failed to determine the https port for redirect.
+
+INFO  2022-05-19 19:26:01,859 [7] Microsoft.AspNetCore.Hosting.Diagnostics - Request finished in 402.7748ms 200 text/html;charset=utf-8
+
+INFO  2022-05-19 19:26:02,142 [5] Microsoft.AspNetCore.Hosting.Diagnostics - Request starting HTTP/1.1 GET http://localhost:21021/swagger/v1/swagger.json  
+
+INFO  2022-05-19 19:26:02,486 [12] Microsoft.AspNetCore.Hosting.Diagnostics - Request finished in 348.8776ms 200 application/json;charset=utf-8
+

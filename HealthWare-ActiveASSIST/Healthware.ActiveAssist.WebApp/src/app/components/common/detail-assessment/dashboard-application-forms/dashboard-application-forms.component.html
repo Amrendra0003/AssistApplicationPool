@@ -1,0 +1,241 @@
+<div class="col-xs-12 col-md-12 col-sm-12" style="overflow: hidden;" [ngClass]=this.currentTheme>
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex mb-3 dashboard-green-top-div">
+        <div class="p-2">
+            <img src="assets/images/icons/applicationForms-icon.svg" />
+        </div>
+        <div class="d-flex row justify-content-center align-self-center">
+            <label class="dashboard-quickAssessment-subtitle"><b>{{topHeaderLabel}}</b>{{topTitleLabel}}</label>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex mb-3" *ngIf="this.isAdvocate == false"
+        style="background-color: #FFFFFF;">
+        <div class="p-2">
+            <img src="assets/images/icons/important.svg" />
+        </div>
+        <div class="d-flex p-1">
+            <label class="dropdown-select-label pt-2">{{messageInfo}}<b>{{scheduleAppointment}}</b></label>
+        </div>
+    </div>
+    <form [formGroup]="applicationForm" [ngClass]="{disabledDiv: !isEditAllowed}">
+        <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+            <div class="col-xs-12 col-md-12 col-sm-12 dashboard-boxshadow mb-5 p-4"
+                *ngIf="this.toShowActivePrograms == false && this.showLoader == false">
+                <div style="text-align: center;" class="my-5 py-5 ">
+                    <label class="py-5">{{programsNotApplied}}</label>
+                </div>
+            </div>
+            <app-spinner-overlay *ngIf="this.showLoader == true">
+            </app-spinner-overlay>
+            <div class="col-xs-2 col-md-2 col-sm-2 mt-5" *ngIf="this.toShowActivePrograms == true">
+                <div *ngFor="let data of this.activeReviewProgramDetails">
+                    <div
+                        class="{{programMenuDivClass[data.programId]}} col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2 mb-2">
+                        <label (click)="ProgramsOnChange(data.programId)"
+                            class="{{programMenuDivClass[data.programId]}} dashboard-p2 pointer enabledDiv">{{data.programName}}</label>
+                        <span *ngIf="data.programId == this.currentselectedProgram" class="upperCurve"></span>
+                        <span *ngIf="data.programId == this.currentselectedProgram" class="lowerCurve"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-10 col-md-10 col-sm-10 dashboard-boxshadow mb-6 p-4 "
+                *ngIf="this.toShowActivePrograms == true && this.showLoader == false">
+                <div class="col-xs-12 col-md-12 col-sm-12">
+                    <div class="col-xs-12 col-md-12 col-sm-12 mt-4">
+                        <div class="col-xs-12 col-md-12 col-sm-12 d-flex mt-4">
+                            <div class="col-xs-9 col-md-9 col-sm-9 float-left mt-2 mb-2">
+                                <label class="dashboard-p1">{{this.programName}}</label>
+                            </div>
+                            <div class="col-xs-3 col-md-3 col-sm-3 text-align-right">
+                                <mat-button-toggle-group name="fontStyle" formControlName="programStatus"
+                                    aria-label="Font Style" class="mx-3" (change)="valueChange($event, this.programID)">
+                                    <mat-button-toggle value="false" class="toggleCss"
+                                        style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                                        {{noLabel}}
+                                    </mat-button-toggle>
+                                    <mat-button-toggle value="true" class="toggleCss"
+                                        style="border-top-right-radius: 25px; border-bottom-right-radius: 25px;">
+                                        &nbsp;{{applyLabel}}&nbsp;&nbsp;
+                                    </mat-button-toggle>
+                                </mat-button-toggle-group>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="col-xs-12 col-md-12 col-sm-12 mt-2" />
+                    <div class="col-xs-12 col-md-12 col-sm-12 mt-2">
+                        <div class="enabledDiv">
+                            <b>{{benefitsLabel}}</b>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-sm-12 mt-3 p-3" style="background-color: #EFF3F6;">
+                            <label class="dropdown-select-label">
+                                {{this.benefitsDescription}}<a [attr.href]="this.benefitsUrl" target="_blank"
+                                    class="px-3">{{moreInformation}}</a>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-sm-12 mt-2">
+                        <div class="enabledDiv">
+                            <label><b class="dashboard-p1 my-2">{{formsTitleLabel}}</b></label>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-sm-12 py-2">
+                            <div *ngFor="let data of this.programDocumentDetails"
+                                class="col-xs-12 col-md-12 col-sm-12 d-flex docMargin">
+                                <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+                                    <div class="col-xs-1 col-md-1 col-sm-1 ">
+                                        <img src="assets/images/icons/pdf-icon.svg" class="format-icon" />
+                                    </div>
+                                    <div class="col-xs-11 col-md-11 col-sm-11 ps-2">
+                                        <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+                                            <label
+                                                class="col-xs-5 col-md-5 col-sm-5 dashboard-select-label"><b>{{data.documentName}}</b></label>
+                                            <div class="">
+                                                <div class="d-flex"
+                                                    *ngIf="data.isProgramDocumentEsigned == true || this.EsignStatus[data.programDocumentId] == true">
+                                                    <img src="assets/images/icons/valid-icon.svg">
+                                                    <label class="textfield-label p-1"
+                                                        style="font-weight: bold; color: #4AD295;">{{Uploaded}}!</label>
+                                                    <span
+                                                        class="col-md-4 pointer dashboard-p2 ps-2 align-self-center enabledDiv showless"
+                                                        (click)="previewDocument(data.documentId)"
+                                                        tooltip="{{data.documentName}}"
+                                                        style="text-decoration: underline ;">{{data.documentName}}</span>
+                                                </div>
+                                                <div class="d-flex"
+                                                    *ngIf="data.isProgramDocumentEsigned == false && this.notSigned == true && 
+                                                            this.EsignStatus[data.programDocumentId] != true && this.disableFlag[data.programId] == 'true'">
+                                                    <img src="assets/images/icons/invalid-icon.svg">
+                                                    <label class="textfield-label p-1"
+                                                        style="font-weight: bold; color: #E66767">{{NotUploaded}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="dashboard-select-label">{{data.documentDescription}}</label>
+                                        <div *ngIf="this.disableFlag[data.programId] == 'true'"
+                                            class="col-xs-12 col-md-12 col-sm-12 d-flex justify-content-center  my-1 ps-3 applicationForm-div">
+                                            <div class="py-2 d-flex px-4 disableESign" *ngIf=" data.esignFlag == false">
+                                                <img src="assets/images/icons/esign-icon.svg" class="upload1-icon mt-1 "
+                                                    data-bs-toggle="modal" data-bs-target="#formsModal" />
+                                                <label class="textfield-label p-1"
+                                                    (click)="loadDocumentOpen(data.documentName, data.programDocumentId, data.documentId, data.programId)"
+                                                    data-bs-toggle="modal" data-bs-target="#formsModal">{{esignLabel}}
+                                                </label>
+                                            </div>
+                                            <div class="py-2 d-flex px-4" *ngIf=" data.esignFlag == true">
+                                                <img src="assets/images/icons/esign-icon.svg"
+                                                    class="enableDnC upload1-icon mt-1 " data-bs-toggle="modal"
+                                                    data-bs-target="#formsModal" />
+                                                <label class="textfield-label p-1 enableDnC"
+                                                    (click)="loadDocumentOpen(data.documentName, data.programDocumentId, data.documentId, data.programId)">{{esignLabel}}
+                                                </label>
+                                            </div>
+                                            <div class="py-2 d-flex px-4">
+                                                <img src="assets/images/icons/share-icon.svg"
+                                                    class="enableDnC upload-icon mt-1" />
+                                                <label class="textfield-label p-1 enableDnC">{{shareLabel}}</label>
+                                            </div>
+                                            <div class=" py-2 d-flex px-4">
+                                                <img src="assets/images/icons/download-icon.svg"
+                                                    class="enableDnC upload-icon mt-1"
+                                                    (click)="downloadApplicationForm(data.programDocumentId)" />
+                                                <a (click)="downloadApplicationForm(data.programDocumentId)">
+                                                    <label
+                                                        class="textfield-label p-1 enableDnC">{{downloadLabel}}</label>
+                                                </a>
+                                            </div>
+                                            <div class="py-2 d-flex px-4">
+                                                <img (click)="Programfile.click()"
+                                                    src="assets/images/icons/upload-icon.svg"
+                                                    class="enableDnC upload-icon mt-1" />
+                                                <label (click)="Programfile.click()"
+                                                    class="textfield-label p-1 enableDnC">{{uploadFormsLabel}}</label>
+                                                <input hidden type="file"
+                                                    id="{{data.programDocumentId}}_{{data.programId}}" #Programfile
+                                                    (change)="HandleProgramDocument($event)" accept=".pdf">
+                                            </div>
+                                        </div>
+                                        <div *ngIf="this.disableFlag[data.programId] == 'false'"
+                                            class="col-xs-12 col-md-12 col-sm-12 d-flex justify-content-center  my-1 ps-3 applicationForm-div">
+                                            <div class="py-2 d-flex px-4 disableESign">
+                                                <img src="assets/images/icons/esign-icon.svg" class="upload1-icon mt-1 "
+                                                    data-bs-toggle="modal" data-bs-target="#formsModal" />
+                                                <label class="textfield-label p-1"
+                                                    (click)="loadDocumentOpen(data.documentName, data.programDocumentId, data.documentId, data.programId)"
+                                                    data-bs-toggle="modal" data-bs-target="#formsModal">{{esignLabel}}
+                                                </label>
+                                            </div>
+                                            <div class="py-2 d-flex px-4 disableESign">
+                                                <img src="assets/images/icons/share-icon.svg"
+                                                    class="upload-icon mt-1" />
+                                                <label class="textfield-label p-1">{{shareLabel}}</label>
+                                            </div>
+                                            <div class=" py-2 d-flex px-4 disableESign">
+                                                <img src="assets/images/icons/download-icon.svg"
+                                                    class="upload-icon mt-1"
+                                                    (click)="downloadApplicationForm(data.programDocumentId)" />
+                                                <a (click)="downloadApplicationForm(data.programDocumentId)">
+                                                    <label class="textfield-label p-1">{{downloadLabel}}</label>
+                                                </a>
+                                            </div>
+                                            <div class="py-2 d-flex px-4 disableESign">
+                                                <img (click)="Programfile.click()"
+                                                    src="assets/images/icons/upload-icon.svg"
+                                                    class="upload-icon mt-1" />
+                                                <label (click)="Programfile.click()"
+                                                    class="textfield-label p-1">{{uploadFormsLabel}}</label>
+                                                <input hidden type="file"
+                                                    id="{{data.programDocumentId}}_{{data.programId}}" #Programfile
+                                                    (change)="HandleProgramDocument($event)" accept=".pdf">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 mb-3" style="display: flex;">
+                                <button type="submit"
+                                    class="btn btn-primary login-text-field mx-2 shadow-none round-icon enabledDiv"
+                                    tooltip="Back" (click)="navBackward(this.currentselectedProgram)">
+                                    <div class="ellipse ellipse1"
+                                        style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;">
+                                        <img src="assets/images/icons/left-chevron.svg" alt="mail-msg"
+                                            class="next-round-icon" />
+                                    </div>
+                                </button>
+                                <button type="submit"
+                                    class="btn btn-primary  login-text-field shadow-none round-icon enabledDiv"
+                                    tooltip="Next" (click)="navForward(this.currentselectedProgram)">
+                                    <div class="ellipse ellipse1"
+                                        style="background-color: #2494ED;box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;">
+                                        <img src="assets/images/icons/right-chevron.svg" alt="mail-msg"
+                                            class="next-round-icon" />
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal" id="formsModal" aria-labelledby="formsModalLabel" role="dialog" data-bs-backdrop="false"
+    [ngClass]="{disabledDiv: !isEditAllowed}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" #closeModal class="close" data-dismiss="modal" aria-label="Close"
+                    (click)="closeDocument()" data-bs-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mt-3">
+                <div class="page">
+                    <div #viewer class="viewer-class" style="display: none;">
+                    </div>
+                </div>
+                <app-spinner-overlay *ngIf="this.showLoader == true">
+                </app-spinner-overlay>
+                <div id='pdf-div' class='pdf-view'></div>
+            </div>
+        </div>
+    </div>
+</div>

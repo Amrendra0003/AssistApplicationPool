@@ -1,0 +1,1344 @@
+<div class="col-xs-12 col-md-12 col-sm-12 d-flex body-height" style="overflow-x: hidden;" id="dashboard-household"
+  [ngClass]=this.currentTheme>
+  <app-spinner-overlay *ngIf="this.showLoader == true">
+  </app-spinner-overlay>
+  <div class="col-xs-2 col-md-2 col-sm-2 mt-5">
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex" *ngxPermissionsOnly="['ViewComponentHouseHoldMemberList']">
+      <div [ngClass]="(this.memberListFlag == true)?'dasboard-side-div':''"
+        class="col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2">
+        <label (click)="memberList()" class="dashboard-p2 pointer"
+          [ngClass]="(this.memberListFlag == true)?'dashboard-side-div-label':''">Member List</label>
+        <span class="upperCurve" *ngIf="this.memberListFlag == true"></span>
+        <span class="lowerCurve" *ngIf="this.memberListFlag == true"></span>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex" *ngxPermissionsOnly="['ViewComponentEditHouseHoldMember']">
+      <div [ngClass]="(this.addMemberFlag == true)?'dasboard-side-div':''"
+        class="col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2">
+        <label (click)="addMember()" class="dashboard-p2 pointer"
+          [ngClass]="(this.addMemberFlag == true)?'dashboard-side-div-label':''">Add/Edit Member</label>
+        <span class="upperCurve" *ngIf="this.addMemberFlag == true"></span>
+        <span class="lowerCurve" *ngIf="this.addMemberFlag == true"></span>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-10 col-md-10 col-sm-10 dashboard-boxshadow heightMaxContent mb-5 p-4" id="memberList"
+    *ngIf="this.memberListFlag == true" [ngClass]="{disabledDiv: !isEditAllowed}">
+    <div class="col-xs-12 col-md-12 col-sm-12">
+      <div class="col-xs-12 col-md-12 col-sm-12">
+        <table mat-table class="col-xs-12 col-md-12 col-sm-12" class="mat-elevation-z8" style="width: 100%;">
+          <div class="col-xs-12 col-md-12 col-sm-12" style="background-color: #CED5DF;border-radius: 8px;">
+            <ng-container class="col-xs-12 col-md-12 col-sm-12">
+              <th mat-header-cell class="col-xs-4 col-md-4 col-sm-4 px-2 py-2"><label
+                  class="dashboard-select-label">{{household}}</label></th>
+              <th mat-header-cell class="col-xs-3 col-md-3 col-sm-3 px-2 py-2"><label
+                  class="dashboard-select-label">{{DateofBirth}}</label></th>
+              <th mat-header-cell class="col-xs-3 col-md-3 col-sm-3 px-2 py-2"><label
+                  class="dashboard-select-label">{{IncomeResources}}</label></th>
+              <th mat-header-cell class="col-xs-2 col-md-2 col-sm-2 px-2 py-2"><label
+                  class="dashboard-select-label">{{Amount}}</label></th>
+              <th mat-header-cell class="col-xs-1 col-md-1 col-sm-1 px-2 py-2"><label
+                  class="dashboard-select-label"></label></th>
+            </ng-container>
+          </div>
+          <div class="col-xs-10 col-md-10 col-sm-10  wid-100" id="memberList" *ngIf="this.memberListEmptyFlag == true">
+            <div class="align-center col-xs-12 col-md-12 col-sm-12">
+              <ng-container class="col-xs-12 col-md-12 col-sm-12">
+                <td mat-cell class="col-xs-12 col-md-12 col-sm-12 px-2 py-2">
+                  <label class=" dashboard-p2 py-3 text-center">{{NoMembersFound}}</label>
+                </td>
+              </ng-container>
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-12 col-sm-12" style="border-radius: 8px;">
+            <tr class="col-xs-12 col-md-12 col-sm-12" *ngFor="let data of result">
+              <td mat-cell class="col-xs-4 col-md-4 col-sm-4 px-2 py-2">
+                <label *ngIf="data.relation == 'Self'" class="dashboard-p2 ">{{data.name}}, {{Patient}}
+                  ({{data.relation}})</label>
+                <label *ngIf="data.relation != 'Self' && data.relation != null" class="dashboard-p2 ">{{data.name}}
+                  ({{data.relation}})</label>
+                <label *ngIf="data.relation == null" class="dashboard-p2 ">{{data.name}} </label>
+              </td>
+              <td mat-cell class="col-xs-3 col-md-3 col-sm-3 px-2 py-2">
+                <label class="dashboard-select-label">{{data.dateOfBirth}} ({{data.age}})</label>
+              </td>
+              <td mat-cell class="col-xs-3 col-md-3 col-sm-3 px-2 py-2">
+                <label *ngIf="data.monthlyIncome == null && data.resource == null"
+                  class="dashboard-p2">{{NoIncomeResources}}</label>
+                <label class="dashboard-select-label">{{data.source}}</label>
+                <br *ngIf="data.source != null && data.type != null">
+                <label class="dashboard-select-label">{{data.type}}</label>
+              </td>
+              <td mat-cell class="col-xs-2 col-md-2 col-sm-2 px-2 py-2">
+                <label *ngIf="data.monthlyIncome == null && data.resource == null" class="dashboard-p2">$0.00</label>
+                <label *ngIf="data.monthlyIncome != null" class="dashboard-p2">${{data.monthlyIncomeString}}</label>
+                <br *ngIf="data.monthlyIncome != null && data.resource != null">
+                <label *ngIf="data.resource != null" class="dashboard-p2">${{data.resourceString}}</label>
+              </td>
+              <td mat-cell class="col-xs-1 col-md-1 col-sm-1 px-2 py-3 ">
+                <div ngbDropdown class="d-inline-block" placement="left">
+                  <span id="clickDotIcon" (click)="isMenuOn=!isMenuOn">
+                    <img src="assets/images/icons/more-options-vr.svg" class="pointer" ngbDropdownToggle />
+                  </span>
+                  <div ngbDropdownMenu aria-labelledby="clickDotIcon">
+                    <button *ngxPermissionsOnly="['ViewComponentEditHouseHoldMember']" ngbDropdownItem mat-mini-fab
+                      class="btnList mx-1" tooltip="Edit"
+                      (click)="addNewMemberTabs(data.houseHoldMemberId, data.canDeleteHousehold)"
+                      style="opacity: 1 !important">
+                      <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="16" height="15.983"
+                          viewBox="0 0 16 15.983">
+                          <path class="a"
+                            d="M-2871.9-3114.117a.349.349,0,0,1-.091-.33l.975-3.917a.357.357,0,0,1,.092-.161l8.8-8.8,3.431,3.43-8.8,8.8a.343.343,0,0,1-.16.091l-3.917.976a.331.331,0,0,1-.084.01A.347.347,0,0,1-2871.9-3114.117Zm10.76-14.191,1.2-1.2a1.775,1.775,0,0,1,2.451,0l.98.98a1.722,1.722,0,0,1,.507,1.225,1.722,1.722,0,0,1-.507,1.225l-1.2,1.2Z"
+                            transform="translate(2872 3130)" />
+                        </svg></mat-icon>
+                    </button>
+                    <button *ngIf="data.relation!='Self' && data.canDeleteHousehold != false" ngbDropdownItem
+                      mat-mini-fab class="btnList mx-1" tooltip="Delete" 
+                      data-bs-target="#deletehouseholdMember" style="opacity: 1 !important"
+                      (click)="openModel(data.houseHoldMemberId)">
+                      <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="14.625" height="18"
+                          viewBox="0 0 14.625 18">
+                          <path class="a"
+                            d="M-2868.959-3112a1.685,1.685,0,0,1-1.685-1.607l-.464-9.74a.176.176,0,0,1,.176-.185h12.49a.175.175,0,0,1,.176.185l-.464,9.74a1.686,1.686,0,0,1-1.685,1.607Zm6.521-10.125v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2862.438-3122.125Zm-2.812,0v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2865.25-3122.125Zm-2.812,0v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2868.063-3122.125Zm-3.375-2.531a.563.563,0,0,1-.562-.563v-1.125a1.407,1.407,0,0,1,1.406-1.406h3.094v-.562a1.688,1.688,0,0,1,1.688-1.688h2.25a1.688,1.688,0,0,1,1.688,1.688v.562h3.094a1.407,1.407,0,0,1,1.406,1.406v1.125a.563.563,0,0,1-.562.563Zm5.063-3.656v.562H-2863v-.562a.563.563,0,0,0-.562-.562h-2.25A.563.563,0,0,0-2866.375-3128.313Z"
+                            transform="translate(2872 3130)" />
+                        </svg></mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div class="modal fade modal-overlay" id="deletehouseholdMember"
+                  aria-labelledby="deletehouseholdMemberLabel" role="dialog" data-bs-backdrop="false">
+                  <div class="modal-dialog" style="margin-top: 15%;">
+                    <div class="modal-content">
+                      <div class="modal-body">
+                        <div class="text-center py-4">
+                          <b class="modal-popup-title text-center">{{DelHouseHoldMember}}</b>
+                        </div>
+                        <div class="d-flex text-center py-1 justify-content-center">
+                          <button class="btn btn-outline mx-4 login-label pointer" data-bs-dismiss="modal"
+                            (click)="hideModal()">{{No}}</button>
+                          <button class="btn btn-primary mx-4 login-label pointer" data-bs-dismiss="modal"
+                            style="color: white;" (click)="deleteMemberData(data.houseHoldMemberId)">{{Yes}}</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </div>
+          <div class="col-xs-12 col-md-12 col-sm-12 dashboard-select-label"
+            style="background-color: #546073;border-radius: 8px;color: #FFFFFF;" id="memberList"
+            *ngIf="this.memberListEmptyFlag == true">
+            <div class="col-xs-12 col-md-12 col-sm-12">
+              <ng-container class="col-xs-12 col-md-12 col-sm-12">
+                <td mat-cell class="col-xs-4 col-md-4 col-sm-4 px-2 py-2">
+                  {{HouseholdSize}}
+                </td>
+                <td mat-cell class="col-xs-4 col-md-4 col-sm-4 px-2 py-2">
+                  {{MonthlyIncome}}
+                </td>
+                <td mat-cell class="col-xs-4 col-md-4 col-sm-4 px-2 py-2">
+                  {{Resources}}
+                </td>
+              </ng-container>
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-12 col-sm-12 dashboard-select-label"
+            style="background-color: #546073;border-radius: 8px;color: #FFFFFF;"
+            *ngIf="this.memberListEmptyFlag == false">
+            <ng-container class="col-xs-12 col-md-12 col-sm-12">
+              <td mat-cell class="col-xs-4 col-md-4 col-sm-4 px-2 py-2">
+                {{HouseholdSize1}} {{this.totalMembers}}
+              </td>
+              <td mat-cell class="col-xs-4 col-md-4 col-sm-4 px-2 py-2">
+                {{MonthlyIncome1}} ${{this.totalMonthlyIncome}}
+              </td>
+              <td mat-cell class="col-xs-4 col-md-4 col-sm-4 px-2 py-2">
+                {{Resources1}} ${{this.totalResource}}
+              </td>
+            </ng-container>
+          </div>
+        </table>
+        <div class="col-xs-8 col-md-8 col-sm-8 mt-5 shadow-none float-left">
+          <button *ngIf="this.showAdvocatePanel == true" type="submit"
+            class="btn btn-primary mb-3 button-white-label shadow-none"
+            style="background-color: 1px solid #2494ED;color: #FFFFFF;"
+            (click)="nextToApplicationForms()">{{Evaluate}}</button>
+          <button *ngIf=" this.showAdvocatePanel == false" type="submit"
+            class="btn btn-primary mb-3 button-white-label shadow-none"
+            style="background-color: 1px solid #2494ED;color: #FFFFFF;" (click)="nextToApplicationForms()"
+             data-bs-target="#openAllPrograms">{{Evaluate}}</button>
+        </div>
+        <div *ngIf="this.isDetailsDone == true" class="modal fade modal-overlay" id="openAllPrograms"
+          aria-labelledby="programModalLabel" role="dialog" data-bs-backdrop="false" [ngStyle]="{'display':display}">
+          <div class="modal-dialog" style="margin-top: 10%;">
+            <div class="modal-content themes-modal">
+              <div class="modal-body">
+                <div class="text-center py-4" *ngIf="this.allPrograms == null">
+                  <div class="text-center d-flex" style="margin: auto; width: 35%;" role="status">
+                    <span class="spinner-border text-primary"></span>
+                    <b class="p-1" style="color:#2494ED ;">Please wait...</b>
+                  </div>
+                </div>
+                <div class="text-center py-4" *ngIf="this.allPrograms != null">
+                  <form [formGroup]="allProgramsForm">
+                    <b class="modal-popup-title text-center">{{EvaluatedPrograms}}</b>
+                    <div class="form-group text-start">
+                      <div *ngFor="let options of this.programsOpted">
+                        <input class="form-check-input dashboard-p1 pointer-events programs-checkbox-sq text-start"
+                          [id]="options" type="checkbox" [value]="options" required [checked]="true" />
+                        <label class="mt-2 mx-3 dashboard-p3">{{this.options}}</label>
+                      </div>
+                    </div>
+                    <b class="modal-popup-title text-center">{{AddMorePrograms}}</b>
+                    <div class="form-group text-start">
+                      <div *ngFor="let radioOptions of this.allPrograms, let i=index">
+                        <input class="form-check-input dashboard-p1 programs-checkbox-sq text-start" [id]="radioOptions"
+                          type="checkbox" (change)="changeProgram(radioOptions,i,$event)" [value]="radioOptions"
+                          required [checked]="false" formControlName="programList" />
+                        <label class="mt-2 mx-3 dashboard-p2">{{this.radioOptions}}</label>
+                      </div>
+                    </div>
+                    <div class="d-flex text-center py-1 justify-content-center">
+                      <button class="btn btn-primary mx-2 login-label pointer " style="color: white;"
+                        (click)="nextTab()" data-bs-dismiss="modal">
+                        {{Next}}</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-10 col-md-10 col-sm-10 dashboard-boxshadow heightMaxContent mb-5 p-4" id="addMember"
+    *ngIf="this.addMemberFlag == true">
+    <div class="col-xs-12 col-md-12 col-sm-12">
+      <div class="col-xs-12 col-md-12 col-sm-12">
+        <form autocomplete="off" [formGroup]="addMemberForm" class="col-xs-12 col-md-12 col-sm-12 row g-3"
+          #myform="ngForm" [ngClass]="{disabledDiv: !isEditAllowed}" onkeydown="event.key != 'Enter';">
+          <input autocomplete="false" name="hidden" type="text" style="display:none;">
+          <div class="col-xs-12 col-md-12 col-sm-12">
+            <!--new row added  -->
+            <mat-accordion class="col-xs-12 col-md-12 col-sm-12">
+              <mat-expansion-panel [expanded]="panelOpenStateAddNewMember==true"
+                (opened)="panelOpenStateAddNewMember = true" hideToggle="true" disabled>
+                <mat-expansion-panel-header style="cursor:unset;">
+                  <mat-panel-title>
+                    <div class="col-xs-12 col-md-12 col-sm-12 d-flex mx-1">
+                      <img src="assets/images/icons/addmember-user-icon.svg" class="dash-icon" />
+                      <label *ngIf="this.EditHouseholdMember == false"
+                        class="dashboard-p1 mx-2 mt-1">{{AddNewMember}}</label>
+                      <label *ngIf="this.EditHouseholdMember == true"
+                        class="dashboard-p1 mx-2 mt-1">{{EditMember}}</label>
+                    </div>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="col-md-12 col-lg-11 row g-3 mx-1" style="visibility: visible;">
+                  <div class="" style="position: relative;"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-6'">
+                    <input type="text" class="form-control textfield-label" id="firstName" placeholder="First Name"
+                      [(ngModel)]="firstName" formControlName="firstName" maxlength="51"
+                      [readonly]="isSelfRelationReadOnly"
+                      [ngClass]="addMemberForm.get('firstName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                    <div *ngIf="addMemberForm.get('firstName').hasError('required')&& myform.submitted"
+                      class="small text-danger mt-1">{{NameReq}}</div>
+                    <div *ngIf="addMemberForm.get('firstName').hasError('pattern')" class="small text-danger mt-1">
+                      {{NameAlp}}</div>
+                    <div *ngIf="addMemberForm.get('firstName').hasError('minlength')" class="small text-danger mt-1">
+                      {{NameChar}}</div>
+                    <div *ngIf="addMemberForm.get('firstName').hasError('maxlength')" class="small text-danger mt-1">
+                      {{NameMax}}</div>
+                  </div>
+                  <div class="" style="position: relative;"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-6'">
+                    <input type="text" class="form-control textfield-label" id="middleName" placeholder="Middle Name"
+                      [(ngModel)]="middleName" formControlName="middleName" maxlength="51"
+                      [readonly]="isSelfRelationReadOnly"
+                      [ngClass]="addMemberForm.get('middleName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                    <div *ngIf="addMemberForm.get('middleName').hasError('pattern')" class="small text-danger mt-1">
+                      {{MidNameAlp}}</div>
+                    <div *ngIf="addMemberForm.get('middleName').hasError('maxlength')" class="small text-danger mt-1">
+                      {{MidNameMax}}</div>
+                  </div>
+                  <div class="" style="position: relative;"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-6'">
+                    <input type="text" class="form-control textfield-label" id="lastName" placeholder="Last Name"
+                      [(ngModel)]="lastName" formControlName="lastName" maxlength="51"
+                      [readonly]="isSelfRelationReadOnly"
+                      [ngClass]="addMemberForm.get('lastName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                    <div *ngIf="addMemberForm.get('lastName').hasError('required')&& myform.submitted"
+                      class="small text-danger mt-1">{{LastNamereq}}</div>
+                    <div *ngIf="addMemberForm.get('lastName').hasError('pattern')" class="small text-danger mt-1">
+                      {{LastNameAlp}}</div>
+                    <div *ngIf="addMemberForm.get('lastName').hasError('maxlength')" class="small text-danger mt-1">
+                      {{LastNameMax}}</div>
+                  </div>
+                  <div class="" style="position: relative;"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-1' :'col-md-2' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-2':'col-md-2'">
+                    <input type="text" class="form-control textfield-label" id="suffix" [(ngModel)]="suffix"
+                      placeholder="Suffix" formControlName="suffix" maxlength="51" [readonly]="isSelfRelationReadOnly"
+                      [ngClass]="addMemberForm.get('suffix').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                    <div *ngIf="addMemberForm.get('suffix').hasError('pattern')" class="small text-danger mt-1">
+                      {{SuffixAlp}}</div>
+                    <div *ngIf="addMemberForm.get('suffix').hasError('maxlength')" class="small text-danger mt-1">
+                      {{SuffixMax}}</div>
+                  </div>
+                  <div *ngIf="this.selfDisable == false" include="form-input-select()" style="position: relative;"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-4' :'col-md-4' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-4':'col-md-4'">
+                    <select class="form-select form-select-sm dropdown-select-label" [(ngModel)]="relation"
+                      id="relation" aria-label="form-select-sm example" formControlName="relation" required
+                      (change)="onChangeRelation($event)"
+                      [ngClass]="addMemberForm.get('relation').errors && myform.submitted?'form-select-invalid': 'form-select'">
+                      <option value="" hidden disabled>{{RelationshipRole}}</option>
+                      <option [ngValue]="null" hidden style="color:#B3B8C0 !important" disabled>{{RelationshipRole}}
+                      </option>
+                      <option *ngFor="let data of this.relationval | keyvalue" value="{{data.value}}">{{data.value}}
+                      </option>
+                    </select>
+                    <div *ngIf="addMemberForm.get('relation').hasError('required') && myform.submitted"
+                      class="small text-danger mt-1">{{RelationshipReq}}</div>
+                  </div>
+                  <div *ngIf="this.selfDisable == true" include="form-input-select()" style="position: relative;"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-4' :'col-md-4' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-4':'col-md-4'">
+                    <input class="form-control textfield-label" [(ngModel)]="relation" readonly id="relation"
+                      aria-label="form-select-sm example" formControlName="relation" required value="Self">
+                    <div *ngIf="addMemberForm.get('relation').hasError('required') && myform.submitted"
+                      class="small text-danger mt-1">{{RelationshipReq}}</div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+            <hr class="col-xs-12 col-md-12 col-sm-12 mt-3" />
+            <mat-accordion class="col-xs-12 col-md-12 col-sm-12">
+              <mat-expansion-panel [expanded]="panelOpenStateDemographic == true"
+                (opened)="panelOpenStateDemographic = true" (closed)="panelOpenStateDemographic = false"
+                hideToggle="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="col-xs-12 col-md-12 col-sm-12 d-flex mx-1">
+                      <label class="dashboard-subtile-p1">{{Demographics}}</label>
+                    </div>
+                  </mat-panel-title>
+                  <md-icon *ngIf="!panelOpenStateDemographic"><img src="assets/images/icons/plus-icon.svg"
+                      class="plus-icon" /></md-icon>
+                  <md-icon *ngIf="panelOpenStateDemographic"><img src="assets/images/icons/minus-icon.svg"
+                      class="plus-icon" /></md-icon>
+                </mat-expansion-panel-header>
+                <div formGroupName="householdDemographicForm" class="col-md-12 col-lg-11 row g-3 mx-1">
+                  <div class="col-md-5 d-flex"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-6'">
+                    <div class="col-12" style="position: relative;" [(bsValue)]="this.bsVal" bsDatepicker
+                      [maxDate]="today" (bsValueChange)="selectDate($event)">
+                      <input type="text" class="form-control textfield-label" [(ngModel)]="dateOfBirth" id="dateOfBirth"
+                        (keyup)="captureDateInDatepicker()" (keydown.tab)="closeCalendar()"
+                        (keydown.enter)="closeCalendar()" placeholder="mm/dd/yyyy" (keypress)='keyPress($event)'
+                        formControlName="dateOfBirth" autocomplete="off" maxlength="10" minlength="10"
+                        [readonly]="isSelfRelationReadOnly"
+                        [ngClass]="addMemberForm.get(['householdDemographicForm','dateOfBirth']).errors && myform.submitted?'form-control-invalid': 'form-control'">
+                      <div
+                        *ngIf="addMemberForm.get(['householdDemographicForm','dateOfBirth']).hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{DateReq}}</div>
+                      <div *ngIf="addMemberForm.get(['householdDemographicForm','dateOfBirth']).hasError('minlength')"
+                        class="small text-danger mt-1">{{DateFormate}}</div>
+                      <div
+                        *ngIf="addMemberForm.get(['householdDemographicForm','dateOfBirth']).hasError('validateDateFormat')"
+                        class="small text-danger mt-1">{{DateFormate}}</div>
+                      <div
+                        *ngIf="addMemberForm.get(['householdDemographicForm','dateOfBirth']).hasError('futureDateValidation')"
+                        class="small text-danger mt-1">{{DateFut}}</div>
+                    </div>
+                    <div style="float:right;">
+                      <i style="position: absolute;"><img style="cursor: pointer;margin-left: -33px;"
+                          src="assets/images/icons/birthday-icon.svg" /></i>
+                    </div>
+                  </div>
+                  <div class="col-md-5" include="form-input-select()" style="position: relative;"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-6'">
+                    <select class="form-select form-select-sm dropdown-select-label" [(ngModel)]="gender" id="gender"
+                      formControlName="gender" aria-label="form-select-sm example" required
+                      [disabled]="isSelfRelationReadOnly"
+                      [ngClass]="addMemberForm.get(['householdDemographicForm','gender']).errors && myform.submitted?'form-select-invalid': 'form-select'">
+                      <option value="" hidden disabled>{{Gender}}</option>
+                      <option [ngValue]="null" hidden select style="color:#B3B8C0 !important" disabled>{{Gender}}
+                      </option>
+                      <option *ngFor="let data of this.genderval | keyvalue" value="{{data.value}}">{{data.value}}
+                      </option>
+                    </select>
+                    <div
+                      *ngIf="addMemberForm.get(['householdDemographicForm','gender']).hasError('required')&& myform.submitted"
+                      class="small text-danger mt-1">{{GenderReq}}</div>
+                  </div>
+                  <div class="col-md-5" include="form-input-select()" style="position: relative;"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-6'">
+                    <select class="form-select form-select-sm dropdown-select-label" [(ngModel)]="maritalStatus"
+                      id="maritalStatus" formControlName="maritalStatus" aria-label="form-select-sm example" required
+                      [disabled]="isSelfRelationReadOnly"
+                      [ngClass]="addMemberForm.get(['householdDemographicForm','maritalStatus']).errors && myform.submitted?'form-select-invalid': 'form-select'">
+                      <option value="" hidden disabled>{{MaritalStatus}}</option>
+                      <option [ngValue]="null" hidden select style="color:#B3B8C0 !important" disabled>{{MaritalStatus}}
+                      </option>
+                      <option *ngFor="let data of this.martialStatusVal | keyvalue" value="{{data.value}}">
+                        {{data.value}}</option>
+                    </select>
+                    <div
+                      *ngIf="addMemberForm.get(['householdDemographicForm','maritalStatus']).hasError('required')&& myform.submitted"
+                      class="small text-danger mt-1">{{MartialReq}}</div>
+                  </div>
+                  <!-- sssn -->
+                  <div class="col-md-5" style="position: relative;" *ngIf="this.relation == 'Self'"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-6'">
+                    <div class="d-flex" style="position:absolute;padding-left: 8px;">
+                      <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">{{SSN}}
+                        </span> </div>
+                    </div>
+                    <span class="">
+                      <input type="text" class="form-control textfield-label" style="padding-left: 66px;" id="sssn"
+                        placeholder="000-00-0000" formControlName="sssn" [(ngModel)]="sssn"
+                        [readonly]="isSelfRelationReadOnly">
+                    </span>
+                  </div>
+                  <div class="col-md-5" *ngIf="this.relation == 'Self'"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-6'">
+                    <input type="text" class="form-control textfield-label" placeholder="Reason No SSN"
+                      [value]="this.reasonNoSSN" [readonly]="isSelfRelationReadOnly">
+                  </div>
+                  <!-- ssn -->
+                  <div class="col-md-5" style="position: relative;" *ngIf="this.relation != 'Self'"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-6'">
+                    <div class="d-flex" style="position:absolute;padding-left: 8px;">
+                      <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">{{SSN}}
+                        </span> </div>
+                    </div>
+                    <span class="">
+                      <input type="text" class="form-control textfield-label" style="padding-left: 66px;" id="ssn"
+                        placeholder="000-00-0000" formControlName="ssn" [(ngModel)]="ssn" [hiddenInput]="maskEnabled"
+                        mask="XXX-XX-0000" (focus)="focusIn()" (blur)="focusOut()" [readonly]="isSelfRelationReadOnly"
+                        (input)="ssnChange($event)"
+                        [ngClass]="addMemberForm.get(['householdDemographicForm','ssn']).errors && myform.submitted?'form-control-invalid': 'form-control'">
+                      <div
+                        *ngIf="addMemberForm.get(['householdDemographicForm','ssn']).hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{SSNReq}}</div>
+                      <div *ngIf="addMemberForm.get(['householdDemographicForm','ssn']).hasError('pattern')"
+                        class="small text-danger mt-1">
+                        {{SSNVal}}</div>
+                    </span>
+                  </div>
+                  <div *ngIf="this.relation != 'Self'" class="col-md-5"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                    [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-6'">
+                    <div style="position: relative;">
+                      <select class="form-select form-select-sm dropdown-select-label" id="reasonNoSSN"
+                        (change)="noSSNChange()" [(ngModel)]="reasonNoSSN" aria-label="form-select-sm example"
+                        formControlName="reasonNoSSN"
+                        [ngClass]="addMemberForm.get(['householdDemographicForm','reasonNoSSN']).errors && myform.submitted?'form-control-invalid': 'form-control'">
+                        <option value="" hidden disabled>Reason No SSN</option>
+                        <option value=null hidden disabled>Reason No SSN</option>
+                        <option *ngFor="let data of this.reasons | keyvalue" value="{{data.value}}">{{data.value}}
+                        </option>
+                      </select>
+                    </div>
+                    <div
+                      *ngIf="addMemberForm.get(['householdDemographicForm','reasonNoSSN']).hasError('required')&& myform.submitted"
+                      class="small text-danger mt-1">Kindly select reason for no SSN!</div>
+                  </div>
+                  <div class="col-xs-12 col-md-12 col-sm-12 d-flex mt-4">
+                    <div class="col-xs-10 col-lg-10 col-md-9 col-sm-10 float-left mt-2" style="position: relative;">
+                      <label style="float: left;" class="dashboard-p2 float-left">{{PatientGuarantor}}</label>
+                    </div>
+                    <div class="col-xs-2 col-md-2 col-sm-2 float-right text-end">
+                      <mat-button-toggle-group name="fontStyle" aria-label="Font Style" id="isDependent"
+                        formControlName="isDependent" [(ngModel)]="isDependent" (click)="onChangeValue('isDependent')"
+                        required>
+                        <mat-button-toggle value="false"
+                          style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">{{No}}
+                        </mat-button-toggle>
+                        <mat-button-toggle value="true"
+                          style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">{{Yes}}
+                        </mat-button-toggle>
+                      </mat-button-toggle-group>
+                    </div>
+                  </div>
+                  <div class="col-xs-10 col-md-10 col-sm-10 float-left mt-2 mx-2"
+                    *ngIf="addMemberForm.get(['householdDemographicForm','isDependent']).hasError('required') && myform.submitted"
+                    class="small text-danger mt-1">{{YesOrNo}}</div>
+                  <div class="col-xs-10 col-md-10 col-sm-10 float-left mt-2 mx-2"
+                    *ngIf="this.isDependentRequiredMessage != '' " class="small text-danger mt-1">{{YesOrNo}}</div>
+                  <div class="col-xs-12 col-md-12 col-sm-12  mt-3">
+                    <div class="d-flex">
+                      <div class="col-xs-10 col-lg-10 col-md-9 col-sm-10 float-left mt-2" style="position: relative;">
+                        <label style="float: left;" class="dashboard-p2 float-left">{{Medicaid}}</label>
+                      </div>
+                      <div class="col-xs-2 col-md-2 col-sm-2 float-right text-end">
+                        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" id="isMedicalAid"
+                          formControlName="isMedicalAid" [(ngModel)]="isMedicalAid"
+                          (click)="onChangeValue('isMedicalAid')" (click)="toShowMedicalformValues($event)" required>
+                          <mat-button-toggle value="false"
+                            style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">{{No}}
+                          </mat-button-toggle>
+                          <mat-button-toggle value="true"
+                            style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">{{Yes}}
+                          </mat-button-toggle>
+                        </mat-button-toggle-group>
+                      </div>
+                    </div>
+                  </div>
+                  <!--Follow up questions-->
+                  <div *ngIf="this.showMedicalAidFields == true" class="col-12 row g-3">
+                    <div class="col-md-6">
+                      <input class="form-control textfield-label" [(ngModel)]="medicalId" formControlName="medicalId"
+                        [ngClass]="(this.medicaidIdReqquiredMessage != '' )?'form-control-invalid': 'form-control' "
+                        placeholder="Medicaid ID" />
+                      <div *ngIf="this.medicaidIdReqquiredMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.medicaidIdReqquiredMessage}}
+                      </div>
+                      <div *ngIf="addMemberForm.get(['householdDemographicForm','medicalId']).hasError('pattern')"
+                        class="small text-danger mt-1">{{MedicaidErr}}</div>
+                      <div *ngIf="addMemberForm.get(['householdDemographicForm','medicalId']).hasError('maxlength')"
+                        class="small text-danger mt-1">{{MedicaidMax}}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <input class="form-control textfield-label" [(ngModel)]="medicalState"
+                        formControlName="medicalState"
+                        [ngClass]="(this.medicaidStateRequiredMessage != '' )?'form-control-invalid': 'form-control'"
+                        placeholder="State" maxlength="50" />
+                      <div *ngIf="this.medicaidStateRequiredMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.medicaidStateRequiredMessage}}
+                      </div>
+                      <div *ngIf="addMemberForm.get(['householdDemographicForm','medicalState']).hasError('pattern')"
+                        class="small text-danger mt-1">{{StateAlp}}</div>
+                      <div *ngIf="addMemberForm.get(['householdDemographicForm','medicalState']).hasError('maxlength')"
+                        class="small text-danger mt-1">{{StateMax}}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div style="position:absolute; padding-left: 8px;width: 120px;">
+                        <div class="input-group-prepend span-input"><span class="input-group-text span-input-data pe-5">
+                            <label>{{EffectiveFrom}}</label></span>
+                        </div>
+                      </div>
+                      <input formControlName="medicalEffectiveFrom" [(ngModel)]="medicalEffectiveFrom"
+                        style="padding-left: 130px;" id="medicalEffectiveFrom"
+                        [(bsValue)]="this.bsValMedicalEffectiveFrom" class="form-control textfield-label" maxlength="10"
+                        [ngClass]="this.medicalEffectiveFromErrorMessage != '' ?'form-control-invalid': 'form-control'"
+                        (bsValueChange)="selectEffectiveFromDate('medicalEffectiveFrom')" placeholder="mm/dd/yyyy"
+                        autocomplete="off" (keydown.tab)="closeCalendarMedical('medicalEffectiveFrom')"
+                        (keydown.enter)="closeCalendarMedical('medicalEffectiveFrom')" bsDatepicker
+                        (change)="clickEffectiveFrom('medicalEffectiveFrom')" />
+                      <div style="float:right;position: relative;">
+                        <i style="position: absolute;"><img
+                            style="cursor: pointer;margin-left: -33px;margin-top: -84px;"
+                            src="assets/images/icons/calendar.svg" /></i>
+                      </div>
+                      <div *ngIf="this.medicalEffectiveFromErrorMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.medicalEffectiveFromErrorMessage}}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div style="position:absolute; padding-left: 8px;width: 110px;">
+                        <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">
+                            {{Termination }}</span>
+                        </div>
+                      </div>
+                      <input formControlName="medicalTermination" [(ngModel)]="medicalTermination"
+                        style="padding-left: 115px;" class="form-control textfield-label" maxlength="10"
+                        id="medicalTermination" [(bsValue)]="this.bsValMedicalTermination"
+                        [ngClass]="medicalTerminationErrorMessage != ''?'form-control-invalid': 'form-control'"
+                        placeholder="mm/dd/yyyy" autocomplete="off" (keypress)='keyPressTermination($event)'
+                        (bsValueChange)="selectTerminationDate('medicalTermination')" #datePicker
+                        (change)="clickTermination('medicalTermination')"
+                        (keydown.tab)="closeCalendarMedical('medicalTermination')"
+                        (keydown.enter)="closeCalendarMedical('medicalTermination')" bsDatepicker />
+                      <div style="float:right;position: relative;">
+                        <i style="position: absolute;"><img
+                            style="cursor: pointer;margin-left: -33px;margin-top: -84px;"
+                            src="assets/images/icons/calendar.svg" /></i>
+                      </div>
+                      <div *ngIf="this.medicalTerminationErrorMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.medicalTerminationErrorMessage}}
+                      </div>
+                    </div>
+                  </div>
+                  <!--Follow up questions-->
+                  <div class="col-xs-10 col-md-10 col-sm-10 float-left mt-2 mx-2"
+                    *ngIf="addMemberForm.get(['householdDemographicForm','isMedicalAid']).hasError('required') && myform.submitted"
+                    class="small text-danger mt-1">{{YesOrNo}}</div>
+                  <div class="col-xs-10 col-md-10 col-sm-10 float-left mt-2 mx-2"
+                    *ngIf="this.isMedicalAidRequiredMessage != '' " class="small text-danger mt-1">{{YesOrNo}}</div>
+                  <div class="col-xs-12 col-md-12 col-sm-12 d-flex mt-3">
+                    <div class="col-xs-10 col-md-9 col-lg-10 col-sm-10 float-left mt-2" style="position: relative;">
+                      <label style="float: left;" class="dashboard-p2 float-left">{{MemberCoverage}}</label>
+                    </div>
+                    <div class="col-xs-2 col-md-2 col-sm-2 float-right text-end">
+                      <mat-button-toggle-group name="fontStyle" aria-label="Font Style" id="isInsurance"
+                        formControlName="isInsurance" [(ngModel)]="isInsurance" (click)="toShowPriorCoverage($event)">
+                        <mat-button-toggle value="false"
+                          style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">{{No}}
+                        </mat-button-toggle>
+                        <mat-button-toggle value="true"
+                          style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">{{Yes}}
+                        </mat-button-toggle>
+                      </mat-button-toggle-group>
+                    </div>
+                  </div>
+                  <!--Follow up questions-->
+                  <div *ngIf="this.showPriorCoverageFields == true" class="col-12 row g-3">
+                    <div class="col-md-6">
+                      <input class="form-control textfield-label" [(ngModel)]="payerName" formControlName="payerName"
+                        [ngClass]="(this.payerNameRequiredMessage != '')?'form-control-invalid': 'form-control'"
+                        type="textbox" placeholder="Payer Name" />
+                      <div *ngIf="this.payerNameRequiredMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.payerNameRequiredMessage}}
+                      </div>
+                      <span *ngIf="addMemberForm.get(['householdDemographicForm','payerName']).hasError('pattern')"
+                        class="small text-danger mt-1">{{PayerNameAlp}}
+                      </span>
+                      <span *ngIf="addMemberForm.get(['householdDemographicForm','payerName']).hasError('maxlength')"
+                        class="small text-danger mt-1">{{PaterMax}}
+                        characters!</span>
+                      <span *ngIf="addMemberForm.get(['householdDemographicForm','payerName']).hasError('minlength')"
+                        class="small text-danger mt-1">{{PayerNumOfChar}}
+                      </span>
+                    </div>
+                    <div class="col-md-6">
+                      <input class="form-control textfield-label" [(ngModel)]="groupName" formControlName="groupName"
+                        [ngClass]="(addMemberForm.get(['householdDemographicForm','groupName']).errors && myform.submitted)?'form-control-invalid': 'form-control'"
+                        type="textbox" placeholder="Group Name" />
+                      <span *ngIf="addMemberForm.get(['householdDemographicForm','groupName']).hasError('pattern')"
+                        class="small text-danger mt-1">{{GroupAlp}}
+                      </span>
+                      <span *ngIf="addMemberForm.get(['householdDemographicForm','groupName']).hasError('maxlength')"
+                        class="small text-danger mt-1">{{GroupNameCharMax}}
+                        characters!</span>
+                      <span *ngIf="addMemberForm.get(['householdDemographicForm','groupName']).hasError('minlength')"
+                        class="small text-danger mt-1">{{GroupNameCharMin}}
+                      </span>
+                    </div>
+                    <div class="col-md-6">
+                      <div style="position:absolute; padding-left: 8px;width: 90px;">
+                        <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">
+                            {{GroupNo}}
+                          </span>
+                        </div>
+                      </div>
+                      <input class="form-control textfield-label" style="padding-left: 100px;" [(ngModel)]="groupNumber"
+                        formControlName="groupNumber"
+                        [ngClass]="(this.groupNumberRequiredMessage != '')?'form-control-invalid': 'form-control'"
+                        placeholder="Group Number" />
+                      <div *ngIf="this.groupNumberRequiredMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.groupNumberRequiredMessage}}
+                      </div>
+                      <span *ngIf="addMemberForm.get(['householdDemographicForm','groupNumber']).hasError('pattern')"
+                        class="small text-danger mt-1">{{SpaceSpecial}}</span>
+                      <span *ngIf="addMemberForm.get(['householdDemographicForm','groupNumber']).hasError('maxlength')"
+                        class="small text-danger mt-1">{{GroupNumMax}}
+                      </span>
+                    </div>
+                    <div class="col-md-6">
+                      <div style="position:absolute; padding-left: 8px;width: 90px;">
+                        <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">
+                            {{PolicyNo}}</span>
+                        </div>
+                      </div>
+                      <input class="form-control textfield-label" style="padding-left: 100px;"
+                        [(ngModel)]="policyNumber" formControlName="policyNumber"
+                        [ngClass]="(this.policyNumberRequiredMessage != '')?'form-control-invalid': 'form-control' "
+                        placeholder="Policy Number" required />
+                      <div *ngIf="this.policyNumberRequiredMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.policyNumberRequiredMessage}}
+                      </div>
+                      <div *ngIf="addMemberForm.get(['householdDemographicForm','policyNumber']).hasError('pattern')"
+                        class="small text-danger mt-1">{{PolicyNumAlp}}
+                      </div>
+                      <div *ngIf="addMemberForm.get(['householdDemographicForm','policyNumber']).hasError('maxlength')"
+                        class="small text-danger mt-1">{{PolicyNumMax}}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div style="position:absolute; padding-left: 8px;width: 120px;">
+                        <div class="input-group-prepend span-input"><span class="input-group-text span-input-data pe-5">
+                            <label>{{EffectiveFrom}} </label></span>
+                        </div>
+                      </div>
+                      <input formControlName="effectiveFrom" [(ngModel)]="effectiveFrom" style="padding-left: 130px;"
+                        id="effectiveFrom" [(bsValue)]="this.bsValEffectiveFrom" class="form-control textfield-label"
+                        maxlength="10"
+                        [ngClass]="(addMemberForm.get(['householdDemographicForm','effectiveFrom']).errors && myform.submitted)?'form-control-invalid': 'form-control'"
+                        (bsValueChange)="selectEffectiveFromDate('effectiveFrom')" placeholder="mm/dd/yyyy"
+                        autocomplete="off" (keydown.tab)="closeCalendarMedical('effectiveFrom')"
+                        (keydown.enter)="closeCalendarMedical('effectiveFrom')" bsDatepicker
+                        (change)="clickEffectiveFrom('effectiveFrom')" />
+                      <div style="float:right;position: relative;">
+                        <i style="position: absolute;"><img
+                            style="cursor: pointer;margin-left: -33px;margin-top: -84px;"
+                            src="assets/images/icons/calendar.svg" /></i>
+                      </div>
+                      <div *ngIf="this.effectiveFromErrorMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.effectiveFromErrorMessage}}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div style="position:absolute; padding-left: 8px;width: 110px;">
+                        <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">
+                            {{Termination}} </span>
+                        </div>
+                      </div>
+                      <input formControlName="termination" [(ngModel)]="termination" style="padding-left: 115px;"
+                        class="form-control textfield-label" maxlength="10" id="termination"
+                        [(bsValue)]="this.bsValTermination"
+                        [ngClass]="(addMemberForm.get(['householdDemographicForm','termination']).errors && myform.submitted)?'form-control-invalid': 'form-control'"
+                        placeholder="mm/dd/yyyy" autocomplete="off" (keypress)='keyPressTermination($event)'
+                        (bsValueChange)="selectTerminationDate('termination')" #datePicker
+                        (change)="clickTermination('termination')" (keydown.tab)="closeCalendarMedical('termination')"
+                        (keydown.enter)="closeCalendarMedical('termination')" bsDatepicker />
+                      <div style="float:right;position: relative;">
+                        <i style="position: absolute;"><img
+                            style="cursor: pointer;margin-left: -33px;margin-top: -84px;"
+                            src="assets/images/icons/calendar.svg" /></i>
+                      </div>
+                      <div *ngIf="this.terminationErrorMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.terminationErrorMessage}}
+                      </div>
+                    </div>
+                  </div>
+                  <!--Follow up questions-->
+                  <div class="col-xs-12 col-md-12 col-sm-12 d-flex mt-3 mx-2"
+                    *ngIf="addMemberForm.get(['householdDemographicForm','isInsurance']).hasError('required') && myform.submitted"
+                    class="small text-danger mt-1">{{YesOrNo}}</div>
+                  <div class="col-xs-10 col-md-10 col-sm-10 float-left mt-2 mx-2"
+                    *ngIf="this.isInsuranceRequiredMessage != '' " class="small text-danger mt-1">{{YesOrNo}}</div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+            <hr class="col-xs-12 col-md-12 col-sm-12 mt-3" />
+            <mat-accordion>
+              <mat-expansion-panel [expanded]="panelOpenStateResource === false && panelOpenStateIncome === true"
+                (opened)="panelOpenStateIncome = true" (closed)="panelOpenStateIncome = false" hideToggle="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="col-xs-12 col-md-12 col-sm-12 d-flex mx-1">
+                      <label class="dashboard-subtile-p1">{{Income}}</label>
+                    </div>
+                  </mat-panel-title>
+                  <md-icon *ngIf="!panelOpenStateIncome" class="enabledDiv"><img src="assets/images/icons/plus-icon.svg"
+                      class="plus-icon" />
+                  </md-icon>
+                  <md-icon *ngIf="panelOpenStateIncome" class="enabledDiv"><img src="assets/images/icons/minus-icon.svg"
+                      class="plus-icon" />
+                  </md-icon>
+                </mat-expansion-panel-header>
+                <div class="col-xs-12 col-md-12 col-sm-12 mx-1">
+                  <div class="col-xs-12 col-md-12 col-sm-12 mb-2" *ngIf="this.showIncomeTables == true">
+                    <div class="col-xs-12 col-md-12 col-sm-12 mt-2 d-flex"
+                      style="background-color: #9DACBF;border-radius: 8px;">
+                      <div class="col-xs-6 col-md-6 col-sm-6 px-2 py-2">
+                        <label class="dashboard-p2">{{IncomeType1}}</label>
+                      </div>
+                      <div class="col-xs-4 col-md-4 col-sm-4 px-2 py-2">
+                        <label class="dashboard-p2">{{MonthlyGrossPay}}</label>
+                      </div>
+                      <div class="col-xs-2 col-md-2 col-sm-2 px-2 py-2">
+                        <label></label>
+                      </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-sm-12 mt-2 d-flex" style="border-radius: 8px;"
+                      *ngFor="let data of incomeResult">
+                      <div class="col-xs-6 col-md-6 col-sm-6 px-2 py-2">
+                        <label class="dashboard-p2">{{data.incomeType}}</label>
+                      </div>
+                      <div class="col-xs-4 col-md-4 col-sm-4 px-2 py-2">
+                        <label class="dashboard-p2">$ {{data.calculatedMonthlyIncome}}</label>
+                      </div>
+                      <div class="col-xs-2 col-md-2 col-sm-2 px-2 py-2 text-end">
+                        <img src="assets/images/icons/edit-grey-icon.svg" class="px-3 pointer enabledDiv"
+                          (click)="editIncomeValues(data.Id)" tooltip={{editToolTip}} />
+                        <img src="assets/images/icons/delete-grey-icon.svg" class="px-3 pointer"
+                          (click)="deleteIncomeValues(data.Id)" tooltip={{deleteToolTip}} />
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="this.addIncomeOptionFlag == true && this.relation == 'Self' &&
+                   this.showIncomeTables != true && this.totalCount == '1' && this.totalMembers == 1"
+                    class="col-xs-12 col-md-12 col-sm-12 mt-1 mb-4">
+                    <span class="py-2 px-1">
+                      <img src="assets/images/icons/background-plusIcon.svg" (click)="SetData('Income')"
+                        class="pointer" /></span>
+                    <label class="dashboard-p2 mx-2">{{this.addincomeContent}}</label>
+                  </div>
+                  <div *ngIf="this.addIncomeOptionFlag == true && this.relation == 'Self' &&
+                   this.showIncomeTables != true && this.totalCount == '1' && this.totalMembers > 1"
+                    class="col-xs-12 col-md-12 col-sm-12 mt-1 mb-4">
+                    <span class="py-2 px-1">
+                      <img src="assets/images/icons/background-plusIcon.svg" (click)="incomeFields()"
+                        class="pointer" /></span>
+                    <label class="dashboard-p2 mx-2">{{this.addincomeContent}}</label>
+                  </div>
+                  <div *ngIf="this.addIncomeOptionFlag == true && this.relation == 'Self' &&
+                   this.showIncomeTables != true && this.totalCount != '1'"
+                    class="col-xs-12 col-md-12 col-sm-12 mt-1 mb-4">
+                    <span class="py-2 px-1">
+                      <img src="assets/images/icons/background-plusIcon.svg" (click)="incomeFields()"
+                        class="pointer" /></span>
+                    <label class="dashboard-p2 mx-2">{{this.addincomeContent}}</label>
+                  </div>
+                  <div *ngIf="this.addIncomeOptionFlag == true && this.relation == 'Self' &&
+                    this.showIncomeTables == true " class="col-xs-12 col-md-12 col-sm-12 mt-1 mb-4">
+                    <span class="py-2 px-1">
+                      <img src="assets/images/icons/background-plusIcon.svg" (click)="incomeFields()"
+                        class="pointer" /></span>
+                    <label class="dashboard-p2 mx-2">{{this.addincomeContent}}</label>
+                  </div>
+                  <div *ngIf="this.addIncomeOptionFlag == true && (this.relation == '' || this.relation != 'Self') "
+                    class="col-xs-12 col-md-12 col-sm-12 mt-1 mb-4">
+                    <span class="py-2 px-1">
+                      <img src="assets/images/icons/background-plusIcon.svg" (click)="incomeFields()"
+                        class="pointer" /></span>
+                    <label class="dashboard-p2 mx-2">{{this.addincomeContent}}</label>
+                  </div>
+                  <div class="col-xs-12 col-md-12 col-sm-12 mt-4" *ngIf="this.incomeFlag == true">
+                    <!-- IncomeForm -->
+                    <div formGroupName="householdIncomeForm" class="col-xs-12 col-md-12 col-sm-12 row g-3">
+                      <label class="dashboard-p2">{{EditIncome}}</label>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'" include="form-input-select()"
+                        style="position: relative;">
+                        <select class="form-select form-select-sm dropdown-select-label" id="incomeType"
+                          formControlName="incomeType" [(ngModel)]="incomeType" aria-label="form-select-sm example"
+                          [ngClass]="{'withFlag': this.incomebuttonFlag, 'withoutFlag':!this.incomebuttonFlag,
+                          'form-select-invalid':addMemberForm.get(['householdIncomeForm','incomeType']).errors && this.isIncomeClicked==true}"
+                          onchange="document.getElementById('incomeType').style.color='#546073'">
+                          <option value="" selected hidden disabled>{{IncomeType1}}</option>
+                          <option *ngFor="let data of this.incomeval | keyvalue" value="{{data.value}}">{{data.value}}
+                          </option>
+                        </select>
+                        <div
+                          *ngIf="addMemberForm.get(['householdIncomeForm','incomeType']).hasError('required') && this.isIncomeClicked==true"
+                          class="small text-danger mt-1">{{IncomeTypeReq}}</div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'"
+                        include="form-input-select()" style="position: relative;">
+                        <select class="form-select form-select-sm dropdown-select-label" id="currentStatus"
+                          formControlName="currentStatus" [(ngModel)]="currentStatus"
+                          aria-label="form-select-sm example"
+                          [ngClass]="{'form-select-invalid':addMemberForm.get(['householdIncomeForm','currentStatus']).errors && this.isIncomeClicked==true }">
+                          <option value="" hidden disabled>{{incomeStatus}}</option>
+                          <option *ngFor="let data of this.incomeCurrentStatusVal | keyvalue" value="{{data.value}}"
+                            selected="Current">
+                            {{data.value}}</option>
+                        </select>
+                        <div
+                          *ngIf="addMemberForm.get(['householdIncomeForm','currentStatus']).hasError('required') && this.isIncomeClicked==true"
+                          class="small text-danger mt-1">{{IncomeStatus}}</div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'">
+                        <label class="dashboard-p2 pt-2 vertical-align">{{verificationLabel}}</label>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'">
+                        <select class="form-select form-select-sm dropdown-select-label"
+                          [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                          *ngIf="this.showAdvocatePanel == true" id="acceptStatus" formControlName="acceptStatus"
+                          [(ngModel)]="acceptStatus" aria-label="form-select-sm example"
+                          [ngClass]="{'withFlag': this.incomebuttonFlag, 'withoutFlag':!this.incomebuttonFlag,
+                          'form-select-invalid':addMemberForm.get(['householdIncomeForm','acceptStatus']).errors && this.isIncomeClicked==true}"
+                          onchange="document.getElementById('acceptStatus').style.color='#546073'">
+                          <option value=" " selected hidden>Verification Status</option>
+                          <option *ngFor="let data of this.verificationVal | keyvalue" value="{{data.value}}">
+                            {{data.value}}</option>
+                        </select>
+                        <input type="text" class="form-control textfield-label" [(ngModel)]="acceptStatus"
+                          id="acceptStatus" formControlName="acceptStatus" value="Accepted, Not Verified" readonly
+                          style="pointer-events: none;" *ngIf="this.showAdvocatePanel == false">
+                        <div
+                          *ngIf="addMemberForm.get(['householdIncomeForm','acceptStatus']).hasError('required') && this.isIncomeClicked==true"
+                          class="small text-danger mt-1">{{VerificationReq}}</div>
+                      </div>
+                      <div class=""
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'">
+                        <label class="dashboard-p2 pt-2 vertical-align">{{GrossPay1}}</label>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'">
+                        <div class="col-md-12 col-sm-12 col-xs-12 row g-1">
+                          <div class="col-md-6 fullWidthTab" style="position: relative;">
+                            <div class="d-flex" style="position:absolute;padding-left: 8px;">
+                              <div class="input-group-prepend span-input"><span
+                                  class="input-group-text span-input-data">$ </span> </div>
+                            </div>
+                            <div>
+                              <input type="text" class="form-control textfield-label" (blur)="validate('income')"
+                                style="padding-left: 43px;width: 98%;" id="grossPay" placeholder="Income Amount"
+                                [(ngModel)]="grossPay" formControlName="grossPay" maxlength="15"
+                                [ngClass]="{'form-control-invalid':addMemberForm.get(['householdIncomeForm','grossPay']).errors && this.isIncomeClicked==true}">
+                              <div
+                                *ngIf="addMemberForm.get(['householdIncomeForm','grossPay']).hasError('required') && this.isIncomeClicked==true"
+                                class="small text-danger mt-1">{{IncomeReq}}</div>
+                              <div *ngIf="addMemberForm.get(['householdIncomeForm','grossPay']).hasError('pattern')"
+                                class="small text-danger mt-1">{{IncomeNum}}</div>
+                              <div *ngIf="addMemberForm.get(['householdIncomeForm','grossPay']).hasError('max')"
+                                class="small text-danger mt-1">{{IncomeExceed}}</div>
+                            </div>
+                          </div>
+                          <div class="col-md-6 fullWidthTab">
+                            <div include="form-input-select()" style="position: relative;">
+                              <select class="form-select form-select-sm dropdown-select-label" id="grossPayPeriod"
+                                [(ngModel)]="grossPayPeriod" formControlName="grossPayPeriod"
+                                aria-label="form-select-sm example"
+                                [ngClass]="{'form-select-invalid':addMemberForm.get(['householdIncomeForm','grossPayPeriod']).errors && this.isIncomeClicked==true}"
+                                style="width: 102%;">
+                                <option value="" style="color: #B3B8C0;" hidden disabled>{{GrossPay1}}</option>
+                                <option *ngFor="let data of this.grossPayPeriodVal | keyvalue" value="{{data.value}}"
+                                  selected="Monthly">
+                                  {{data.value}}</option>
+                              </select>
+                            </div>
+                            <div
+                              *ngIf="addMemberForm.get(['householdIncomeForm','grossPayPeriod']).hasError('required') && this.isIncomeClicked==true"
+                              class="small text-danger mt-1">Gross pay is required!</div>
+                          </div>
+                        </div>
+                        <label class="col-12 legal-name">{{CalMonthlyIncome}}{{grossPay
+                          | monthlyincome:grossPayPeriod}}</label>
+                        <input type="text" hidden readonly class="dashboard-p2 col-md-3 mx-1 mt-2" style="border: none;"
+                          id="incomecalculatedValue" formControlName="incomecalculatedValue"
+                          [(ngModel)]="incomecalculatedValue">
+                      </div>
+                    </div>
+                    <!-- IncomeForm Address -->
+                    <div formGroupName="IncomeForm" class="col-xs-12 col-md-12 col-sm-12 row g-3 mt-1">
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'">
+                        <label class="dashboard-p2 pt-2 vertical-align">{{ConfirmationContact}}</label>
+                      </div>
+                      <div style="position: relative;"
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'">
+                        <input type="text" class="form-control textfield-label" id="companyName"
+                          [(ngModel)]="companyName" placeholder="Company Name" formControlName="companyName"
+                          maxlength="51"
+                          [ngClass]="{'form-control-invalid':addMemberForm.get(['IncomeForm','companyName']).errors && this.isIncomeClicked==true}">
+                        <div
+                          *ngIf="addMemberForm.get(['IncomeForm','companyName']).hasError('required') && this.isIncomeClicked==true"
+                          class="small text-danger mt-1">{{CompanyNameReq}}</div>
+                        <div *ngIf="addMemberForm.get(['IncomeForm','companyName']).hasError('pattern')"
+                          class="small text-danger mt-1">{{CompanyNameAlp}}</div>
+                        <div *ngIf="addMemberForm.get(['IncomeForm','companyName']).hasError('minlength')"
+                          class="small text-danger mt-1">{{CompanyNameMin}}</div>
+                        <div *ngIf="addMemberForm.get(['IncomeForm','companyName']).hasError('maxlength')"
+                          class="small text-danger mt-1">{{CompanyNameMax}}</div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'"></div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'"
+                        style="position: relative;">
+                        <input type="text" class="form-control textfield-label" id="contactName"
+                          [(ngModel)]="contactName" placeholder="Contact Name" formControlName="contactName"
+                          maxlength="51"
+                          [ngClass]="{'form-control-invalid':addMemberForm.get(['IncomeForm','contactName']).errors && this.isIncomeClicked==true}">
+                        <div *ngIf="addMemberForm.get(['IncomeForm','contactName']).hasError('pattern')"
+                          class="small text-danger mt-1">{{ContactNumAlp}}</div>
+                        <div *ngIf="addMemberForm.get(['IncomeForm','contactName']).hasError('minlength')"
+                          class="small text-danger mt-1">{{ContactNameMin}}</div>
+                        <div *ngIf="addMemberForm.get(['IncomeForm','contactName']).hasError('maxlength')"
+                          class="small text-danger mt-1">{{ContactNameMax}}</div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'"></div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'"
+                        style="position: relative;">
+                        <input type="text" class="form-control textfield-label" id="streetAddress"
+                          [(ngModel)]="streetAddress" placeholder="Street Address" formControlName="streetAddress"
+                          maxlength="251"
+                          [ngClass]="{'form-control-invalid':addMemberForm.get(['IncomeForm','streetAddress']).errors && this.isIncomeClicked==true}">
+                        <div
+                          *ngIf="addMemberForm.get(['IncomeForm','streetAddress']).hasError('maxlength') && this.isIncomeClicked==true"
+                          class="small text-danger mt-1">{{AddressMax}}</div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'">
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'"
+                        style="position: relative;">
+                        <input type="text" class="form-control textfield-label" id="zipCode" [(ngModel)]="zipCode"
+                          formControlName="zipCode" placeholder="Zip Code" maxlength="51" (keyup)="getStateAndCity()"
+                          (keydown)="check($event)"
+                          [ngClass]="{'form-control-invalid':addMemberForm.get(['IncomeForm','zipCode']).errors && this.isIncomeClicked==true}">
+                        <div *ngIf="addMemberForm.get(['IncomeForm','zipCode']).hasError('pattern')"
+                          class="small text-danger mt-1" style="white-space: nowrap;">{{ZipNum}}
+                        </div>
+                        <div *ngIf="addMemberForm.get(['IncomeForm','zipCode']).hasError('invalid')"
+                          class="small text-danger mt-1" style="white-space: nowrap;">Enter a valid Zip Code!</div>
+                        <div *ngIf="addMemberForm.get(['IncomeForm','zipCode']).hasError('minlength')"
+                          class="small text-danger mt-1" style="white-space: nowrap;">{{ZipMin}}</div>
+                        <div *ngIf="addMemberForm.get(['IncomeForm','zipCode']).hasError('maxlength')"
+                          class="small text-danger mt-1" style="white-space: nowrap;">{{ZipMax}}
+                        </div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'"></div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'">
+                        <div class="col-md-12 col-xs-12 col-sm-12 row g-1">
+                          <div class="col-md-6" style="position: relative;">
+                            <input type="text" class="form-control textfield-label disabledDiv" id="city"
+                              [(ngModel)]="city" placeholder="City" formControlName="city" maxlength="51"
+                              [ngClass]="{'form-control-invalid':addMemberForm.get(['IncomeForm','city']).errors && this.isIncomeClicked==true}">
+                            <div *ngIf="addMemberForm.get(['IncomeForm','city']).hasError('pattern')"
+                              class="small text-danger mt-1">{{CityAlp}}</div>
+                            <div *ngIf="addMemberForm.get(['IncomeForm','city']).hasError('maxlength')"
+                              class="small text-danger mt-1">{{CityMax}}</div>
+                          </div>
+                          <div class="col-md-6">
+                            <div style="position: relative;">
+                              <input type="text" class="form-control textfield-label disabledDiv" id="state"
+                                [(ngModel)]="state" formControlName="state" placeholder="State" style="width: 100%;"
+                                [ngClass]="{'form-control-invalid':addMemberForm.get(['IncomeForm','state']).errors && this.isIncomeClicked==true}" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'"></div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'"
+                        style="position: relative;">
+                        <div class=" d-flex" style="position:absolute;padding-left: 8px;">
+                          <div class="input-group-prepend span-input"><span
+                              class="input-group-text span-input-data">Cell</span> </div>
+                        </div>
+                        <div class="mt-2" style="position:absolute; padding-left: 60px;" include="form-input-select()">
+                          <select class="dropdown-select-label" style="border:none; outline:none;width:48px;"
+                            [(ngModel)]="countryCode" formControlName="countryCode">
+                            <option value="" hidden disabled>+1</option>
+                            <option *ngFor="let data of this.phoneCode | keyvalue" value="{{data.value}}">
+                              +{{data.value}}
+                            </option>
+                          </select>
+                        </div>
+                        <input type="text" class="form-control textfield-label" style="padding-left: 120px;"
+                          id="cellNumber" placeholder="Cell Number" mask="(000) 000-0000" [(ngModel)]="cellNumber"
+                          formControlName="cellNumber"
+                          [ngClass]="{'form-control-invalid':addMemberForm.get(['IncomeForm','cellNumber']).errors && this.isIncomeClicked==true}">
+                        <div *ngIf="addMemberForm.get(['IncomeForm','cellNumber']).hasError('minlength')"
+                          class="small text-danger mt-1">{{CellVal}}</div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'"></div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'"
+                        style="position: relative;">
+                        <div class="d-flex" style="position:absolute;padding-left: 8px;">
+                          <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">Fax
+                            </span> </div>
+                        </div>
+                        <div class="mt-2" style="position:absolute; padding-left: 60px;" include="form-input-select()">
+                          <select class="dropdown-select-label" style="border:none; outline:none;width:48px;">
+                            <option value="" hidden disabled>+1</option>
+                            <option *ngFor="let data of this.phoneCode | keyvalue" value="{{data.value}}">
+                              +{{data.value}}
+                            </option>
+                          </select>
+                        </div>
+                        <input type="text" class="form-control textfield-label" style="padding-left: 120px;"
+                          id="faxNumber" [(ngModel)]="faxNumber" mask="(000) 000-0000" phone-input
+                          placeholder="Fax Number" formControlName="faxNumber"
+                          [ngClass]="{'form-control-invalid':addMemberForm.get(['IncomeForm','faxNumber']).errors && this.isIncomeClicked==true}">
+                        <div *ngIf="addMemberForm.get(['IncomeForm','faxNumber']).hasError('minlength')"
+                          class="small text-danger mt-1">{{FaxNumVal}}</div>
+                      </div>
+                    </div>
+                    <div class="col-xs-10 col-md-10 col-sm-10 d-flex mt-4">
+                      <button type="submit" class="btn btn-outline login-text-field enabledDiv"
+                        style="border: 1px solid #2494ED;margin-right: 10px;"
+                        (click)="clearhouseholdIncomeForm()">Cancel</button>
+                      <button type="submit" class="btn btn-primary login-text-field"
+                        style="width:200px;background-color: 1px solid #2494ED;color: #FFFFFF;"
+                        *ngIf="this.incomebuttonFlag == true"
+                        (click)=updateHouseHoldIncomeDetails(addMemberForm.value)>Add
+                        Income</button>
+                      <button type="submit" class="btn btn-primary login-text-field"
+                        style="width:200px;background-color: 1px solid #2494ED;color: #FFFFFF;"
+                        *ngIf="this.incomebuttonFlag == false"
+                        (click)=updateHouseHoldIncomeDetails(addMemberForm.value)>{{UpdateIncome}}</button>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+            <hr class="col-xs-12 col-md-12 col-sm-12 mt-2" />
+            <mat-accordion>
+              <mat-expansion-panel [expanded]="panelOpenStateIncome === false && panelOpenStateResource === true"
+                (opened)="panelOpenStateResource = true" (closed)="panelOpenStateResource = false" hideToggle="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="col-xs-12 col-md-12 col-sm-12 d-flex mx-1">
+                      <label class="dashboard-subtile-p1">{{Resource}}</label>
+                    </div>
+                  </mat-panel-title>
+                  <md-icon *ngIf="!panelOpenStateResource" class="enabledDiv"><img
+                      src="assets/images/icons/plus-icon.svg" class="plus-icon" /></md-icon>
+                  <md-icon *ngIf="panelOpenStateResource" class="enabledDiv"><img
+                      src="assets/images/icons/minus-icon.svg" class="plus-icon" /></md-icon>
+                </mat-expansion-panel-header>
+                <div class="col-xs-12 col-md-12 col-sm-12  mb-2 mx-2">
+                  <div class="col-xs-12 col-md-12 col-sm-12 mb-2" *ngIf="this.showResourceTables == true">
+                    <div class="col-xs-12 col-md-12 col-sm-12 mt-2 d-flex"
+                      style="background-color: #9DACBF;border-radius: 8px;">
+                      <div class="col-xs-6 col-md-6 col-sm-6 px-2 py-2">
+                        <label class="dashboard-p2">{{ResourceType1}}</label>
+                      </div>
+                      <div class="col-xs-4 col-md-4 col-sm-4 px-2 py-2">
+                        <label class="dashboard-p2">{{ResourceValue}}</label>
+                      </div>
+                      <div class="col-xs-2 col-md-2 col-sm-2 px-2 py-2">
+                        <label></label>
+                      </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-sm-12 mt-2 d-flex" style="border-radius: 8px;"
+                      *ngFor="let data of resourceResult">
+                      <div class="col-xs-6 col-md-6 col-sm-6 px-2 py-2">
+                        <label class="dashboard-p2">{{data.resourceType}}</label>
+                      </div>
+                      <div class="col-xs-4 col-md-4 col-sm-4 px-2 py-2">
+                        <label class="dashboard-p2">$ {{data.calculatedValue}}</label>
+                      </div>
+                      <div class="col-xs-2 col-md-2 col-sm-2 px-2 py-2 text-end">
+                        <img src="assets/images/icons/edit-grey-icon.svg" class="px-3 pointer enabledDiv"
+                          (click)="editResourceValues(data.Id)" tooltip={{editToolTip}} />
+                        <img src="assets/images/icons/delete-grey-icon.svg" class="px-3 pointer"
+                          (click)="deleteResourceValues(data.Id)" tooltip={{deleteToolTip}} />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-md-12 col-sm-12 mt-1 mb-4" *ngIf="this.resourceAddFlag == true && this.relation == 'Self' && 
+                  this.showResourceTables != true && this.totalCount == '1' && this.totalMembers == 1">
+                    <span class="py-2 px-1"><img src="assets/images/icons/background-plusIcon.svg"
+                        (click)="SetData('Resource')" class="pointer" /></span>
+                    <label class="dashboard-p2 mx-2">{{this.addresourceContent}}</label>
+                  </div>
+                  <div class="col-xs-12 col-md-12 col-sm-12 mt-1 mb-4" *ngIf="this.resourceAddFlag == true && this.relation == 'Self' && 
+                  this.showResourceTables != true && this.totalCount == '1' && this.totalMembers > 1">
+                    <span class="py-2 px-1"><img src="assets/images/icons/background-plusIcon.svg"
+                        (click)="resourceFields()" class="pointer" /></span>
+                    <label class="dashboard-p2 mx-2">{{this.addresourceContent}}</label>
+                  </div>
+                  <div class="col-xs-12 col-md-12 col-sm-12 mt-1 mb-4" *ngIf="this.resourceAddFlag == true && this.relation == 'Self' && 
+                  this.showResourceTables != true && this.totalCount != '1'">
+                    <span class="py-2 px-1"><img src="assets/images/icons/background-plusIcon.svg"
+                        (click)="resourceFields()" class="pointer" /></span>
+                    <label class="dashboard-p2 mx-2">{{this.addresourceContent}}</label>
+                  </div>
+                  <div class="col-xs-12 col-md-12 col-sm-12 mt-1 mb-4"
+                    *ngIf="this.resourceAddFlag == true && this.relation == 'Self' && this.showResourceTables == true">
+                    <span class="py-2 px-1"><img src="assets/images/icons/background-plusIcon.svg"
+                        (click)="resourceFields()" class="pointer" /></span>
+                    <label class="dashboard-p2 mx-2">{{this.addresourceContent}}</label>
+                  </div>
+                  <div class="col-xs-12 col-md-12 col-sm-12 mt-1 mb-4"
+                    *ngIf="this.resourceAddFlag == true && (this.relation == '' || this.relation != 'Self') ">
+                    <span class="py-2 px-1"><img src="assets/images/icons/background-plusIcon.svg"
+                        (click)="resourceFields()" class="pointer" /></span>
+                    <label class="dashboard-p2 mx-2">{{this.addresourceContent}}</label>
+                  </div>
+                  <div class="col-xs-12 col-md-12 col-sm-12  mt-4" *ngIf="this.resourceFlag == true">
+                    <div formGroupName="householdResourceForm" class="col-xs-12 col-md-12 col-sm-12 row g-3">
+                      <label class="dashboard-p2">{{EditResource}}</label>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'" include="form-input-select()"
+                        style="position:relative;">
+                        <select class="form-select form-select-sm dropdown-select-label" id="resourceType"
+                          [(ngModel)]="resourceType" formControlName="resourceType" aria-label="form-select-sm example"
+                          [ngClass]="{'withFlag': this.resourcebuttonFlag, 'withoutFlag':!this.resourcebuttonFlag,
+                        'form-select-invalid':addMemberForm.get(['householdResourceForm','resourceType']).errors && this.isResourceClicked==true}"
+                          onchange="document.getElementById('resourceType').style.color='#546073'">
+                          <option value="" selected hidden disabled>Resource Type</option>
+                          <option *ngFor="let data of this.resourceVal | keyvalue" value="{{data.value}}">{{data.value}}
+                          </option>
+                        </select>
+                        <div
+                          *ngIf="addMemberForm.get(['householdResourceForm','resourceType']).hasError('required')&& this.isResourceClicked==true"
+                          class="small text-danger mt-1">{{ResourceReq}} </div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'"
+                        include="form-input-select()" style="position: relative;">
+                        <select class="form-select form-select-sm dropdown-select-label" id="resourceStatus"
+                          [(ngModel)]="resourceStatus" formControlName="resourceStatus"
+                          aria-label="form-select-sm example"
+                          [ngClass]="{
+                          'form-select-invalid':addMemberForm.get(['householdResourceForm','resourceStatus']).errors && this.isResourceClicked==true}">
+                          <option value="" hidden disabled>{{ResourceStatus}}</option>
+                          <option *ngFor="let data of this.resourceCurrentVal | keyvalue" value="{{data.value}}"
+                            selected="Currently Owned">
+                            {{data.value}}</option>
+                        </select>
+                        <div
+                          *ngIf="addMemberForm.get(['householdResourceForm','resourceStatus']).hasError('required')&& this.isResourceClicked==true"
+                          class="small text-danger mt-1">{{ResourcestatusReq}}</div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'">
+                        <label class="dashboard-p2 pt-2 vertical-align">{{verificationLabel}}</label>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'">
+                        <select *ngIf="this.showAdvocatePanel == true"
+                          class="form-select form-select-sm dropdown-select-label" id="resourceAcceptStatus"
+                          formControlName="resourceAcceptStatus" [(ngModel)]="resourceAcceptStatus"
+                          aria-label="form-select-sm example"
+                          [ngClass]="{'withFlag': this.resourcebuttonFlag, 'withoutFlag':!this.resourcebuttonFlag,
+                          'form-select-invalid':addMemberForm.get(['householdResourceForm','resourceAcceptStatus']).errors && this.isResourceClicked==true}"
+                          onchange="document.getElementById('resourceAcceptStatus').style.color='#546073'">
+                          <option value=" " selected hidden>Verification Status</option>
+                          <option *ngFor="let data of this.verificationVal | keyvalue" value="{{data.value}}">
+                            {{data.value}}</option>
+                        </select>
+                        <input type="text" *ngIf="this.showAdvocatePanel == false" class="form-control textfield-label"
+                          [(ngModel)]="resourceAcceptStatus" id="resourceAcceptStatus"
+                          formControlName="resourceAcceptStatus" value="Accepted, Not Verified" readonly
+                          style="pointer-events: none;">
+                        <div
+                          *ngIf="addMemberForm.get(['householdResourceForm','resourceAcceptStatus']).hasError('required')&& this.isResourceClicked==true"
+                          class="small text-danger mt-1"> {{VerificationReq}}</div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'">
+                        <label class="dashboard-p2 pt-2 vertical-align">{{MarketValue}}</label>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'">
+                        <div class="col-xs-12 col-md-12 col-sm-12 row g-1">
+                          <div class="col-md-12 col-lg-6" style="position: relative;">
+                            <div class="d-flex" style="position:absolute;padding-left: 8px;">
+                              <div class="input-group-prepend span-input"><span
+                                  class="input-group-text span-input-data">$ </span> </div>
+                            </div>
+                            <div class="col-12 d-flex">
+                              <input type="text" class="form-control textfield-label" id="resourceIncomeAmt"
+                                placeholder="Amount" formControlName="resourceIncomeAmt" (blur)="validate('resource')"
+                                [(ngModel)]="resourceIncomeAmt" maxlength="15" style="padding-left: 43px;width: 98%;"
+                                [ngClass]="{'form-control-invalid':addMemberForm.get(['householdResourceForm','resourceIncomeAmt']).errors && this.isResourceClicked==true}">
+                            </div>
+                            <div
+                              *ngIf="addMemberForm.get(['householdResourceForm','resourceIncomeAmt']).hasError('required')&& this.isResourceClicked==true"
+                              class="small text-danger mt-1">{{IncomeReq}}</div>
+                            <div
+                              *ngIf="addMemberForm.get(['householdResourceForm','resourceIncomeAmt']).hasError('pattern')"
+                              class="small text-danger mt-1">{{IncomeErr}}</div>
+                            <div
+                              *ngIf="addMemberForm.get(['householdResourceForm','resourceIncomeAmt']).hasError('max')"
+                              class="small text-danger mt-1">{{IncomeExceed}}</div>
+                          </div>
+                          <div class="col-md-12 col-lg-6" style="position: relative;">
+                            <input type="text" class="form-control textfield-label" id="ownership" placeholder=""
+                              formControlName="ownership" [(ngModel)]="ownership" maxlength="7" style="width: 102%;"
+                              [ngClass]="{'form-select-invalid':addMemberForm.get(['householdResourceForm','ownership']).errors && this.isResourceClicked==true}">
+                            <span class="input-group-text right-span-input-data rightIcon">%</span>
+                            <div
+                              *ngIf="addMemberForm.get(['householdResourceForm','ownership']).hasError('required') && this.isResourceClicked==true"
+                              class="small text-danger mt-1">{{PercentageReq}}</div>
+                            <div *ngIf="addMemberForm.get(['householdResourceForm','ownership']).hasError('pattern')"
+                              class="small text-danger mt-1">{{Percentagedeci}}</div>
+                            <div *ngIf="addMemberForm.get(['householdResourceForm','ownership']).hasError('max')"
+                              class="small text-danger mt-1">{{PercentageMax}}</div>
+                          </div>
+                          <label class=" mx-1 mt-2 col-xs-10 col-md-10 col-sm-10  legal-name">{{ResourceVal}}
+                            {{resourceIncomeAmt | resourceValue:ownership}}</label>
+                          <input type="text" readonly hidden class="col-xs-3 col-md-3 col-sm-3 mx-2 mt-2"
+                            style="border: none;" id="resourcecalculatedValue" formControlName="resourcecalculatedValue"
+                            [(ngModel)]="resourcecalculatedValue">
+                        </div>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-5'">
+                        <label class="dashboard-p2">{{LocationRealProperty}}</label>
+                      </div>
+                      <div
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-5' :'col-md-6' "
+                        [ngClass]="this.showAdvocatePanel == true?'col-md-6':'col-md-7 col-lg-6'">
+                        <div class="col-xs-12 col-md-12 col-sm-12 " style="position: relative;">
+                          <textarea type="text" class="form-control textfield-label" id="locationName" placeholder=""
+                            formControlName="locationName" [(ngModel)]="locationName"
+                            style="padding: 15px 0 80px 10px;overflow: hidden;resize: none" maxlength="51"
+                            [ngClass]="{'form-control-invalid':addMemberForm.get(['householdResourceForm','locationName']).errors && this.isResourceClicked==true}"></textarea>
+                          <div
+                            *ngIf="addMemberForm.get(['householdResourceForm','locationName']).hasError('required') && this.isResourceClicked==true"
+                            class="small text-danger mt-1">{{LocationReq}}</div>
+                          <div
+                            *ngIf="addMemberForm.get(['householdResourceForm','locationName']).hasError('maxlength') && this.isResourceClicked==true"
+                            class="small text-danger mt-1">{{LocationMax}}</div>
+                        </div>
+                      </div>
+                      <div class="col-xs-10 col-md-10 col-sm-10 d-flex mt-4">
+                        <button type="submit" class="btn btn-outline login-text-field enabledDiv"
+                          style="border: 1px solid #2494ED;margin-right: 10px;"
+                          (click)="clearhouseholdResourceForm()">{{Cancel}}</button>
+                        <button type="submit" class="btn btn-primary login-text-field"
+                          style="width:200px;background-color: 1px solid #2494ED;color: #FFFFFF;"
+                          (click)="updateHouseHoldResourceDetails(addMemberForm.value)">{{this.resourcebuttonText}}</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+          <hr style="margin-top: 0px;width: 100%;" class="col-xs-12 col-md-12 col-sm-12 mt-1" />
+          <div style="margin-top: 10px;" class="mt-3">
+            <button type="submit" class="btn btn-outline mb-3 login-text-field enabledDiv"
+              style="border: 1px solid #2494ED;margin-right: 10px;" (click)="memberList()">{{Cancel}}</button>
+            <button type="submit" class="btn btn-primary mb-3 login-text-field"
+              style="background-color: 1px solid #2494ED;color: #FFFFFF;"
+              (click)="CreateNewMember(addMemberForm.value)">{{Save}}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

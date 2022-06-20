@@ -1,0 +1,88 @@
+<div class="col-xs-12 col-md-12 col-sm-12 mt-3 pt-5 pb-5" style="height: 100vh;" [ngClass]=this.currentTheme>
+    <app-spinner-overlay *ngIf="this.showLoader == true">
+    </app-spinner-overlay>
+    <form autocomplete="off" [formGroup]="verificationForm" #myform="ngForm" class="pb-4">
+        <input autocomplete="false" name="hidden" type="text" style="display:none;">
+        <div class="col-xs-11 col-md-11 col-sm-11">
+            <label class="mb-3"><b class="dashboard-p1 ">{{provideSSN}}</b></label>
+            <p class="dashboard-select-label pt-2 pb-2">{{VerificationMsg1}} <br> {{VerificationMsg2}}</p>
+            <div class="row">
+                <div class="col-md-4" style="position: relative;">
+                    <div class="d-flex" style="position:absolute;padding-left: 8px;">
+                        <div class="input-group-prepend span-input"><span class="input-group-text span-input-data"><img
+                                    src="assets/images/icons/lock-icon.svg" alt="lock-icon"
+                                    style="width: 16px;" /></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2 ps-2 pe-4" style="float:right;">
+                        <i class="mt-2 mx-2" style="position: absolute;cursor: pointer;" (click)="toggleField()">
+                            <img *ngIf="this.fieldType=='password'" src="assets/images/icons/eye-slash.svg" />
+                            <img *ngIf="this.fieldType=='text'" src="assets/images/icons/eye-open.png" />
+                        </i>
+                    </div>
+                    <div>
+                        <input [type]="this.fieldType" class="form-control textfield-label" style="padding-left: 46px;"
+                            id="ssn" placeholder="000-00-0000" [(ngModel)]="ssn" mask="000-00-0000"
+                            formControlName="ssn" (input)="ssnChange($event)"
+                            [ngClass]="verificationForm.get('ssn').hasError('required') && myform.submitted?'form-control-invalid': 'form-control'">
+                    </div>
+                </div>
+                <div *ngIf="verificationForm.get('ssn').hasError('required') && myform.submitted"
+                    class="small text-danger mt-1">{{SSNReq}}</div>
+                <div class="col-md-4" style="position: relative;">
+                    <div style="position: relative;">
+                        <select class="form-select form-select-sm dropdown-select-label" id="reasonNoSSN"
+                            [(ngModel)]="reasonNoSSN" aria-label="form-select-sm example" formControlName="reasonNoSSN"
+                            (change)="noSSNChange()"
+                            [ngClass]="verificationForm.get('reasonNoSSN').hasError('required') && myform.submitted?'form-control-invalid': 'form-control'">
+                            <option value="" hidden disabled>Reason No SSN</option>
+                            <option value=null hidden disabled>Reason No SSN</option>
+                            <option *ngFor="let data of this.reasons | keyvalue" value="{{data.value}}">{{data.value}}
+                            </option>
+                        </select>
+                    </div>
+                    <div *ngIf="verificationForm.get('reasonNoSSN').hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">Kindly select reason for no SSN!</div>
+                </div>
+            </div>
+            <div class="col-md-7" style="background-color: #EFF3F6;">
+                <div class="note mt-2 mb-3">
+                    <img src="assets/images/icons/important.svg" class="important-icon m-12 mb-1 mx-2"
+                        alt="important-img" width="20" />
+                    <label class="dropdown-select-label"> {{SSNPatientId}}</label>
+                </div>
+            </div>
+            <div class="col-md-7 d-flex">
+                <div>
+                    <input class="form-check-input-rememberMe dashboard-p2 pointer-events" type="checkbox"
+                        formControlName="checkValue" [(ngModel)]="checkValue" id="checkValue"
+                        (change)="CheckBoxvalue($event)" [checked]="checkValue" />
+                </div>
+                <a class="dashboard-select-label mx-2 pointer" (click)="open(content)">{{AcceptPrivacyStatement}}</a>
+            </div>
+        </div>
+        <div class="pt-3 mt-4 d-flex">
+            <button type="submit" class="btn btn-primary mb-3 login-button-label px-3 evaluate-btn"
+                (click)="createAssessment(verificationForm.value)"
+                [disabled]="!this.verificationForm.valid || !this.checkValue || !this.HDone || !this.IDone || !this.DDone">{{buttonLabel}}</button>
+        </div>
+    </form>
+</div>
+<ng-template #content let-modal style="width: 100% !important;">
+    <div class="modal-content">
+        <label class="mt-5 mb-3 assessment-sidemenu-label text-align-center">Terms And Conditions</label>
+        <div class="modal-body">
+            <div class="">
+                <label class="dashboard-select-label mx-2 mb-5">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                    sed deiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation.Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit, sed deiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation.Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit, sed deiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation.Lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit, sed deiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</label>
+            </div>
+        </div>
+    </div>
+</ng-template>

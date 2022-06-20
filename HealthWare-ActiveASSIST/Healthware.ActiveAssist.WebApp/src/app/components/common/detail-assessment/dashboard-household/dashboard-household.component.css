@@ -1,0 +1,19 @@
+.form-control:disabled, .form-control[readonly] {
+    background-color: #E9ECEf;
+    opacity: 1;
+}
+.vertical-align{
+    vertical-align: -webkit-baseline-middle;
+}
+.programs-checkbox-sq {
+    width: 1.7rem;
+    height: 1.7rem;
+}
+.programs-checkbox{
+    width: 33px;
+    height: 33px;
+    border-radius: 17px;
+}
+.pointer-events{
+    pointer-events: none;
+}

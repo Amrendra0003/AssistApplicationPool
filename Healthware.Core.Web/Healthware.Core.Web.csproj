@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<PackageId>HealthwareCoreWebLib</PackageId>
+		<Version>1.0.35</Version>
+		<Authors>Healthware</Authors>
+		<Company>Healthware</Company>
+		<IsPackable>true</IsPackable>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<UserSecretsId>23f6ebed-275c-4148-936a-32015f078cf6</UserSecretsId>
+		<ApplicationIcon />
+		<OutputType>Library</OutputType>
+		<StartupObject />
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Healthware.Core\Healthware.Core.csproj" />
+	</ItemGroup>
+
+</Project>

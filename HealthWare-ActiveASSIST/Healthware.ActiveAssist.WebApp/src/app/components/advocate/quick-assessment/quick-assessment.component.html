@@ -1,0 +1,91 @@
+<div class="col-xs-12 col-md-12 col-sm-12 d-flex pt-5 " [ngClass]=this.currentTheme>
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex" id="quick-assessment">
+        <div class="col-xs-2 col-md-2 col-sm-2 pt-5 left-panel-bg page-height">
+            <div class="col-xs-12 col-md-12 col-sm-12 d-flex pt-5 mt-5">
+                <div [ngClass]="(this.demographicsFlag == true)?'dasboard-side-div':''"
+                    class="col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2">
+                    <label (click)="demographics()" class="dashboard-p2 pointer"
+                        [ngClass]="(this.demographicsFlag == true)?'dashboard-side-div-label':''">{{Demographics}}</label>
+                    <span style="position: absolute; right: 10px;">
+                        <img *ngIf="this.DComplete == 'false'" src="assets/images/icons/invalid-icon.svg">
+                        <img *ngIf="this.DComplete == 'true'" src="assets/images/icons/valid-icon.svg">
+                    </span>
+                    <span class="upperCurve" *ngIf="this.demographicsFlag == true"></span>
+                    <span class="lowerCurve" *ngIf="this.demographicsFlag == true"></span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+                <div [ngClass]="(this.insuranceFlag == true)?'dasboard-side-div':''"
+                    class="col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2">
+                    <label (click)="insurance()" class="dashboard-p2 pointer"
+                        [ngClass]="(this.insuranceFlag == true)?'dashboard-side-div-label':''">{{Insurance}}</label>
+                    <span style="position: absolute; right: 10px;">
+                        <img *ngIf="this.IComplete == 'false'" src="assets/images/icons/invalid-icon.svg">
+                        <img *ngIf="this.IComplete == 'true'" src="assets/images/icons/valid-icon.svg">
+                    </span>
+                    <span class="upperCurve" *ngIf="this.insuranceFlag == true"></span>
+                    <span class="lowerCurve" *ngIf="this.insuranceFlag == true"></span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+                <div [ngClass]="(this.householdFlag == true)?'dasboard-side-div':''"
+                    class="col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2">
+                    <label (click)="household()" class="dashboard-p2 pointer"
+                        [ngClass]="(this.householdFlag == true)?'dashboard-side-div-label':''">{{Household}}</label>
+                    <span style="position: absolute; right: 10px;">
+                        <img *ngIf="this.HComplete == 'false'" src="assets/images/icons/invalid-icon.svg">
+                        <img *ngIf="this.HComplete == 'true'" src="assets/images/icons/valid-icon.svg">
+                    </span>
+                    <span class="upperCurve" *ngIf="this.householdFlag == true"></span>
+                    <span class="lowerCurve" *ngIf="this.householdFlag == true"></span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+                <div [ngClass]="(this.generalQuestionsFlag == true)?'dasboard-side-div':''"
+                    class="col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2">
+                    <label (click)="GeneralQuestions()" class="dashboard-p2 pointer"
+                        [ngClass]="(this.generalQuestionsFlag == true)?'dashboard-side-div-label':''">{{GeneralQuestionsMsg}}</label>
+
+                    <span class="upperCurve" *ngIf="this.generalQuestionsFlag == true"></span>
+                    <span class="lowerCurve" *ngIf="this.generalQuestionsFlag == true"></span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+                <div [ngClass]="(this.verificationFlag == true)?'dasboard-side-div':''"
+                    class="col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2">
+                    <label (click)="verification()" class="dashboard-p2 pointer"
+                        [ngClass]="(this.verificationFlag == true)?'dashboard-side-div-label':''">{{Verification}}</label>
+
+                    <span class="upperCurve" *ngIf="this.verificationFlag == true"></span>
+                    <span class="lowerCurve" *ngIf="this.verificationFlag == true"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-10 col-md-10 col-sm-10 right-panel-bg px-4 py-4 body-height">
+            <div class="col-xs-12 col-md-12 col-sm-12">
+                <div class="col-xs-12 col-md-12 col-sm-12 px-5">
+                    <div class="col-xs-12 col-md-11 col-sm-12 d-flex pt-4">
+                        <div class="col-xs-6 col-md-6 col-sm-6 text-align-left">
+                            <label class="dashboard-p1">{{QuickAssessment}}-{{this.patientName}}</label>
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-sm-6 text-align-right">
+                            <button id="qaQmb" class="login-label">{{QMB}}</button>
+                            <button id="qaSnf" class="login-label">{{SNF}}</button>
+                            <button id="qaAddBaby" class="login-label">{{AddBaby}}</button>
+                        </div>
+                    </div>
+                    <app-demographics (advocateInsuranceClicked)='advocateInsuranceClickedEvent($event)'
+                        (advocateDemographicsClicked)="advocateDemographicsClickedEvent($event)"
+                        *ngIf="this.demographicsFlag == true" id="demographics"></app-demographics>
+                    <app-insurance (advocateHouseholdClicked)='advocateHouseholdClickedEvent($event)'
+                        *ngIf="this.insuranceFlag == true" id="insurance"></app-insurance>
+                    <app-household (advocateGeneralQuestionClicked)="advocateGeneralQuestionClickedEvent($event)"
+                        *ngIf="this.householdFlag == true" id="household"></app-household>
+                    <app-general-questions (advocateSsnClicked)="advocateSsnClickedEvent($event)"
+                        *ngIf="this.generalQuestionsFlag == true" id="generalQuestions"></app-general-questions>
+                    <app-verification *ngIf="this.verificationFlag == true" id="verification"></app-verification>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

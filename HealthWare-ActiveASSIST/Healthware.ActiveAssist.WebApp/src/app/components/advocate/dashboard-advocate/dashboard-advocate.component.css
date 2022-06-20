@@ -1,0 +1,6 @@
+#advocate #filter .form-select {
+    background-image: url(../../../../assets/images/icons/filter.svg);
+}
+#advocate #date .form-select {
+    background-image: url(../../../../assets/images/icons/calendar.svg);
+}

@@ -1,0 +1,257 @@
+<div class="col-xs-12 col-md-12 col-sm-12 d-flex px-3 dashboard-list-bg minHeightFull" #dashboardInfo
+    [ngClass]=this.currentTheme>
+    <div class="mb-5 mt-5"
+        [ngClass]="(this.showAdvocatePanel == true)? 'col-xs-3 col-md-3 col-sm-3 ' :'col-xs-0 col-md-0 col-sm-0 ' ">
+        <div class="advocate-panel-bg dashboard-boxshadow mt-5 " *ngIf="this.showAdvocatePanel == true">
+            <app-advocate-summary-panel class=""></app-advocate-summary-panel>
+        </div>
+    </div>
+    <div [ngClass]="(this.showAdvocatePanel == true)? 'col-xs-9 col-md-9 col-sm-9 mt-5' :'col-xs-12 col-md-12 col-sm-12 ' "
+        class={{this.virtualAssistPadding}}>
+        <app-spinner-overlay *ngIf="this.showLoader == true">
+        </app-spinner-overlay>
+        <div class="pt-5">
+            <div class="container-fluid dashboard-bg">
+                <div class="d-flex " *ngIf="this.showAdvocatePanel != true ">
+                    <div class="col-xs-12 col-md-12 col-sm-12 d-flex mt-5 mb-2 mx-1">
+                        <div class="col-xs-3 col-md-2 col-lg-3 col-sm-3 dashboard-ripponIcon">
+                            <div class="mt-2">
+                                <label class="px-2 ml-2 float-left dashboard-p2 my-1 ms-2 me-4"
+                                    style="color: #FFFFFFDD;">{{AssessmentID}}:{{this.assessmentId}}</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-7 col-md-8 col-lg-7 col-sm-7 d-flex"
+                            style="background-color: #D1D8E1;font-size: 15px;">
+                            <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+                                <div class="col-xs-8 col-md-8 col-sm-8  d-flex float-left vAlignItemC ">
+                                    <div class="">
+                                        <img [src]="this.profileImageUrl" class="dash-img float-right" />
+                                    </div>
+                                    <label
+                                        class="login-label px-2 dashboard-p2 float-left my-1 py-2 ">{{this.fullName}}</label>
+                                    <label class="login-label px-2 dashboard-p2 float-left my-1 py-2"
+                                        style="color: #95989c;">l </label>
+                                    <label class="login-label px-2 dashboard-p2 float-left my-1 py-2 "
+                                        style="color: #95989c;">{{this.gender}} </label>
+                                    <label class="login-label px-2 dashboard-p2 float-left my-1 py-2"
+                                        style="color: #95989c;">l </label>
+                                    <label class="login-labelpx-2 dashboard-p2 float-left my-1 py-2"
+                                        style="color: #95989c;">{{this.age}} years</label>
+                                </div>
+                                <div class="col-xs-4 col-md-4 col-sm-4 float-right px-2" style="text-align: right;">
+                                    <label class="p-2 dashboard-p2  float-right my-1 float-right">{{this.submittedOn}}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div [ngClass]="(this.assessmentStatus == 'Incomplete')?'dashboard-submit-div':'dashboard-underReview-div'"
+                            class="col-xs-2 col-md-2 col-sm-2 dashboard-submit-label "
+                            style="border-top-right-radius: 10px;border-bottom-right-radius: 10px;">
+                            <p class="text-center py-2 mt-1 mb-0 extraPadding15Tab" style="font-weight: bold;">
+                                {{this.statusDisplay}}</p>
+                        </div>
+                    </div>
+                </div>
+                <mat-tab-group [disableRipple]=true animationDuration="0ms" [backgroundColor]="'primary'"
+                    [selectedIndex]="selectedIndex" (selectedTabChange)="currentTabUpdateFn($event)">
+                    <mat-tab animationDuration="0ms" class="shadow-sm p-3 mb-5 bg-body rounded"
+                        style="box-shadow: rgba(93, 226, 40, 0.1) 0px 1px 2px 0px;"
+                        *ngIf="this.isQuickAssessmentResults == true">
+                        <ng-template mat-tab-label>
+                            <mat-icon style="position: relative;">
+                                <span class="position-absolute translate-middle mt-1 mx-3">
+                                    <img *ngIf="this.QuickSaved == null" src="">
+                                    <img *ngIf="this.QuickSaved == true" src="assets/images/icons/valid-icon.svg">
+                                    <img *ngIf="this.QuickSaved == false || this.QuickComplete == false"
+                                        src="assets/images/icons/invalid-icon.svg">
+                                </span>
+                                <img src="assets/images/icons/quick-assessment-label-icon.svg"
+                                    class="dashboard-label-icon" />
+                            </mat-icon>
+                            <label class="dashboard-p2 px-2 mt-1"
+                                style="cursor: pointer;">{{QuickAssessmentResults}}</label>
+                        </ng-template>
+                        <hr style="margin-top: 0px;" />
+                        <app-dashboard-quick-assessment (activate)="Scroll($event)"
+                            [currentTabUpdate]='appdashboardquickassessment'></app-dashboard-quick-assessment>
+                    </mat-tab>
+                    <mat-tab animationDuration="0ms" class="px-3" *ngIf="this.isPersonal == true">
+                        <ng-template mat-tab-label>
+                            <mat-icon style="position: relative;">
+                                <span class="position-absolute translate-middle mt-1 mx-3">
+                                    <img *ngIf="this.PersonalSaved == null" src="">
+                                    <img *ngIf="this.PersonalSaved == true" src="assets/images/icons/valid-icon.svg">
+                                    <img *ngIf="this.PersonalSaved == false || this.PersonalComplete == false"
+                                        src="assets/images/icons/invalid-icon.svg">
+                                </span>
+                                <img src="assets/images/icons/personal-label-icon.svg" class="dashboard-label-icon" />
+                            </mat-icon>
+                            <label class="dashboard-p2 px-2 mt-1" style="cursor: pointer;">{{Personal}}</label>
+                        </ng-template>
+                        <hr style="margin-top: 0px;" />
+                        <app-dashboard-personal (activate)="Scroll($event)" [currentTabUpdate]='appdashboardpersonal'>
+                        </app-dashboard-personal>
+                    </mat-tab>
+                    <mat-tab animationDuration="0ms" class="px-3" *ngIf="this.isGuarantor == true">
+                        <ng-template mat-tab-label>
+                            <mat-icon style="position: relative;">
+                                <span class="position-absolute translate-middle mt-1 mx-3">
+                                    <img *ngIf="this.GuarantorSaved == null" src="">
+                                    <img *ngIf="this.GuarantorSaved == true" src="assets/images/icons/valid-icon.svg">
+                                    <img *ngIf="this.GuarantorSaved == false || this.GuarantorComplete == false"
+                                        src="assets/images/icons/invalid-icon.svg">
+                                </span>
+                                <img src="assets/images/icons/guarantor-label-icon.svg" class="dashboard-label-icon" />
+                            </mat-icon>
+                            <label class="dashboard-p2 px-2 mt-1" style="cursor: pointer;">{{Guarantor}}</label>
+                        </ng-template>
+                        <hr style="margin-top: 0px;" />
+                        <app-dashboard-guarantor (activate)="Scroll($event)" [currentTabUpdate]='appdashboardguarantor'>
+                        </app-dashboard-guarantor>
+                    </mat-tab>
+                    <mat-tab *ngIf="this.isContactPreference == true">
+                        <ng-template mat-tab-label>
+                            <mat-icon style="position: relative;">
+                                <span class="position-absolute translate-middle mt-1 mx-3">
+                                    <img *ngIf="this.ContactPreferenceSaved == null" src="">
+                                    <img *ngIf="this.ContactPreferenceSaved == true"
+                                        src="assets/images/icons/valid-icon.svg">
+                                    <img *ngIf="this.ContactPreferenceSaved == false || this.ContactComplete == false"
+                                        src="assets/images/icons/invalid-icon.svg">
+                                </span>
+                                <img src="assets/images/icons/contact-preference-tab-icon.png"
+                                    class="dashboard-label-icon" />
+                            </mat-icon>
+                            <label class="dashboard-p2 px-2 mt-1" style="cursor: pointer;">{{title}}</label>
+                        </ng-template>
+                        <hr style="margin-top: 0px;" />
+                        <app-dashboard-contact-preference (activate)="Scroll($event)"
+                            [currentTabUpdate]='appdashboaredContactpreference'></app-dashboard-contact-preference>
+                    </mat-tab>
+                    <mat-tab *ngIf="this.isHousehold == true">
+                        <ng-template mat-tab-label>
+                            <mat-icon style="position: relative;">
+                                <span class="position-absolute translate-middle mt-1 mx-3">
+                                    <img *ngIf="this.HouseHoldSaved == null" src="">
+                                    <img *ngIf="this.HouseHoldSaved == true" src="assets/images/icons/valid-icon.svg">
+                                    <img *ngIf="this.HouseHoldSaved == false || this.HouseholdComplete == false"
+                                        src="assets/images/icons/invalid-icon.svg">
+                                </span>
+                                <img src="assets/images/icons/home-icon.svg" class="dashboard-label-icon" />
+                            </mat-icon>
+                            <label class="dashboard-p2 px-2 mt-1" style="cursor: pointer;">{{Household}}</label>
+                        </ng-template>
+                        <hr style="margin-top: 0px;" />
+                        <app-dashboard-household (activate)="Scroll($event)" [currentTabUpdate]='appdashboardhousehold'>
+                        </app-dashboard-household>
+                    </mat-tab>
+                    <mat-tab *ngIf="this.showAdvocatePanel == false && this.isApplicationForms == true"
+                        [disabled]="this.AppFormActive == false && this.showAdvocatePanel == false">
+                        <ng-template mat-tab-label>
+                            <mat-icon style="position: relative;">
+                                <span class="position-absolute translate-middle mt-1 mx-3">
+                                    <img *ngIf="this.ApplicationFormsSaved == null" src="">
+                                    <img *ngIf="this.ApplicationFormsSaved == true"
+                                        src="assets/images/icons/valid-icon.svg">
+                                    <img *ngIf="this.ApplicationFormsSaved == false || this.ApplicationComplete == false"
+                                        src="assets/images/icons/invalid-icon.svg">
+                                </span>
+                                <img src="assets/images/icons/application-label-icon.svg" class="dashboard-label-icon"
+                                    [ngClass]="{'disabledTab':this.AppFormActive==false 
+                                && this.showAdvocatePanel == false}" />
+                            </mat-icon>
+                            <label class="dashboard-p2 px-2 mt-1" style="cursor: pointer;" [ngClass]="{'disabledTab':this.AppFormActive==false
+                        && this.showAdvocatePanel == false}">Application Forms</label>
+                        </ng-template>
+                        <hr style="margin-top: 0px;" />
+                        <app-dashboard-application-forms (activate)="Scroll($event)"
+                            [currentTabUpdate]='appdashboardApplicationForms'></app-dashboard-application-forms>
+                    </mat-tab>
+                    <mat-tab *ngIf="this.showAdvocatePanel == true && this.isForms == true">
+                        <ng-template mat-tab-label>
+                            <mat-icon style="position: relative;">
+                                <span class="position-absolute translate-middle mt-1 mx-3">
+                                    <img *ngIf="this.ProgramSaved == null" src="">
+                                    <img *ngIf="this.ProgramSaved == true" src="assets/images/icons/valid-icon.svg">
+                                    <img *ngIf="this.ProgramSaved == false || this.ProgramComplete == false"
+                                        src="assets/images/icons/invalid-icon.svg">
+                                </span>
+                                <img src="assets/images/icons/programs-icon.png" class="dashboard-label-icon" />
+                            </mat-icon>
+                            <label class="dashboard-p2 px-2 mt-1" style="cursor: pointer;">{{Programs}}</label>
+                        </ng-template>
+                        <hr style="margin-top: 0px;" />
+                        <app-dashboard-programs (activate)="Scroll($event)" [currentTabUpdate]='appdashboardPrograms'>
+                        </app-dashboard-programs>
+                    </mat-tab>
+                    <mat-tab *ngIf="this.showAdvocatePanel == true && this.isPrograms == true">
+                        <ng-template mat-tab-label>
+                            <mat-icon style="position: relative;">
+                                <span class="position-absolute translate-middle mt-1 mx-3">
+                                    <img *ngIf="this.ApplicationFormsSaved == null" src="">
+                                    <img *ngIf="this.ApplicationFormsSaved == true"
+                                        src="assets/images/icons/valid-icon.svg">
+                                    <img *ngIf="this.ApplicationFormsSaved == false || this.ApplicationComplete == false"
+                                        src="assets/images/icons/invalid-icon.svg">
+                                </span>
+                                <img src="assets/images/icons/forms-tab-icon.svg" class="dashboard-label-icon" />
+                            </mat-icon>
+                            <label class="dashboard-p2 px-2 mt-1" style="cursor: pointer;">{{Forms}}</label>
+                        </ng-template>
+                        <hr style="margin-top: 0px;" />
+                        <app-dashboard-forms (activate)="Scroll($event)" [currentTabUpdate]='appdashboardForms'>
+                        </app-dashboard-forms>
+                    </mat-tab>
+                    <!-- Advocate new tab-->
+                    <mat-tab *ngIf="this.isVerification == true"
+                        [disabled]="this.ApplicationFormsSaved != true && this.showAdvocatePanel == false">
+                        <ng-template mat-tab-label>
+                            <mat-icon style="position: relative;">
+                                <span class="position-absolute translate-middle mt-1 mx-3">
+                                    <img *ngIf="this.VerificationSaved == null" src="">
+                                    <img *ngIf="this.VerificationSaved == true"
+                                        src="assets/images/icons/valid-icon.svg">
+                                    <img *ngIf="this.VerificationSaved == false || this.VerificationComplete == false"
+                                        src="assets/images/icons/invalid-icon.svg">
+                                </span>
+                                <img src="assets/images/icons/verification-label-icon.svg" class="dashboard-label-icon"
+                                    [ngClass]="{'disabledTab':this.ApplicationFormsSaved != true 
+                                && this.showAdvocatePanel == false}" />
+                            </mat-icon>
+                            <label class="dashboard-p2 px-2 mt-1" style="cursor: pointer;" [ngClass]="{'disabledTab':this.ApplicationFormsSaved != true
+                                && this.showAdvocatePanel == false}">{{verification}}</label>
+                        </ng-template>
+                        <hr style="margin-top: 0px;" />
+                        <app-dashboard-verification (activate)="Scroll($event)"
+                            [currentTabUpdate]='appdashboardVerification'></app-dashboard-verification>
+                    </mat-tab>
+                    <mat-tab *ngIf="this.showAdvocatePanel == false && this.isSubmit == true"
+                        [disabled]="this.submitDone == 'false'">
+                        <ng-template mat-tab-label>
+                            <mat-icon style="position: relative;">
+                                <img src="assets/images/icons/thumbsup-icon.png" class="dashboard-label-icon"
+                                    [ngClass]="{'disabledTab':this.submitDone=='false'}" />
+                            </mat-icon>
+                            <label class="dashboard-p2 px-2 mt-1" style="cursor: pointer;"
+                                [ngClass]="{'disabledTab':this.submitDone=='false'}">{{Submit}}</label>
+                        </ng-template>
+                        <hr style="margin-top: 0px;" />
+                        <div class="col-xs-12 col-md-12 col-sm-12 dashboard-boxshadow mb-5 pb-5 px-4 pt-4">
+                            <div class="container text-center col-xs-12 col-md-12 col-sm-12 d-flex pt-5 mt-5">
+                                <div class="col-xs-5 col-md-5 col-sm-5">
+                                    <img src="assets/images/Application-Complete.png" />
+                                </div>
+                                <div class="col-xs-7 col-md-7 col-sm-7 text-start mb-5 pb-5">
+                                    <label class="pt-3 pb-3"><b>{{YourApplicationComplete}}</b>
+                                        {{SubmittingVerificationInformation}}</label>
+                                    <p class="dashboard-p1 pb-3">{{SubmittingVerificationInformationMsg}}</p>
+                                    <button class="btn btn-primary" style="color: #FFFFFF;width: auto;"
+                                        (click)="goToDashboard()">{{GoDashboard}}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+        </div>
+    </div>
+</div>

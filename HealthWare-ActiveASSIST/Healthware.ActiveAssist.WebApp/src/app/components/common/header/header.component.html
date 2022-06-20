@@ -1,0 +1,149 @@
+<div class="container" class="header-position header-bg" [ngClass]="this.currentTheme">
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex "
+        style="flex-wrap: nowrap;width: 100%;margin: 0px;box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;">
+        <div class="col-xs-5 col-md-5 col-sm-5 d-flex float-left">
+            <img *ngIf="this.clickLanding == true" src="assets/images/healthware-logo.png"
+                class="logo ps-1 ms-3 pointer" (click)="navigateToLandingPage()" />
+            <img *ngIf="this.clickLanding == false" src="assets/images/healthware-logo.png"
+                class="logo ps-1 ms-3 pointer" />
+            <div class="d-flex vCenter">
+                <img src="assets/images/icons/back-to-dashboard-icon.svg"
+                    *ngIf="this.loginBtnFlag == false && this.userNameSpanFlag == true"
+                    class="dashboard-back-icon ms-3 pointer" (click)="navigateToDashboard()" />
+                <label class="header-label px-2 pb-0 pointer "
+                    *ngIf="this.loginBtnFlag == false && this.userNameSpanFlag == true"
+                    (click)="navigateToDashboard()">{{BtoDash}}</label>
+            </div>
+        </div>
+        <div class="col-xs-7 col-md-7 col-sm-7 d-flex float-right justify-content-end">
+            <div class="menuItems">
+                <div class="align-self-center text-right pe-3">
+                    <img (click)="FullScreenToggle()" [src]="fullScreenToggleIcon"
+                        class="union-img ps-1 mt-1 float-right justify-content-end pointer" />
+                </div>
+                <div class="ps-1 d-flex heighFullVCenter"
+                    *ngIf="this.loginBtnFlag == false && this.userNameSpanFlag == true">
+                    <img [src]="this.userImageUrl" class="header-avator-img " />
+                    <label class="header-label ps-1 ">{{Hello}}<br>{{this.fullName}}</label>
+                </div>
+                <div class="pe-3" *ngIf="this.loginBtnFlag == true">
+                    <button type="button" class="btn-outline login-btn" (click)="loginPage()">{{Login}}</button>
+                </div>
+                <div class="menuItemDropdown" *ngIf="this.loginBtnFlag == false && this.userNameSpanFlag == true">
+                    <div ngbDropdown class="d-inline-block">
+                        <span id="dropdownBasic1" (click)="isMenuOn=!isMenuOn">
+                            <img src="assets/images/icons/down-chevron.svg" class="mt-2 " ngbDropdownToggle
+                                style="cursor: pointer;" />
+                        </span>
+                        <div class="mt-4" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <div *ngxPermissionsOnly="['ViewProfile']">
+                                <button ngbDropdownItem (click)="navigateToprofileSettings()"
+                                    class="header-label pointer">{{PSet}}</button>
+                            </div>
+                            <button ngbDropdownItem data-bs-toggle="modal" data-bs-target="#logoutModal"
+                                class="header-label pointer">{{LogOut}}</button>
+                        </div>
+                    </div>
+                    <div class="modal fade modal-overlay" id="logoutModal" aria-labelledby="logoutModalLabel"
+                        role="dialog" data-bs-backdrop="false">
+                        <div class="modal-dialog" style="margin-top: 15%;">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <div class="text-center py-4">
+                                        <b class="modal-popup-title text-center">{{LogQues}}</b>
+                                    </div>
+                                    <div class="d-flex text-center py-1 justify-content-center">
+                                        <button class="btn btn-outline mx-4 login-label pointer"
+                                            data-bs-dismiss="modal">{{No}}</button>
+                                        <button class="btn btn-primary mx-4 login-label pointer " style="color: white;"
+                                            data-bs-dismiss="modal"
+                                            (click)="clearsessionStorageAndNavigateLoginPage()">{{Yes}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="helpIcon" [ngClass]="(this.isOpen != false)?'img-bg':''">
+                    <span (click)="toggle()" cdkOverlayOrigin #trigger="cdkOverlayOrigin"
+                        [ngClass]="(this.isOpen != false)?'background-color:#FFFFFF':''">
+                        <img class="question-img" style="cursor: pointer;" *ngIf="this.isOpen==false"
+                            src="assets/images/icons/question-mark.svg" (click)="handleVirtualAssistPanelSpan(false)">
+                        <img class="question-img" style="cursor: pointer;" *ngIf="this.isOpen==true"
+                            src="assets/images/icons/help-white.svg" (click)="handleVirtualAssistPanelSpan(true)">
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="trigger" [cdkConnectedOverlayOpen]="isOpen">
+    <div class="col-12 ps-3" class="container-content" [ngClass]="this.currentTheme" id="virtual-assist">
+        <div class="col-12 d-flex ps-4 py-3 pe-2">
+            <div class="col-md-11">
+                <label class="header-label">{{VirtualAssist}}</label>
+            </div>
+            <div class="col-md-1" class="close-icon" (click)="isOpen = !isOpen">
+                <img src="assets/images/icons/close-white-icon.svg" style="cursor: pointer;" *ngIf="this.isOpen==true"
+                    alt="close-icon" cdkOverlayOrigin #trigger="cdkOverlayOrigin"
+                    (click)="handleVirtualAssistPanelSpan(false)" />
+            </div>
+        </div>
+        <div class="col-12 d-flex ps-4 py-3 pe-2">
+            <mat-tab-group [disableRipple]=true animationDuration="0ms" [backgroundColor]="'primary'">
+                <mat-tab animationDuration="0ms" class="shadow-sm p-3 mb-5 bg-body rounded"
+                    style="box-shadow: rgba(93, 226, 40, 0.1) 0px 1px 2px 0px;">
+                    <ng-template mat-tab-label style="width: 100px;">
+                        <mat-icon style="position: relative;">
+                            <img src="assets/images/icons/VA-important-blue-icon.svg" class="dashboard-label-icon " />
+                        </mat-icon>
+                    </ng-template>
+                    <hr style="margin-top: 0px;" />
+                    <div class="col-md-12 pt-2 pe-4">
+                        <label class="header-label">{{InstruMessage}}</label>
+                        <p class="header-label">
+                            {{this.InstruMessageBody1}}<br /><br />{{this.InstruMessageBody2}}<br /><br />{{this.InstruMessageBody3}}
+                        </p>
+                    </div>
+                    <div class="col-md-12 justify-content-start mt-3 pt-3">
+                        <button class="virtual-assist-btn">{{Appointment}}</button>
+                    </div>
+                </mat-tab>
+                <mat-tab animationDuration="0ms" class="px-3">
+                    <ng-template mat-tab-label style="width: 100px;">
+                        <mat-icon style="position: relative;">
+                            <img src="assets/images/icons/VA-chat-blue-icon.svg" class="dashboard-label-icon" />
+                        </mat-icon>
+                    </ng-template>
+                    <hr style="margin-top: 0px;" />
+                    <div class="col-md-12 pt-2 pe-4">
+                        <label class="header-label">{{this.InstruMessage}}</label>
+                        <p class="header-label">
+                            {{this.InstruMessageBody1}}<br /><br />{{this.InstruMessageBody2}}<br /><br />{{this.InstruMessageBody3}}
+                        </p>
+                    </div>
+                    <div class="col-md-12 justify-content-start mt-3 pt-3">
+                        <button class="virtual-assist-btn">{{Appointment}}</button>
+                    </div>
+                </mat-tab>
+                <mat-tab animationDuration="0ms" class="px-3">
+                    <ng-template mat-tab-label style="width: 100px;">
+                        <mat-icon style="position: relative;">
+                            <img src="assets/images/icons/VA-video-camera-blue-icon.svg" class="dashboard-label-icon" />
+                        </mat-icon>
+                    </ng-template>
+                    <hr style="margin-top: 0px;" />
+                    <div class="col-md-12 pt-2 pe-4">
+                        <label class="header-label">{{this.InstruMessage}}</label>
+                        <p class="header-label">
+                            {{this.InstruMessageBody1}}<br /><br />{{this.InstruMessageBody2}}<br /><br />{{this.InstruMessageBody3}}
+                        </p>
+                    </div>
+                    <div class="col-md-12 justify-content-start mt-3 pt-3">
+                        <button class="virtual-assist-btn ">{{Appointment}}</button>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+</ng-template>

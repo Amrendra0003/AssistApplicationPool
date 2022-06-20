@@ -1,0 +1,11 @@
+<ng-container>
+    <div class="spinner-overlay">
+        <div class="spinner-center">
+            <ng-template [ngTemplateOutlet]="progressSpinner"></ng-template>
+        </div>
+    </div>
+</ng-container>
+<ng-template #progressSpinner>
+    <mat-progress-spinner mode="indeterminate" value="25" color="accent" class="custom-spinner" [diameter]="50">
+    </mat-progress-spinner>
+</ng-template>

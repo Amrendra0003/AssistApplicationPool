@@ -1,0 +1,182 @@
+<div class="col-12" id="advocate-household" [ngClass]=this.currentTheme>
+    <div class="col-xs-12 col-md-12 col-sm-12">
+        <form class="col-xs-9 col-md-9 col-sm-9 pt-5" [formGroup]="householdForm" #myform="ngForm">
+            <div class="col-xs-12 col-md-12 col-sm-12">
+                <label class="col-12 dashboard-p1">{{HouseholdInfo}}</label>
+            </div>
+            <p class="dashboard-select-label pt-2">{{HouseholdInfoMsg1}}<br> {{HouseholdInfoMsg2}}</p>
+            <div class="col-12 pt-2">
+                <div class="col-11 d-flex">
+                    <div class="col-md-4">
+                        <label class="quick-assessment-title mb-4">{{TotalNumLiving}}</label>
+                    </div>
+                    <div class="col-2">
+                    </div>
+                    <div class="col-md-5">
+                        <div aria-required="true">
+                            <div class="d-flex" id="noOfHousehold">
+                                <button class="count-button" (click)="decrement()">
+                                    <img src="assets/images/icons/decrement-btn.svg" />
+                                </button>
+                                <label
+                                    class="count-button-label count-button-width dashboard-p2">{{this.noOfHousehold}}</label>
+                                <button class="count-button" (click)="increment()">
+                                    <img src="assets/images/icons/increment-btn.svg" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="this.noOfHouseHoldRequiredMessage != '' " class="small text-danger mt-1 ps-1">
+                    {{this.noOfHouseHoldRequiredMessage}}</div>
+                <div class="col-11 d-flex">
+                    <div class="col-md-4">
+                        <label class="quick-assessment-title mb-4">{{MinorChildren}}</label>
+                    </div>
+                    <div class="col-2">
+                    </div>
+                    <div class="col-md-5">
+                        <div aria-required="true">
+                            <div class="d-flex" id="minorChildren">
+                                <button class="count-button" (click)="mdecrement()">
+                                    <img src="assets/images/icons/decrement-btn.svg" />
+                                </button>
+                                <label
+                                    class="count-button-label count-button-width dashboard-p2">{{this.minorChildren}}</label>
+                                <button class="count-button" (click)="mincrement()">
+                                    <img src="assets/images/icons/increment-btn.svg" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="this.minorChilrdrenRequiredMessage != '' " class="small text-danger mt-1 ps-1 ms-0">
+                    {{this.minorChilrdrenRequiredMessage}}
+                </div>
+                <div *ngIf="this.noOfHouseHoldCountRequiredMessage != '' " class="small text-danger mt-1 ps-1 ms-0">
+                    {{this.noOfHouseHoldCountRequiredMessage}}</div>
+                <div class="col-11 d-flex">
+                    <div class="col-md-4">
+                        <label class="quick-assessment-title mb-2">{{HouseholdEmployedQue}}</label>
+                    </div>
+                    <div class="col-2">
+                    </div>
+                    <div class="col-md-5 d-flex">
+                        <div class="col-xs-3 col-md-3 col-sm-3">
+                            <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
+                                formControlName="isHouseholdEmployed" [(ngModel)]="isHouseholdEmployed"
+                                (click)="isHouseholdMemberEmployed(isHouseholdEmployed.value)" aria-required="true">
+                                <mat-button-toggle value="false"
+                                    style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                                    No</mat-button-toggle>
+                                <mat-button-toggle value="true"
+                                    style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">
+                                    Yes
+                                </mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="this.isHouseholdEmployedRequiredMessage != '' " class="small text-danger mt-1">
+                    {{this.isHouseholdEmployedRequiredMessage}}</div>
+                <div class="col-12 row">
+                    <label class="dashboard-p1 mb-1 mt-4">{{PatientCurrently}}
+                    </label>
+                    <div class="col-md-5 mb-2 mt-2 d-flex" *ngFor="let checkboxOptions of programServicesOptions">
+                        <div class="form-check ">
+                            <input class="form-check-input " [id]="checkboxOptions.name" type="checkbox"
+                                [(ngModel)]="values[checkboxOptions.name]" formControlName={{checkboxOptions.name}}
+                                [value]="checkboxOptions.value"
+                                (change)="onChangeValue($event,checkboxOptions.id,this.programMappingId,programQuestionId,checkboxOptions.name)" />
+                            <label class="mt-2 mx-3 dashboard-p2">{{checkboxOptions.value}}</label>
+                        </div>
+                    </div>
+                    <div *ngIf="householdForm.get('programServices').hasError('required') && myform.submitted"
+                        class="small text-danger mt-1 mb-2">{{ProgramsReq}}</div>
+                </div>
+                <div *ngIf="this.isHouseholdEmployedRequiredMessage != '' " class="small text-danger mt-1">
+                    {{this.isHouseholdEmployedRequiredMessage}}</div>
+                <div class="col-xs-12 col-md-12 col-sm-12 pt-3">
+                    <div class="col-xs-12 col-md-12 col-sm-12">
+                        <label class="dashboard-p1 mb-4">{{HouseholdIncomeAndResources}}</label>
+                        <div class="col-xs-10 col-md-10 col-sm-10">
+                            <div class="col-xs-12 col-md-12 col-sm-12 d-flex row g-3">
+                                <label class="dashboard-p2 mb-2 col-md-4">{{EstimatedHouseholdIncome}}</label>
+                                <div class="col-md-4 px-0">
+                                    <div class="d-flex" style="position:absolute;padding-left: 8px;">
+                                        <div class="input-group-prepend span-input"><span
+                                                class="input-group-text span-input-data">$ </span> </div>
+                                    </div>
+                                    <input class="form-control textfield-label" style="padding-left: 40px;"
+                                        maxlength="8"
+                                        [ngClass]="(this.householdIncomeRequiredMessage != '')?'form-control-invalid': 'form-control' "
+                                        type="textbox" placeholder="Income" (keyup)="onKey($event)"
+                                        (blur)="validate('income')" formControlName="householdIncome"
+                                        [(ngModel)]="householdIncome" required />
+                                    <div *ngIf="householdForm.get('householdIncome').hasError('pattern')"
+                                        class="small text-danger mt-1 mb-2">{{IncomeErr}}</div>
+                                    <div *ngIf="householdForm.get('householdIncome').hasError('max')"
+                                        class="small text-danger mt-1 mb-2">{{IncomeErrExceed}}</div>
+
+                                    <div *ngIf="this.householdIncomeRequiredMessage != ' ' "
+                                        class="small text-danger mt-1 mb-2">{{this.householdIncomeRequiredMessage}}
+                                    </div>
+                                </div>
+                                <div class="col-md-4" include="form-input-select()">
+                                    <select class="form-select form-select-sm dropdown-select-label"
+                                        [ngClass]="(this.householdGrossPayRequiredMessage != '' )?'form-select-invalid': 'form-select' "
+                                        formControlName="incomePayPeriod" [(ngModel)]="incomePayPeriod"
+                                        aria-label="form-select-sm example" (keyup)="onKey($event)" required>
+                                        <option value="" hidden disabled>{{GrossPay}}</option>
+                                        <option *ngFor="let data of this.incomePayOptions"
+                                            [value]="data.value+'_'+data.id" selected="Yearly_31">
+                                            {{data.value}}</option>
+                                    </select>
+                                    <div *ngIf="this.householdGrossPayRequiredMessage != '' "
+                                        class="small text-danger  mt-1 mb-2">{{this.householdGrossPayRequiredMessage}}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-10 col-md-10 col-sm-10">
+                            <div class="col-xs-12 col-md-12 col-sm-12 d-flex row g-3">
+                                <label class="dashboard-p2 mb-2 col-md-4">{{EstimatedHousehold}}</label>
+                                <div class="col-md-4 px-0">
+                                    <div class="d-flex" style="position:absolute;padding-left: 8px;">
+                                        <div class="input-group-prepend span-input"><span
+                                                class="input-group-text span-input-data">$ </span> </div>
+                                    </div>
+                                    <input class="form-control textfield-label" style="padding-left: 40px;"
+                                        maxlength="8" (keyup)="onKey($event)" (blur)="validate('resource')"
+                                        [ngClass]="(this.householdResourcesRequiredMessage != '')?'form-control-invalid': 'form-control' "
+                                        type="textbox" placeholder="Resources" formControlName="householdResources"
+                                        [(ngModel)]="householdResources" required />
+                                    <div *ngIf="householdForm.get('householdResources').hasError('pattern')"
+                                        class="small text-danger  mt-1 mb-2">{{ResourceAcceptsNumbers}}</div>
+                                    <div *ngIf="householdForm.get('householdResources').hasError('max')"
+                                        class="small text-danger  mt-1 mb-2">{{IncomeErrExceed}}</div>
+
+                                    <div *ngIf="this.householdResourcesRequiredMessage != '' "
+                                        class="small text-danger  mt-1 mb-2">{{this.householdResourcesRequiredMessage}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex mt-1 mb-5  pt-0">
+                <button type="submit" class="btn btn-primary mt-3 login-text-field shadow-none pointer next-button"
+                    (click)="navigateToGeneralQuestions(householdForm.value)" style="background-color: transparent;">
+                    <div class="ellipse d-flex ellipse1 next-button-ellipse">
+                        <img src="assets/images/icons/qucikassessment-left-chevron.svg" alt="mail-msg"
+                            class="next-round-icon pointer" />
+                    </div>
+                </button>
+                <label class="dashboard-p2 mx-2 mt-3 pt-2 pointer"
+                    (click)="navigateToGeneralQuestions(householdForm.value)">{{Next}}</label>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+#advocate-panel .mat-tab-label {
+    opacity: .9 !important;
+    animation: none;
+    padding: 10px;
+    background-color: transparent;
+    font-weight: normal;
+    color: #546073;
+    padding: 0 10px !important;
+}
+.leftPanel-div {
+    border-radius: 5px;
+}
+.pink-color {
+    background-color: #F5738D;
+    color: #FFFFFF;
+    font-size: 11px;
+    line-height: 18px;
+    font-weight: normal;
+}
+.update-btn {
+    border-radius: 30px;
+    border: none;
+    width: auto;
+    height: 20px;
+}
+.update-ellipse {
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    text-align: center;
+    padding-top: 2px;
+    margin-top: -2px;
+}
+.advocate-line-through {
+    text-decoration: line-through;
+}

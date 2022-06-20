@@ -1,0 +1,188 @@
+<div class="col-12" style="height: 120vh;" [ngClass]=this.currentTheme>
+    <div class="col-xs-12 col-md-12 col-sm-12">
+        <form autocomplete="off" class="col-xs-10 col-md-10 col-sm-10" [formGroup]="generalQuestionsForm"
+            #myform="ngForm">
+            <p class="dashboard-select-label pt-5">{{GeneralInfo1}}<br> {{GeneralInfo2}}</p>
+            <input autocomplete="false" name="hidden" type="text" style="display:none;">
+            <div class="col-xs-12 col-md-12 col-sm-12 mt-3">
+                <div *ngFor="let question of result">
+                    <div class="col-xs-12 col-md-12 col-sm-12">
+                        <div class="col-xs-12 col-md-12 col-sm-12 row g-3">
+                            <div [ngSwitch]="question.uiType" class="">
+                                <div *ngIf="question.keyName == 'serviceProgram' ">
+                                    <label class={{question.cssStyle}} class="dashboard-p1 mb-2"
+                                        *ngIf="question.displayFormat == 'header' ">{{question.name}}</label>
+                                </div>
+                                <div *ngIf="question.keyName == 'healthConditiion'">
+                                    <label class={{question.cssStyle}} class="dashboard-p1 mb-4 mt-3"
+                                        *ngIf="question.displayFormat == 'header'">{{question.name}}</label>
+                                </div>
+                                <div *ngIf="question.keyName == 'beenInjured' ">
+                                    <label class={{question.cssStyle}} class="dashboard-p1 mb-4 mt-3"
+                                        *ngIf="question.displayFormat == 'header'">{{question.name}}</label>
+                                </div>
+                                <div *ngIf="question.keyName == 'serviceProgram' ">
+                                    <div class={{question.cssStyle}} *ngSwitchCase="'checkbox'">
+                                        <div class="col-md-12 mb-2" *ngFor="let checkboxOptions of question.options">
+                                            <div class="form-check" *ngSwitchCase="'checkbox'">
+                                                <input class="form-check-input " [id]="checkboxOptions.name"
+                                                    type="checkbox" [(ngModel)]="values[checkboxOptions.name]"
+                                                    formControlName={{checkboxOptions.name}}
+                                                    [value]="checkboxOptions.value"
+                                                    (change)="onChangeValue($event,question.subQuestion?.question,checkboxOptions.id,question.screenQuestionMappingId,question.id,checkboxOptions.name)"
+                                                    [required]="question.isRequired" />
+                                                <label class="dashboard-p2 mt-2 mx-3">{{checkboxOptions.value}}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="this.toShowServiceProgramRequired != '' "
+                                        class="small text-danger mt-1">{{this.toShowServiceProgramRequired}}
+                                    </div>
+                                </div>
+                                <div>
+                                    <div *ngIf="question.keyName == 'healthConditiion'">
+                                        <div class={{question.cssStyle}}>
+                                            <div class="col-md-12 mb-2"
+                                                *ngFor="let checkboxOptions of question.options">
+                                                <div class="form-check" *ngSwitchCase="'checkbox'">
+                                                    <input class="form-check-input" [id]="checkboxOptions.name"
+                                                        type="checkbox" [(ngModel)]="values[checkboxOptions.name]"
+                                                        formControlName={{checkboxOptions.name}}
+                                                        [value]="checkboxOptions.value"
+                                                        (change)="onChangeValue($event,question.subQuestion?.question,checkboxOptions.id,question.screenQuestionMappingId,question.id,checkboxOptions.name)"
+                                                        [required]="question.isRequired" />
+                                                    <label
+                                                        class="dashboard-p2 mt-2 mx-3">{{checkboxOptions.value}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="this.toShowHealthConditionRequired != '' "
+                                            class="small text-danger mt-1">
+                                            {{this.toShowHealthConditionRequired}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+                                    <div class="col-xs-8 col-md-8 col-sm-8" *ngIf="question.keyName == 'beenInjured' "
+                                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-xs-8 col-md-8 col-sm-8' :'col-xs-7 col-md-7 col-sm-7' ">
+                                        <div class="col-xs-12 col-md-12 col-sm-12 mb-2"
+                                            *ngFor="let checkboxOptions of question.options">
+                                            <div class="form-check" *ngSwitchCase="'checkbox'">
+                                                <input class="form-check-input " [id]="checkboxOptions.name"
+                                                    type="checkbox" [(ngModel)]="values[checkboxOptions.name]"
+                                                    formControlName={{checkboxOptions.name}}
+                                                    [value]="checkboxOptions.value"
+                                                    (change)="onChangeValue($event,question.subQuestion?.question,checkboxOptions.id,question.screenQuestionMappingId,question.id,checkboxOptions.name)"
+                                                    [required]="question.isRequired" />
+                                                <label class="dashboard-p2 mt-2 mx-3">{{checkboxOptions.value}}</label>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="this.toShowHaveBeenInjured != '' " class="small text-danger mt-1">
+                                            {{this.toShowHaveBeenInjured}}</div>
+                                    </div>
+                                    <div class="col-xs-4 col-md-4 col-sm-4"
+                                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-xs-4 col-md-4 col-sm-4' :'col-xs-5 col-md-5 col-sm-5' ">
+                                        <div *ngFor="let subLabels of question.subQuestion.question" class="mb-1">
+                                            <div
+                                                [ngClass]="(subLabels.keyName == 'reportFiledCrime')?'reportField-height': 'remove-reportField-height' ">
+                                                <div [ngSwitch]="subLabels.uiType" class="d-flex "
+                                                    *ngIf="subLabels.keyName == 'reportFiledCrime' &&  this.toShowCrimeReportFiled == true">
+                                                    <label class={{subLabels.cssStyle}}
+                                                        class="dasdboard-p2 pe-3 pt-1">{{subLabels.name}}</label>
+                                                    <div class="{{subLabels.cssStyle}} " class="d-flex ">
+                                                        <div class="col-xs-2 col-md-2 col-sm-2">
+                                                            <mat-button-toggle-group *ngSwitchCase="'toggle'"
+                                                                name="fontStyle" aria-label="Font Style"
+                                                                formControlName={{subLabels.keyName}}
+                                                                [(ngModel)]="reportFiledCrime"
+                                                                (click)="wasReportFiledChange($event,subLabels.options[0].id,subLabels.options[1].id,subLabels.screenQuestionMappingId,subLabels.id)">
+                                                                <mat-button-toggle value="false"
+                                                                    style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                                                                    {{subLabels.options[0].value}}
+                                                                </mat-button-toggle>
+                                                                <mat-button-toggle value="true"
+                                                                    style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">
+                                                                    {{subLabels.options[1].value}}
+                                                                </mat-button-toggle>
+                                                            </mat-button-toggle-group>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                [ngClass]="(subLabels.keyName == 'reportFiledMotor')?'reportField-height': 'remove-reportField-height' ">
+                                                <div [ngSwitch]="subLabels.uiType" class="d-flex "
+                                                    *ngIf="subLabels.keyName == 'reportFiledMotor' && this.toShowMotorVehicleReportFiled == true">
+                                                    <label class={{subLabels.cssStyle}}
+                                                        class="dasdboard-p2 pe-3 pt-1">{{subLabels.name}}</label>
+                                                    <div class="{{subLabels.cssStyle}} " class="d-flex ">
+                                                        <div class="col-xs-2 col-md-2 col-sm-2">
+                                                            <mat-button-toggle-group *ngSwitchCase="'toggle'"
+                                                                name="fontStyle" aria-label="Font Style"
+                                                                formControlName={{subLabels.keyName}}
+                                                                [(ngModel)]="reportFiledMotor"
+                                                                (click)="wasReportFiledChange($event,subLabels.options[0].id,subLabels.options[1].id,subLabels.screenQuestionMappingId,subLabels.id)">
+                                                                <mat-button-toggle value="false"
+                                                                    style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                                                                    {{subLabels.options[0].value}}
+                                                                </mat-button-toggle>
+                                                                <mat-button-toggle value="true"
+                                                                    style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">
+                                                                    {{subLabels.options[1].value}}
+                                                                </mat-button-toggle>
+                                                            </mat-button-toggle-group>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div
+                                                [ngClass]="(subLabels.keyName == 'reportFiledJob')?'reportField-height': 'remove-reportField-height' ">
+                                                <div [ngSwitch]="subLabels.uiType"
+                                                    [ngClass]="(subLabels.keyName == 'reportFiledJob')?'reportField-height': 'remove-reportField-height' "
+                                                    class="d-flex  "
+                                                    *ngIf="subLabels.keyName == 'reportFiledJob' && this.toShowJobReportFiled == true"
+                                                    style="height: 32px;">
+                                                    <label class={{subLabels.cssStyle}} class="dasdboard-p2 pe-3 pt-1"
+                                                        style="position: relative;">{{subLabels.name}}</label>
+                                                    <div class="{{subLabels.cssStyle}} " class="d-flex "
+                                                        style="position: relative;">
+                                                        <div class="col-xs-2 col-md-2 col-sm-2">
+                                                            <mat-button-toggle-group *ngSwitchCase="'toggle'"
+                                                                name="fontStyle" aria-label="Font Style"
+                                                                formControlName={{subLabels.keyName}}
+                                                                [(ngModel)]="reportFiledJob"
+                                                                (click)="wasReportFiledChange($event,subLabels.options[0].id,subLabels.options[1].id,subLabels.screenQuestionMappingId,subLabels.id)">
+                                                                <mat-button-toggle value="false"
+                                                                    style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                                                                    {{subLabels.options[0].value}}
+                                                                </mat-button-toggle>
+                                                                <mat-button-toggle value="true"
+                                                                    style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">
+                                                                    {{subLabels.options[1].value}}
+                                                                </mat-button-toggle>
+                                                            </mat-button-toggle-group>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" mt-4 d-flex">
+                <button type="submit" class="btn btn-primary  login-text-field shadow-none pointer next-button"
+                    (click)="nextToSSNScreen(generalQuestionsForm.value)">
+                    <div class="ellipse d-flex ellipse1 next-button-ellipse">
+                        <img src="assets/images/icons/qucikassessment-left-chevron.svg" alt="mail-msg"
+                            class="next-round-icon pointer" />
+                    </div>
+                </button>
+                <label class="dashboard-p2 mt-2 mx-2 pointer"
+                    (click)="nextToSSNScreen(generalQuestionsForm.value)">{{Next}}</label>
+            </div>
+        </form>
+    </div>
+</div>

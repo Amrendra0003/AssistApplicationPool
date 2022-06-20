@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\ActivaAssist\SourceCode\AssistApplicationPool\HealthWare-ActiveASSIST\HealthWare.ActiveASSIST.WebAPI\bin\Release\netcoreapp3.1\publish\</_PublishTargetUrl>
+    <History>True|2022-06-14T09:15:44.1707631Z;True|2022-06-09T18:12:58.8169352+05:30;True|2022-06-09T16:38:22.0753863+05:30;True|2022-06-09T16:31:06.5213473+05:30;True|2022-06-09T16:14:21.1541298+05:30;True|2022-06-06T20:09:43.8964300+05:30;True|2022-06-03T18:17:22.1399763+05:30;True|2022-06-03T15:29:20.3275113+05:30;True|2022-06-03T12:29:09.9188251+05:30;True|2022-06-03T12:25:30.0418484+05:30;True|2022-06-03T12:17:29.4196401+05:30;True|2022-06-03T11:01:23.3963274+05:30;</History>
+  </PropertyGroup>
+</Project>

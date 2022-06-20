@@ -1,0 +1,71 @@
+<div class="col-xs-12 col-md-12 col-sm-12 jumbotron appLanding-bg pt-5 body-height" class={{this.virtualAssistPadding}}
+  [ngClass]=this.currentTheme>
+  <app-spinner-overlay *ngIf="this.showLoader == true">
+  </app-spinner-overlay>
+  <div class="container col-xs-12 col-md-12 col-sm-12 ">
+    <div class=" col-xs-12 col-md-12 col-sm-12 pt-3 jumbotron vertical-center">
+      <div class="align-middle">
+        <div class="d-flex align-items-center justify-content-center col-xs-12 col-md-12 col-sm-12 pt-5 mt-5">
+          <div class="col-xs-4 col-md-4 col-sm-4 pt-5">
+            <img src="assets/images/login-img.png" alt="login-img" class="login-img" />
+          </div>
+          <div class="col-xs-8 col-md-8 col-sm-8 pt-5">
+            <form autocomplete="off" [formGroup]="loginForm" (ngSubmit)="loginUser(loginForm.value)" #myform="ngForm">
+              <input autocomplete="false" name="hidden" type="text" style="display:none;">
+              <div class="col-xs-6 col-md-6 col-sm-6">
+                <p class="login-title mb-1">{{welcome}}<br>
+                <p class="login-sub-title">{{LoginInfo}}</p>
+              </div>
+              <div class="col-xs-7 col-md-7 col-sm-7" style="position: relative;">
+                <input type="text" class="form-control login-text-field" id="emailAddress" placeholder="Email ID"
+                  [(ngModel)]="emailAddress" formControlName="emailAddress" required
+                  [ngClass]="loginForm.get('emailAddress').errors && myform.submitted?'form-control-invalid': 'form-control'"
+                  (keydown)="space($event)">
+                <div *ngIf="loginForm.get('emailAddress').hasError('required')&& myform.submitted"
+                  class="small text-danger mt-1">{{Emailreq}}</div>
+                <div *ngIf="loginForm.get('emailAddress').hasError('pattern')" class="small text-danger mt-1">
+                  {{EmailVal}}</div>
+                <div *ngIf="loginForm.get('emailAddress').hasError('maxlength')" class="small text-danger mt-1">
+                  {{Emailmax}}</div>
+              </div>
+              <div class="col-xs-7 col-md-7 col-sm-7 mt-3" style="position: relative;">
+                <i class="posiAbRight0" style="position: absolute;cursor: pointer;" (click)="toggleField()">
+                  <img *ngIf="this.fieldType=='password'" class="eyeIconPwd" src="assets/images/icons/eye-slash.svg" />
+                  <img *ngIf="this.fieldType=='text'" class="eyeIconPwd" src="assets/images/icons/eye-open.png" />
+                </i>
+                <input [type]="this.fieldType" (paste)="default($event)" class="form-control login-text-field"
+                  id="password" placeholder="Password" formControlName="password" [(ngModel)]="password"
+                  [ngClass]="loginForm.get('password').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                <div *ngIf="loginForm.get('password').hasError('required')&& myform.submitted"
+                  class="small text-danger mt-1">
+                  Password is required!</div>
+              </div>
+              <div class="col-md-7 mt-3">
+                <div class="d-flex" style="position: absolute;">
+                  <div>
+                    <input class="form-check-input-rememberMe dashboard-p2 pointer-events" type="checkbox"
+                      (change)="changeRememberMe($event)" formControlName="isRememberMe" [(ngModel)]="isRememberMe"
+                      [checked]="isRememberMe" />
+                  </div>
+                  <label class="login-label mx-2">{{RememberMe}}</label>
+                </div>
+                <div style="float: right;">
+                  <fieldset (click)="forgotPasswordLink()" class="login-label pointer" style="cursor: pointer;">
+                    {{ForgotPassword}}
+                  </fieldset>
+                </div>
+              </div>
+              <div class="col-xs-7 col-md-7 col-sm-7 mt-4 fl">
+                <button type="submit" class="btn btn-primary mb-3 login-button-label "
+                  style="background-color: 1px solid #2494ED;color: #FFFFFF;cursor: pointer;">{{Next}}</button>
+              </div>
+              <div class="col-xs-8 col-md-8 col-sm-8 mt-2 fl">
+                <label class="login-label" style="cursor: pointer;" (click)="navigateToBegin()">{{NewUserInfo}}</label>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

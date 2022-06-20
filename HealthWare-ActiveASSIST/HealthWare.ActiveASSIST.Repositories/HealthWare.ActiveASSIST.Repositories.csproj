@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HealthWare.ActiveASSIST.Entities\HealthWare.ActiveASSIST.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="HealthWare.Core">
+      <HintPath>..\Healthware.Core\Healthware.Core\bin\Debug\netcoreapp3.1\HealthWare.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HealthwareCoreLib" Version="1.0.36" />
+    <PackageReference Include="HealthwareCoreMultiTenancyEntitiesLib" Version="1.0.37" />
+    <PackageReference Include="HealthwareCoreMultiTenancyLib" Version="1.0.37" />
+    <PackageReference Include="HealthwareCoreMultiTenancyServicesLib" Version="1.0.37" />
+    <PackageReference Include="HealthwareCoreWebLib" Version="1.0.35" />
+  </ItemGroup>
+
+</Project>

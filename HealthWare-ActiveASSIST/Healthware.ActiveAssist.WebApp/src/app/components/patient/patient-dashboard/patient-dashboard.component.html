@@ -1,0 +1,358 @@
+<div class="dashboard-bg body-height mb-5 pb-5" class={{this.virtualAssistPadding}} [ngClass]=this.currentTheme
+    id="Patient">
+    <div class="container" *ngxPermissionsOnly="['ViewPatientDashboard']">
+        <div class="row col-xs-12 col-md-12 col-sm-12 pt-5 page-width">
+            <div class="col-xs-9 col-md-9 col-sm-9  mt-3 pt-3 d-flex">
+                <label class="dashboard-title-p1 pt-1">{{PriorSubmissions}}</label>
+                <input type="search" style="width: 70%;" class="form-control dashboard-p2 px-2 mx-2" id="search"
+                    formcontrolname="searchText" [(ngModel)]="searchText" (change)="getDashboardDetails($event)"
+                    placeholder="Search using First Name, Last Name, Email, Cell Number and Assessment Id"
+                    [ngModelOptions]="{standalone: true}">
+                <img src="assets/images/icons/search.svg" class="dashboard-img pt-1 pointer"
+                    (click)="getDashboardDetails(this.searchText)" />
+            </div>
+            <div class="col-xs-3 col-md-3 col-sm-3 float-right p-0 text-right mt-3 pt-3" style="text-align: right;"
+                *ngxPermissionsOnly="['CreateAssessment']">
+                <button type="button" class="btn btn-primary float-right px-4 fullWidthHeiAuto"
+                    (click)="startNewAssessment()"
+                    style="width:auto;background-color: 1px solid #2494ED;color: #FFFFFF;">{{StartNewAssessment}}</button>
+            </div>
+        </div>
+        <app-spinner-overlay *ngIf="this.showLoader == true">
+        </app-spinner-overlay>
+        <div style="height: 90vh;" *ngIf="this.showEmptyMessage == true">
+            <div class="contsiner-fluid mt-5 pt-5" style="text-align: center;height: 90vh">
+                <label style="text-align: center;" class="flex appLanding-header px-5">{{NoRecordsFound}}</label>
+            </div>
+        </div>
+        <!-- Partial Assessment Card! -->
+        <form class="mb-4" [formGroup]="dashboardForm">
+            <div *ngIf="this.showEmptyMessage == false">
+                <div *ngIf="this.partial != null">
+                    <mat-card class="col-xs-12 col-md-12 col-sm-12 mt-4 d-flex p-0 dashboard-card-bg">
+                        <div class="col-xs-2 col-md-2 col-sm-2 pt-4 ps-4 pb-4">
+                            <div>
+                                <img class="dasboard-card-userImg" />
+                            </div>
+                            <div>
+                                <label class="dashboard-p1 py-2"
+                                    style="word-break: break-word;">{{this.partial.fullName}}</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-10 col-md-10 col-sm-10 m-0 d-flex ps-4 pb-4">
+                            <div class="col-xs-12 col-md-12 col-sm-12">
+                                <div class="col-xs-12 col-md-12 col-sm-12 d-flex dashboard-submit-div">
+                                    <div class="dashboard-submit-label mx-4">
+                                        <p class="text-center py-2 mb-0">Quick Assessment Incomplete</p>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-sm-12 d-flex align-self-end justify-content-end pe-4"
+                                    style="margin-top: -17px;">
+                                    <div class="example-button-container dash-rounded-icon ms-2">
+                                        <button mat-mini-fab class="btnTray" tooltip="Resume"
+                                            (click)="editPartialAssessment(this.partial.partialAssessmentId)">
+                                            <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="16" height="15.983"
+                                                    viewBox="0 0 16 15.983">
+                                                    <defs></defs>
+                                                    <path class="a"
+                                                        d="M-2871.9-3114.117a.349.349,0,0,1-.091-.33l.975-3.917a.357.357,0,0,1,.092-.161l8.8-8.8,3.431,3.43-8.8,8.8a.343.343,0,0,1-.16.091l-3.917.976a.331.331,0,0,1-.084.01A.347.347,0,0,1-2871.9-3114.117Zm10.76-14.191,1.2-1.2a1.775,1.775,0,0,1,2.451,0l.98.98a1.722,1.722,0,0,1,.507,1.225,1.722,1.722,0,0,1-.507,1.225l-1.2,1.2Z"
+                                                        transform="translate(2872 3130)" />
+                                                </svg></mat-icon>
+                                        </button>
+                                    </div>
+                                    <div class="example-button-container dash-rounded-icon ms-2">
+                                        <button mat-mini-fab class="btnTray" tooltip="Delete" data-bs-toggle="modal"
+                                            data-bs-target="#deleteAssessment">
+                                            <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="14.625" height="18"
+                                                    viewBox="0 0 14.625 18">
+                                                    <defs></defs>
+                                                    <path class="a"
+                                                        d="M-2868.959-3112a1.685,1.685,0,0,1-1.685-1.607l-.464-9.74a.176.176,0,0,1,.176-.185h12.49a.175.175,0,0,1,.176.185l-.464,9.74a1.686,1.686,0,0,1-1.685,1.607Zm6.521-10.125v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2862.438-3122.125Zm-2.812,0v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2865.25-3122.125Zm-2.812,0v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2868.063-3122.125Zm-3.375-2.531a.563.563,0,0,1-.562-.563v-1.125a1.407,1.407,0,0,1,1.406-1.406h3.094v-.562a1.688,1.688,0,0,1,1.688-1.688h2.25a1.688,1.688,0,0,1,1.688,1.688v.562h3.094a1.407,1.407,0,0,1,1.406,1.406v1.125a.563.563,0,0,1-.562.563Zm5.063-3.656v.562H-2863v-.562a.563.563,0,0,0-.562-.562h-2.25A.563.563,0,0,0-2866.375-3128.313Z"
+                                                        transform="translate(2872 3130)" />
+                                                </svg></mat-icon>
+                                        </button>
+                                        <div class="modal fade modal-overlay" id="deleteAssessment"
+                                            aria-labelledby="deleteAssessmentLabel" role="dialog"
+                                            data-bs-backdrop="false">
+                                            <div class="modal-dialog" style="margin-top: 15%;">
+                                                <div class="modal-content">
+                                                    <div class="modal-body">
+                                                        <div class="text-center py-4">
+                                                            <b class="modal-popup-title text-center">{{logoutMsg}}</b>
+                                                        </div>
+                                                        <div class="d-flex text-center py-1 justify-content-center">
+                                                            <button class="btn btn-outline mx-4 login-label pointer"
+                                                                data-bs-dismiss="modal">{{No}}</button>
+                                                            <button class="btn btn-primary mx-4 login-label pointer"
+                                                                data-bs-dismiss="modal" style="color: white;"
+                                                                (click)="deletePartialAssessment(this.partial.partialAssessmentId)">{{Yes}}</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row w-100 m-0">
+                                    <div class="col-xs-3 col-md-3 col-sm-3">
+                                        <label class="dashboard-helptext-p2"
+                                            style="color: #95989c;font-size: 14px;font-weight: normal !important;">{{SubmittedBy}}</label>
+                                        <div>
+                                            <label class="dashboard-p2"
+                                                style="word-break: break-word;">{{this.partial.submittedBy.name}}</label>
+                                        </div>
+                                        <div>
+                                            <label class="dashboard-p2">{{this.partial.submittedBy.submittedOn+' UTC' |
+                                                date:'MMM
+                                                d, y h:mm a' }}</label>
+                                        </div>
+                                        <div>
+                                            <label class="dashboard-p2">{{hospitalName}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-2 col-md-4 col-sm-2 col-lg-3 col-xl-3"
+                                        *ngIf="this.partial.contactDetails.cellNumber != null">
+                                        <label class="dashboard-helptext-p2"
+                                            style="color: #95989c;font-size: 14px;font-weight: normal !important;">Contact
+                                            Details</label>
+                                        <div>
+                                            <label
+                                                class="dashboard-p2">{{cell}}:&nbsp;+{{this.partial.contactDetails.countryCode}}
+                                                {{this.partial.contactDetails.cellNumber}}</label>
+                                        </div>
+                                        <div class="d-flex"
+                                            *ngIf="this.partial.contactDetails.homeCountryCode != null && this.partial.contactDetails.homeCellNumber != '' ">
+                                            <label class="dashboard-p2">{{home}}:&nbsp;</label>
+                                            <label class="dashboard-p2">+</label>
+                                            <label class="dashboard-p2">{{this.partial.contactDetails.homeCountryCode}}
+                                                {{this.partial.contactDetails.homeCellNumber}}</label>
+                                        </div>
+                                        <div>
+                                            <label class="dashboard-p2" style="word-break: break-word;">
+                                                <a>{{this.partial.contactDetails.emailAddress}}</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div *ngFor="let data of this.result">
+                    <mat-card class="col-xs-12 col-md-12 col-sm-12 mt-4 d-flex p-0 dashboard-card-bg">
+                        <div class="col-xs-2 col-md-2 col-sm-2 pt-4 ps-4 pb-4">
+                            <div>
+                                <img [src]="data.profileImageData" class="dasboard-card-userImg" />
+                            </div>
+                            <div>
+                                <label class="dashboard-p1 py-2"
+                                    style="word-break: break-word;">{{data.fullName}}</label>
+                            </div>
+                            <div class="d-flex dispBlock">
+                                <label class="dashboard-p2">{{data.gender}}</label>
+                                <label class="dashboard-p2 px-2">l</label>
+                                <label class="dashboard-p2">{{data.age}} {{years}}</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-10 col-md-10 col-sm-10 m-0 d-flex ps-4 pb-4">
+                            <div class="col-xs-12 col-md-12 col-sm-12">
+                                <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+                                    <div
+                                        class="col-xs-3 col-md-3 col-sm-3 dashboard-assessment-label dashboard-assessment-div">
+                                        <p class="ps-4 py-2 mb-0">{{AssessmentID}}:{{data.assessmentId}}</p>
+                                    </div>
+                                    <div [ngClass]="(data.assessmentStatus == 'Incomplete')?'dashboard-submit-div':'dashboard-underReview-div'"
+                                        class="col-xs-2 col-md-2 col-sm-2 dashboard-submit-label">
+
+                                        <p class="text-center py-2 mb-0">{{data.statusDisplayName}}</p>
+                                    </div>
+                                    <div [ngClass]="(data.assessmentStatus == 'Incomplete')?'dashboard-assessment-complete':'dashboard-assessment-incomplete'"
+                                        class="col-xs-7 col-md-7 col-sm-7 dashboard-p2"
+                                        style="border-top-right-radius: 10px;">
+                                        <p class="ps-4 py-2  mb-0">{{data.assessmentStatus}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-sm-12 d-flex align-self-end justify-content-end pe-4"
+                                    style="margin-top: -17px;">
+                                    <div *ngxPermissionsOnly="['UpdateAssessment']">
+                                        <div class="example-button-container dash-rounded-icon ms-2"
+                                            *ngIf="data.assessmentStatus === 'Incomplete'">
+                                            <button mat-mini-fab class="btnTray" tooltip="Edit"
+                                                (click)="dashboardInfo(data.assessmentId,data.gender,data.age,data.fullName,data.submittedBy.submittedOn,data.assessmentStatus,data.patientId,data.userId, '0')">
+                                                <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                        height="15.983" viewBox="0 0 16 15.983">
+                                                        <defs></defs>
+                                                        <path class="a"
+                                                            d="M-2871.9-3114.117a.349.349,0,0,1-.091-.33l.975-3.917a.357.357,0,0,1,.092-.161l8.8-8.8,3.431,3.43-8.8,8.8a.343.343,0,0,1-.16.091l-3.917.976a.331.331,0,0,1-.084.01A.347.347,0,0,1-2871.9-3114.117Zm10.76-14.191,1.2-1.2a1.775,1.775,0,0,1,2.451,0l.98.98a1.722,1.722,0,0,1,.507,1.225,1.722,1.722,0,0,1-.507,1.225l-1.2,1.2Z"
+                                                            transform="translate(2872 3130)" />
+                                                    </svg></mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div *ngxPermissionsOnly="['UpdateAssessment']">
+                                        <div class="example-button-container dash-rounded-icon ms-2"
+                                            *ngIf="data.assessmentStatus !== 'Incomplete'">
+                                            <button mat-mini-fab class="btnTray" tooltip="Edit"
+                                                (click)="dashboardInfo(data.assessmentId,data.gender,data.age,data.fullName,data.submittedBy.submittedOn,data.assessmentStatus,data.patientId,data.userId,'0')">
+                                                <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                        height="15.983" viewBox="0 0 16 15.983">
+                                                        <defs></defs>
+                                                        <path class="a"
+                                                            d="M-2871.9-3114.117a.349.349,0,0,1-.091-.33l.975-3.917a.357.357,0,0,1,.092-.161l8.8-8.8,3.431,3.43-8.8,8.8a.343.343,0,0,1-.16.091l-3.917.976a.331.331,0,0,1-.084.01A.347.347,0,0,1-2871.9-3114.117Zm10.76-14.191,1.2-1.2a1.775,1.775,0,0,1,2.451,0l.98.98a1.722,1.722,0,0,1,.507,1.225,1.722,1.722,0,0,1-.507,1.225l-1.2,1.2Z"
+                                                            transform="translate(2872 3130)" />
+                                                    </svg></mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="example-button-container dash-rounded-icon ms-2">
+                                        <button mat-mini-fab class="btnTray" tooltip="E-forms"
+                                            (click)="dashboardInfo(data.assessmentId,data.gender,data.age,data.fullName,data.submittedBy.submittedOn,data.assessmentStatus,data.patientId,data.userId, '5')">
+                                            <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="13" height="17.067"
+                                                    viewBox="0 0 13 17.067">
+                                                    <defs></defs>
+                                                    <path class="a"
+                                                        d="M-1434.167-5024.934a1.836,1.836,0,0,1-1.833-1.833v-13.4a1.835,1.835,0,0,1,1.833-1.833h5.967v3.833a1.168,1.168,0,0,0,1.167,1.167H-1423v10.233a1.836,1.836,0,0,1-1.833,1.833Zm.4-4.567a.5.5,0,0,0,.5.5h2.424a.5.5,0,0,0,.5-.5.5.5,0,0,0-.5-.5h-2.424A.5.5,0,0,0-1433.766-5029.5Zm0-2.667a.5.5,0,0,0,.5.5h7.333a.5.5,0,0,0,.5-.5.5.5,0,0,0-.5-.5h-7.333A.5.5,0,0,0-1433.766-5032.167Zm0-2.667a.5.5,0,0,0,.5.5h7.333a.5.5,0,0,0,.5-.5.5.5,0,0,0-.5-.5h-7.333A.5.5,0,0,0-1433.766-5034.834Zm6.733-3.167a.166.166,0,0,1-.167-.167v-3.626a1.861,1.861,0,0,1,.412.294l3.214,3.041a1.838,1.838,0,0,1,.35.458Z"
+                                                        transform="translate(1436 5042)" />
+                                                </svg></mat-icon>
+                                        </button>
+                                    </div>
+                                    <div *ngIf="assessmentMoreOptions[data.assessmentId]"
+                                        class="example-button-container dash-rounded-icon ms-2">
+                                        <button mat-mini-fab class="btnTray" tooltip="Verification"
+                                            (click)="dashboardInfo(data.assessmentId,data.gender,data.age,data.fullName,data.submittedBy.submittedOn,data.assessmentStatus,data.patientId,data.userId, '6')">
+                                            <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="20" height="18.75"
+                                                    viewBox="0 0 20 18.75">
+                                                    <defs></defs>
+                                                    <path class="a"
+                                                        d="M7172.758-969.249a1.76,1.76,0,0,1-1.758-1.758v-10.547a1.76,1.76,0,0,1,1.758-1.758h8.926a5.261,5.261,0,0,0,5.214,4.688,5.242,5.242,0,0,0,2.93-.893v8.51a1.76,1.76,0,0,1-1.758,1.758Zm8.867-2.93a.586.586,0,0,0,.586.586h4.688a.586.586,0,0,0,.586-.586.586.586,0,0,0-.586-.586h-4.687A.586.586,0,0,0,7181.625-972.179Zm-7.7-5.273a2.34,2.34,0,0,0,.706,1.673,2.929,2.929,0,0,0-1.292,2.429v1.172a.585.585,0,0,0,.586.586h4.688a.586.586,0,0,0,.586-.586v-1.172a2.929,2.929,0,0,0-1.293-2.429,2.333,2.333,0,0,0,.708-1.673,2.346,2.346,0,0,0-2.344-2.344A2.346,2.346,0,0,0,7173.93-977.452Zm7.7,2.93a.586.586,0,0,0,.586.586h4.688a.586.586,0,0,0,.586-.586.586.586,0,0,0-.586-.586h-4.687A.586.586,0,0,0,7181.625-974.523Zm4.688-2.344a.586.586,0,0,0,.586.586.586.586,0,0,0,.586-.586.586.586,0,0,0-.586-.586A.586.586,0,0,0,7186.313-976.866Zm-2.344,0a.586.586,0,0,0,.586.586.586.586,0,0,0,.586-.586.586.586,0,0,0-.586-.586A.586.586,0,0,0,7183.969-976.866Zm-2.344,0a.586.586,0,0,0,.586.586.586.586,0,0,0,.586-.586.586.586,0,0,0-.586-.586A.586.586,0,0,0,7181.625-976.866Zm-7.109,4.1v-.586a1.76,1.76,0,0,1,1.758-1.758,1.76,1.76,0,0,1,1.758,1.758v.586Zm.586-4.687a1.174,1.174,0,0,1,1.172-1.172,1.173,1.173,0,0,1,1.172,1.172,1.173,1.173,0,0,1-1.172,1.172A1.174,1.174,0,0,1,7175.1-977.452Zm7.7-6.445a4.073,4.073,0,0,1,4.063-4.1,4.14,4.14,0,0,1,4.141,4.1,4.107,4.107,0,0,1-4.1,4.1A4.106,4.106,0,0,1,7182.8-983.9Zm1.929-.414a.586.586,0,0,0,0,.828l1.172,1.172a.586.586,0,0,0,.829,0l2.344-2.344a.584.584,0,0,0,0-.828.586.586,0,0,0-.829,0l-1.929,1.929-.758-.758a.586.586,0,0,0-.414-.172A.585.585,0,0,0,7184.726-984.312Z"
+                                                        transform="translate(-7171 987.999)" />
+                                                </svg></mat-icon>
+                                        </button>
+                                    </div>
+                                    <div *ngIf="assessmentMoreOptions[data.assessmentId]"
+                                        class="example-button-container dash-rounded-icon ms-2">
+                                        <button *ngxPermissionsOnly="['DeleteAssessment']" mat-mini-fab class="btnTray"
+                                            tooltip="Delete" data-bs-toggle="modal" data-bs-target="#deleteAssessment">
+                                            <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="14.625" height="18"
+                                                    viewBox="0 0 14.625 18">
+                                                    <defs></defs>
+                                                    <path class="a"
+                                                        d="M-2868.959-3112a1.685,1.685,0,0,1-1.685-1.607l-.464-9.74a.176.176,0,0,1,.176-.185h12.49a.175.175,0,0,1,.176.185l-.464,9.74a1.686,1.686,0,0,1-1.685,1.607Zm6.521-10.125v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2862.438-3122.125Zm-2.812,0v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2865.25-3122.125Zm-2.812,0v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2868.063-3122.125Zm-3.375-2.531a.563.563,0,0,1-.562-.563v-1.125a1.407,1.407,0,0,1,1.406-1.406h3.094v-.562a1.688,1.688,0,0,1,1.688-1.688h2.25a1.688,1.688,0,0,1,1.688,1.688v.562h3.094a1.407,1.407,0,0,1,1.406,1.406v1.125a.563.563,0,0,1-.562.563Zm5.063-3.656v.562H-2863v-.562a.563.563,0,0,0-.562-.562h-2.25A.563.563,0,0,0-2866.375-3128.313Z"
+                                                        transform="translate(2872 3130)" />
+                                                </svg></mat-icon>
+                                        </button>
+                                        <div class="modal fade modal-overlay" id="deleteAssessment"
+                                            aria-labelledby="deleteAssessmentLabel" role="dialog"
+                                            data-bs-backdrop="false">
+                                            <div class="modal-dialog" style="margin-top: 15%;">
+                                                <div class="modal-content">
+                                                    <div class="modal-body">
+                                                        <div class="text-center py-4">
+                                                            <b class="modal-popup-title text-center">{{logoutMsg}}</b>
+                                                        </div>
+                                                        <div class="d-flex text-center py-1 justify-content-center">
+                                                            <button class="btn btn-outline mx-4 login-label pointer"
+                                                                data-bs-dismiss="modal"
+                                                                (click)="hideModal()">{{No}}</button>
+                                                            <button class="btn btn-primary mx-4 login-label pointer"
+                                                                data-bs-dismiss="modal" style="color: white;"
+                                                                (click)="deleteDashboardAssessment(data.assessmentId)">{{Yes}}</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="example-button-container dash-rounded-icon ms-2">
+                                        <button mat-mini-fab class="btnTray" (click)="moreOptions(data.assessmentId)"
+                                            tooltip="More">
+                                            <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="16" height="3.556"
+                                                    viewBox="0 0 16 3.556">
+                                                    <defs></defs>
+                                                    <path class="a"
+                                                        d="M-5744-3115.778a1.778,1.778,0,0,1,1.778-1.778,1.778,1.778,0,0,1,1.778,1.778,1.778,1.778,0,0,1-1.778,1.778A1.778,1.778,0,0,1-5744-3115.778Zm0-6.222a1.778,1.778,0,0,1,1.778-1.778,1.778,1.778,0,0,1,1.778,1.778,1.778,1.778,0,0,1-1.778,1.778A1.778,1.778,0,0,1-5744-3122Zm0-6.222a1.778,1.778,0,0,1,1.778-1.778,1.778,1.778,0,0,1,1.778,1.778,1.778,1.778,0,0,1-1.778,1.778A1.778,1.778,0,0,1-5744-3128.222Z"
+                                                        transform="translate(-3114 5744) rotate(90)" />
+                                                </svg></mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row w-100 m-0">
+                                    <div class="col-xs-3 col-md-3 col-sm-3">
+                                        <label class="dashboard-helptext-p2"
+                                            style="color: #95989c;font-size: 14px;font-weight: normal !important;">{{SubmittedBy}}</label>
+                                        <div>
+                                            <label class="dashboard-p2"
+                                                style="word-break: break-word;">{{data.submittedBy.name}}</label>
+                                        </div>
+                                        <div>
+                                            <label class="dashboard-p2">{{ data.submittedBy.submittedOn+' UTC' |
+                                                date:'MMM
+                                                d, y h:mm a' }}</label>
+                                        </div>
+                                        <div>
+                                            <label class="dashboard-p2">{{hospitalName}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-2 col-md-4 col-sm-2 col-lg-3 col-xl-3">
+                                        <label class="dashboard-helptext-p2"
+                                            style="color: #95989c;font-size: 14px;font-weight: normal !important;">Contact
+                                            Details</label>
+                                        <div>
+                                            <label
+                                                class="dashboard-p2">{{cell}}:&nbsp;+{{data.contactDetails.countryCode}}
+                                                {{data.contactDetails.cellNumber}}</label>
+                                        </div>
+                                        <div class="d-flex"
+                                            *ngIf="data.contactDetails.homeCountryCode != null && data.contactDetails.homeCellNumber != '' ">
+                                            <label class="dashboard-p2">{{home}}:&nbsp;</label>
+                                            <label class="dashboard-p2">+</label>
+                                            <label class="dashboard-p2">{{data.contactDetails.homeCountryCode}}
+                                                {{data.contactDetails.homeCellNumber}}</label>
+                                        </div>
+                                        <div>
+                                            <label class="dashboard-p2" style="word-break: break-word;">
+                                                <a>{{data.contactDetails.emailAddress}}</a>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-7 col-md-5 col-sm-7">
+                                        <div class="mx-3">
+                                            <label class="dashboard-helptext-p2"
+                                                style="color: #95989c;font-size: 14px;font-weight: normal !important;">Programs</label>
+                                            <div *ngIf="data.programs.programName.length <= 1">
+                                                <div *ngFor="let program of data.programs.programName">
+                                                    <label class="dashboard-p2">{{program}}</label><br />
+                                                </div>
+                                            </div>
+                                            <div *ngIf="data.programs.programName.length > 1">
+                                                <label tooltip="{{data.programs.programName.join(', ')}}"
+                                                    class="dashboard-p2 programs-overflow pointer">{{data.programs.programName.join(',
+                                                    ')}}
+                                                </label><br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                    <div class="col-xs-12 col-md-12 col-sm-12 py-3 mb-3 card-attach">
+                        <div class="row col-xs-12 col-md-12 col-sm-12 mx-0 p-0">
+                            <div class="col-xs-4 col-md-4 col-sm-4 mt-2 d-flex">
+                                <img src="assets/images/icons/calendar-icon.svg" class="important-icon" />
+                                <label class="dashboard-p2">{{scheduleAppointment}}</label>
+                            </div>
+                            <div class="col-xs-8 col-md-8 col-sm-8 mt-2 justify-content-end d-flex float-right">
+                                <div class="col-xs-12 col-md-12 col-sm-12 justify-content-end d-flex float-right">
+                                    <label class="dashboard-p2">Do you need any assistance? Is so, please contact a
+                                        Patient
+                                        Advocate at +{{data.countyCode}}&nbsp;{{data.cellNumber}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

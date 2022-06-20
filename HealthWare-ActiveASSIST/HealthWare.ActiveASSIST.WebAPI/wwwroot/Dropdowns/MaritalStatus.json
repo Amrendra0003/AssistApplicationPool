@@ -1,0 +1,12 @@
+{
+  "MaritalStatus": {
+    "A": "Separated",
+    "D": "Divorced",
+    "M": "Married",
+    "P": "Domestic partner",
+    "S": "Single",
+    "T": "Unreported",
+    "U": "Unknown",
+    "W": "Widowed"
+  }
+}

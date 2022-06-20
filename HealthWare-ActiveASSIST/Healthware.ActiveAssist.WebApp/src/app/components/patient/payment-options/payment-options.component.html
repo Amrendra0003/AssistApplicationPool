@@ -1,0 +1,97 @@
+<div class="pt-3 appLanding-bg body-height" class={{this.virtualAssistPadding}} [ngClass]=this.currentTheme>
+  <div class="container align-items-center  col-xs-12 col-md-12 col-sm-12"
+    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'container-fluid  ' : 'container' ">
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex pt-5 mt-5">
+      <div class="col-xs-4 col-md-4 col-sm-4 pt-5">
+        <img src="assets/images/Payment-options.png" alt="left-img" class="left-img" />
+      </div>
+      <div class="col-xs-8 col-md-8 col-sm-8 pt-5 ps-2 h-100 " [ngClass]="this.isAdvocate == true? 'mt-0':'mt-5' ">
+        <form [formGroup]="paymentOptionsForm" [ngClass]="this.isAdvocate == true? 'mt-0':'mt-3' "
+          class="col-xs-12 col-md-12 col-sm-12 align-items-center justify-content-center h-100 vertical-align-top"
+          #myform="ngForm">
+          <div class="col-xs-10 col-md-10 col-sm-10 mb-3 align-items-center justify-content-center h-100">
+            <p class="paymentoptions-title" *ngIf="this.patient == 'myself'">{{PaymentErrMsg1}}</p>
+            <p class="paymentoptions-title" *ngIf="this.patient != 'myself' && this.isAdvocate == false ">
+              {{PaymentErrMsg1}}</p>
+            <p class="paymentoptions-title" *ngIf="this.patient != 'myself' && this.isAdvocate == true ">
+              {{PaymentErrMsg1}}</p>
+            <p class="paymentoptions-sub-title mb-1" *ngIf="this.patient == 'myself'"> {{PaymentErrMsg2}}</p>
+            <p class="paymentoptions-sub-title mb-1"
+              *ngIf="this.patient != 'myself' && this.toShowAlternatives == false">{{PaymentErrMsg2}}</p>
+          </div>
+          <div class="col-10" *ngIf="this.patientOptions == true">
+            <button type="submit" class="btn btn-payment mb-3  me-3 px-4"
+              style="background-color: 1px solid #2494ED;color: #FFFFFF;cursor: pointer;">{{PaymentPlans}}</button>
+            <button type="submit" class="btn btn-payment mb-3  me-3 px-4"
+              style="background-color: 1px solid #2494ED;color: #FFFFFF;cursor: pointer;">{{SmartCardInfo}}</button>
+          </div>
+          <div class="col-xs-12 col-md-12 col-sm-12" *ngIf="this.advocateOptions == true">
+            <label class="paymentoptions-sub-title mb-1"
+              *ngIf="this.toShowAlternatives == true">{{EmergencyAcuity}}</label>
+            <div class="col-xs-12 col-md-12 col-sm-12 row">
+              <div class="col-md-4 mb-2" *ngFor="let radioOptions of paymentOptions"
+                [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-4' : ' col-md-5' ">
+                <div class="form-check">
+                  <input class="form-check-input dashboard-p2" [id]="radioOptions.name" type="radio"
+                    (change)="OnSelectPaymentOptions(payment)" [value]="radioOptions.value" formControlName="payment"
+                    [(ngModel)]="payment" required />
+                  <label class="mt-2 mx-3 login-text-field">{{radioOptions.value}}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 pb-3 pt-2" *ngIf="this.advocateOptions == true && this.toShowAlternatives == true">
+            <label class="paymentoptions-sub-title mb-1 ">{{AlternativePaymentOptions}}</label>
+            <div class="col-xs-12 col-md-12 col-sm-12 d-flex mt-2">
+              <label class="col-xs-5 col-md-5 col-sm-5 login-text-field mt-2">{{PaymentPlans}}</label>
+              <div class="col-xs-3 col-md-3 col-sm-3 d-flex">
+                <button type="submit" class="btn btn-primary  login-text-field shadow-none"
+                  style="width:38px;background-color: transparent;border:none;color: #FFFFFF;">
+                  <div class="ellipse d-flex ellipse-payment"
+                    style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;background-color: #FFFFFF;">
+                    <img src="assets/images/icons/comments.svg" alt="mail-msg" class="ellipse-icon pointer" />
+                  </div>
+                </button>
+                <label class="login-label mt-2 mx-2 pointer">{{ShareViaText}}</label>
+              </div>
+              <div class="col-xs-3 col-md-3 col-sm-3 d-flex">
+                <button type="submit" class="btn btn-primary  login-text-field shadow-none"
+                  style="width:38px;background-color: transparent;border:none;color: #FFFFFF;">
+                  <div class="ellipse d-flex ellipse-payment"
+                    style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;background-color: #FFFFFF;">
+                    <img src="assets/images/icons/envelope.svg" alt="mail-msg" class="ellipse-icon pointer" />
+                  </div>
+                </button>
+                <label class="login-label mt-2 mx-2 pointer">{{ShareViaEmail}}</label>
+              </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-sm-12 d-flex mt-3">
+              <label class="col-xs-5 col-md-5 col-sm-5 login-text-field mt-2">{{SmartCardInfo}}</label>
+              <div class="col-xs-3 col-md-3 col-sm-3 d-flex">
+                <button type="submit" class="btn btn-primary  login-text-field shadow-none"
+                  style="width:38px;background-color: transparent;border:none;color: #FFFFFF;">
+                  <div class="ellipse d-flex ellipse-payment"
+                    style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;background-color: #FFFFFF;">
+                    <img src="assets/images/icons/comments.svg" alt="mail-msg" class="ellipse-icon pointer" />
+                  </div>
+                </button>
+                <label class="login-label mt-2 mx-2 pointer">{{ShareViaText}}</label>
+              </div>
+              <div class="col-xs-3 col-md-3 col-sm-3 d-flex">
+                <button type="submit" class="btn btn-primary  login-text-field shadow-none"
+                  style="width:38px;background-color: transparent;border:none;color: #FFFFFF;">
+                  <div class="ellipse d-flex ellipse-payment"
+                    style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;background-color: #FFFFFF;">
+                    <img src="assets/images/icons/envelope.svg" alt="mail-msg" class="ellipse-icon pointer" />
+                  </div>
+                </button>
+                <label class="login-label mt-2 mx-2 pointer">{{ShareViaEmail}}</label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <p class="dashboard-select-label  pb-5 pt-4">{{PaymentErrMsg3}}</p>
+  </div>
+</div>

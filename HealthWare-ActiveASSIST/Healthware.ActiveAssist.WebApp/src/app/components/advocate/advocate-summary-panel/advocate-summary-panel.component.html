@@ -1,0 +1,134 @@
+<div class="col-xs-12 col-md-12 col-sm-12" id="advocate-panel" [ngClass]=this.currentTheme>
+  <div [ngClass]="(this.assessmentStatus == 'Incomplete')?'dashboard-submit-div':'dashboard-underReview-div'"
+    class="dashboard-submit-label leftPanel-div">
+    <p class="advocate-summary-panel py-3 px-3" *ngIf="this.assessmentStatus === 'Incomplete'">{{AssessmentIncomplete}}
+    </p>
+    <p class="advocate-summary-panel py-3 px-3" *ngIf="this.assessmentStatus === 'Documentation Incomplete'">
+      {{DocumentationIncomplete}}
+    </p>
+  </div>
+  <div class="col-xs-12 col-md-12 col-sm-12 d-flex px-3 mt-2" style="height: auto;">
+    <div class="col-xs-4 col-md-4 col-sm-4">
+      <img [src]="this.profileImageUrl" class="advocate-profile-img " />
+    </div>
+    <div class="col-xs-8 col-md-8 col-sm-8 float-left">
+      <div>
+        <p class="px-2 advocate-assessment-label m-0"><strong>ID:{{this.assessmentId}}</strong></p>
+        <p class="px-2 advocate-assessment-label m-0" style="color: #95989c;">{{this.submittedOn | date:'MMM d, y h:mm
+          a'}}</p>
+      </div>
+      <div class="pt-2">
+        <label class="px-2 advocate-assessment-label mb-0 "
+          style="width: 100%;white-space: pre-wrap;">{{this.fullName}}</label>
+        <p class="px-2 advocate-assessment-label m-0" style="color: #95989c;">{{this.gender}} l
+          {{this.age}} {{years}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-md-12 col-sm-12 pt-3" style="height: 66vh;">
+    <mat-tab-group [disableRipple]=true animationDuration="0ms" [backgroundColor]="'primary'">
+      <mat-tab animationDuration="0ms" class="shadow-sm p-3 mb-5 bg-body rounded"
+        style="box-shadow: rgba(93, 226, 40, 0.1) 0px 1px 2px 0px;">
+        <ng-template mat-tab-label>
+          <label class="dashboard-p2 px-2 mt-1" style="cursor: pointer;">{{QuickAssessment}}</label>
+        </ng-template>
+        <hr style="margin-top: 0px;" />
+        <div class="px-3" style="max-height: 45vh; overflow-y:scroll;" id="panelScroll">
+          <p class="dashboard-assessment-label pt-1">{{panelInfo}}</p>
+          <div class="col-12 pt-1">
+            <label class="dashboard-assessment-label"><strong>{{Demographics}}</strong></label>
+            <label class="col-12 subtitle-label pt-1">{{ResidentialZipCode}}</label>
+            <label class="col-12 advocate-sub-label pt-1" style="color: #95989c;">{{this.zipcode}} l {{this.city}},
+              {{this.state}}</label>
+            <label class="col-12 subtitle-label pt-1">Citizenship Status</label>
+            <label class="col-12 advocate-sub-label pt-1" style="color: #95989c;">{{this.citizenship}}</label>
+          </div>
+          <div class="col-12 pt-1">
+            <label class="col-12 dashboard-assessment-label pt-1"><strong>{{Insurance}}</strong></label>
+            <label class="col-12 subtitle-label pt-1">{{InsuranceInfo}}</label>
+            <label class="col-12 advocate-sub-label pt-1" style="color: #95989c;">{{this.insuranceStatus}}</label>
+          </div>
+          <div class="col-12 pt-2">
+            <label class="dashboard-assessment-label"><strong>{{Household}}</strong></label>
+            <div class="col-12 d-flex pt-2">
+              <label class="col-xs-10 col-md-10 col-sm-10  advocate-sub-label">{{NumberOfMembers}} </label>
+              <div class="col-2 d-flex text-end justify-content-end">
+                <label class="advocate-sub-label text-align-right" style="color: #95989c;"
+                  [ngClass]="this.showUpdateMembers != false ?'advocate-line-through' : '' ">{{this.totalHouseholdMembers}}</label>
+                <label class="update-ellipse text-align-right pink-color ms-1"
+                  *ngIf="this.showUpdateMembers != false">{{this.updatedNumberOfMembers}}</label>
+              </div>
+            </div>
+            <div class="col-12 d-flex pt-2">
+              <label class="col-xs-10 col-md-10 col-sm-10 advocate-sub-label">{{NumberOfMinors}} </label>
+              <div class="col-2 d-flex" style="text-align: end;justify-content: end;">
+                <label class="advocate-sub-label text-align-right" style="color: #95989c;"
+                  [ngClass]="this.showUpdateMinors != false ?'advocate-line-through' : '' ">{{this.totalMinorHouseholdMembers}}</label>
+                <label class="update-ellipse text-align-right pink-color ms-1"
+                  *ngIf="this.showUpdateMinors != false">{{this.updatedNumberOfMinors}}</label>
+              </div>
+            </div>
+            <div class="col-12 d-flex pt-2">
+              <label class="col-xs-11 col-md-11 col-sm-11 advocate-sub-label">{{AnyoneInHouseholdEmployed}}</label>
+              <label class="col-xs-1 col-md-1 col-sm-1 advocate-sub-label text-align-right"
+                style="color: #95989c;">{{this.isEmployed}}</label>
+            </div>
+          </div>
+          <div class="col-12 pt-1">
+            <label class="col-12 subtitle-label pt-1">{{ReceivingAny}}</label>
+            <label class="col-12 advocate-sub-label pt-1" style="color: #95989c;">{{this.receivingAny}}</label>
+            <label class="col-12 subtitle-label pt-1">{{MonthlyHouseholdIncomeMsg}}</label>
+            <div class="col-12  d-flex float-left pt-1">
+              <label class="advocate-sub-label pe-2" style="color: #95989c;"
+                [ngClass]="this.showUpdateIncome != false ?'advocate-line-through' : '' ">${{this.monthlyIncome}}</label>
+              <button class="update-btn pink-color"
+                *ngIf="this.showUpdateIncome != false">${{this.updatedMonthlyIncome}}</button>
+            </div>
+            <label class="col-12 subtitle-label pt-1">{{MonthlyResourcesMsg}}</label>
+            <div class="col-12 d-flex float-left pt-1">
+              <label class="advocate-sub-label pe-2" style="color: #95989c;"
+                [ngClass]="this.showUpdateResource != false ?'advocate-line-through' : '' ">${{this.resourceIncome}}</label>
+              <button class="update-btn pink-color"
+                *ngIf="this.showUpdateResource != false">${{this.updatedNumberOfResource}}</button>
+            </div>
+          </div>
+          <div class="col-12 pb-3 pt-1 mb-2">
+            <label class="col-12 dashboard-assessment-label pt-1"><strong>{{GeneralQuestions}}</strong></label>
+            <label class="col-12 advocate-sub-label pt-1" style="color: #95989c;">{{this.serviceProgram}}</label>
+            <label class="col-12 advocate-sub-label pt-1" style="color: #95989c;">{{this.healthConditions}}</label>
+            <label class="col-12 advocate-sub-label pt-1" style="color: #95989c;">{{this.isInjured}}</label>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab animationDuration="0ms" class="px-3">
+        <ng-template mat-tab-label>
+          <label class="dashboard-p2 px-2 mt-1" style="cursor: pointer;">Contact</label>
+        </ng-template>
+        <hr style="margin-top: 0px;" />
+        <div class="px-3" style="max-height: 46vh; overflow-y:scroll;" id="panelContactScroll">
+          <div class="col-12 pb-2 pt-1 mb-2">
+            <label class="col-12 subtitle-label pt-1">{{PersonalEmail}}</label>
+            <label class="col-12 advocate-sub-label " style="color: #95989c;">{{this.personalEmail}}</label>
+            <label class="col-12 subtitle-label ">{{PersonalCellNumber}}</label>
+            <label class="col-12advocate-sub-label " style="color: #95989c;">{{this.personalCountyCode}}
+              {{this.personalCellNumber}}</label>
+          </div>
+          <div class="col-12 pb-2 pt-1 mb-2">
+            <label class="col-12 subtitle-label pt-1">{{GuarantorEmail}}</label>
+            <label class="col-12 advocate-sub-label " style="color: #95989c;">{{this.guarantorEmail}}</label>
+            <label class="col-12 subtitle-label ">{{GuarantorCellNumber}}</label>
+            <label class="col-12 advocate-sub-label " style="color: #95989c;">{{this.guarantorCountyCode}}
+              {{this.guarantorCellNUmber}}</label>
+          </div>
+          <div class="col-12 pb-2 pt-1 mb-2">
+            <label class="col-12 subtitle-label pt-1">{{PreferredEmail}}</label>
+            <label class="col-12 advocate-sub-label " style="color: #95989c;">{{this.preferredEmail}}</label>
+            <label class="col-12 subtitle-label ">{{PreferredCellNumber}}</label>
+            <label class="col-12 advocate-sub-label " style="color: #95989c;">{{this.preferredCountyCode}}
+              {{this.preferredCellNumber}}</label>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <PackageId>HealthwareCoreMultiTenancyEntitiesLib</PackageId>
+	  <Version>1.0.37</Version>
+	  <Authors>Healthware</Authors>
+	  <Company>Healthware</Company>
+	  <IsPackable>true</IsPackable>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <UserSecretsId>4c14d082-fdf8-4f1b-b8cc-1213dcae6ca7</UserSecretsId>
+	  <ApplicationIcon />
+	  <OutputType>Library</OutputType>
+	  <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\nazeem.a\.nuget\packages\healthwarecorelib\1.0.5\contentFiles\any\netcoreapp3.1\appsettings.Development.json" />
+    <Content Remove="C:\Users\nazeem.a\.nuget\packages\healthwarecorelib\1.0.5\contentFiles\any\netcoreapp3.1\appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HealthwareCoreLib" Version="1.0.36" />
+    <PackageReference Include="HealthwareCoreWebLib" Version="1.0.35" />
+  </ItemGroup>
+
+</Project>

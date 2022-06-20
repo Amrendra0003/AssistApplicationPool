@@ -1,0 +1,6 @@
+<div class="container text-start align-items-center align-self-center ps-5 pt-5" [ngClass]=this.currentTheme>
+    <h4 class="dashboard-p2 mt-5" *ngIf="this.isSuccessFlag == true">Dear <b>{{this.patientName}}</b></h4>
+    <label class="dashboard-p2" *ngIf="this.isSuccessFlag == true">{{YourEmail}} <b>({{this.patientEmail}})</b>
+        {{Verified}}.</label>
+    <label class="dashboard-p2 mt-5" *ngIf="this.isSuccessFlag == false">{{ExpiredMsg}}</label>
+</div>

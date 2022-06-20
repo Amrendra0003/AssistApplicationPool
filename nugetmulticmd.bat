@@ -1,0 +1,3 @@
+nuget add %cd%\Healthware.Core.MultiTenancy\Healthware.Core.MultiTenancy\bin\Debug\HealthwareCoreMultiTenancyLib.1.0.22.nupkg -Source %cd%\HANugetPackages
+nuget add %cd%\Healthware.Core.MultiTenancy\Healthware.Core.MultiTenancy.Entities\bin\Debug\HealthwareCoreMultiTenancyEntitiesLib.1.0.26.nupkg -Source %cd%\HANugetPackages
+nuget add %cd%\Healthware.Core.MultiTenancy\Healthware.Core.MultiTenancy.Services\bin\Debug\HealthwareCoreMultiTenancyServicesLib.1.0.28.nupkg -Source %cd%\HANugetPackages

@@ -1,0 +1,137 @@
+<div class="col-xs-12 col-md-12 col-sm-12" [ngClass]=this.currentTheme>
+  <div class="col-xs-12 col-md-12 col-sm-12 mx-2 d-flex"> <img src="assets/images/icons/portfolio.svg"
+      class="dash-icon" /><label class="dashboard-p1 mx-2 mt-1"><b>{{WorkAddress}}</b></label></div>
+  <div class="col-xs-12 col-md-12 col-sm-12 mt-2 d-flex">
+    <form autocomplete="off" class="col-xs-10 col-md-10 col-sm-10 row g-3" [formGroup]="workAddressForm"
+      #myform="ngForm" [ngClass]="{disabledDiv: !isEditAllowed}">
+      <input autocomplete="false" name="hidden" type="text" style="display:none;">
+      <div class="col-12">
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label" id="employeer" [(ngModel)]="employer"
+            placeholder="Employer " formControlName="employeer" maxlength="251"
+            [ngClass]="workAddressForm.get('employeer').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="workAddressForm.get('employeer').hasError('pattern')" class="small text-danger mt-1">
+          {{EmployerNameReq}}</div>
+        <div *ngIf="workAddressForm.get('employeer').hasError('maxlength')" class="small text-danger mt-1">
+          {{EmployeMax}}</div>
+        <div *ngIf="workAddressForm.get('employeer').hasError('minlength')" class="small text-danger mt-1">
+          {{EmployeMin}}</div>
+      </div>
+      <div class="col-12">
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label" id="streetName" [(ngModel)]="streetName"
+            placeholder="Street Address" formControlName="streetName"
+            [ngClass]="workAddressForm.get('streetName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="workAddressForm.get('streetName').hasError('maxlength')" class="small text-danger mt-1">
+          {{StreetAddressMax}}</div>
+      </div>
+      <div class="col-md-6">
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label" id="suite" [(ngModel)]="suite" placeholder="Suite"
+            formControlName="suite" maxlength="251"
+            [ngClass]="workAddressForm.get('suite').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="workAddressForm.get('suite').hasError('maxlength')" class="small text-danger mt-1">
+          {{StreetAddressMax}}</div>
+      </div>
+      <div class="col-md-6" style="background-color: transparent;color: transparent;">
+        <input type="password" class="form-control" hidden>
+      </div>
+      <div class="col-md-6">
+        <!-- zipcode -->
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label" id="zipcode" [(ngModel)]="zipcode"
+            placeholder="Zip Code" formControlName="zipcode" maxlength="51" (keyup)="getStateAndCity()"
+            [ngClass]="workAddressForm.get('zipcode').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="workAddressForm.get('zipcode').hasError('pattern')" class="small text-danger mt-1">{{ZipNum}}</div>
+        <div *ngIf="workAddressForm.get('zipcode').hasError('invalid')" class="small text-danger mt-1">{{ZipVal}}</div>
+        <div *ngIf="workAddressForm.get('zipcode').hasError('minlength')" class="small text-danger mt-1">{{ZipMin}}
+        </div>
+        <div *ngIf="workAddressForm.get('zipcode').hasError('maxlength')" class="small text-danger mt-1">{{ZipMax}}
+        </div>
+        <!-- zipcode -->
+      </div>
+      <div class="col-md-6">
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label disabledDiv" id="country" [(ngModel)]="country"
+            placeholder="County" formControlName="country" maxlength="51"
+            [ngClass]="workAddressForm.get('country').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="workAddressForm.get('country').hasError('pattern')" class="small text-danger mt-1">{{CountyAlp}}
+        </div>
+        <div *ngIf="workAddressForm.get('country').hasError('maxlength')" class="small text-danger mt-1">{{CountyMax}}
+        </div>
+      </div>
+      <div class="col-md-6">
+        <!-- city -->
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label disabledDiv" id="city" [(ngModel)]="city"
+            placeholder="City" formControlName="city" maxlength="51"
+            [ngClass]="workAddressForm.get('city').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="workAddressForm.get('city').hasError('pattern')" class="small text-danger mt-1">{{CityAlp}}</div>
+        <div *ngIf="workAddressForm.get('city').hasError('maxlength')" class="small text-danger mt-1">{{CityMax}}</div>
+        <!-- city -->
+      </div>
+      <div class="col-md-6">
+        <!-- state -->
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label disabledDiv" id="state" [(ngModel)]="state"
+            placeholder="State" formControlName="state" maxlength="51"
+            [ngClass]="workAddressForm.get('state').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="workAddressForm.get('state').hasError('pattern')" class="small text-danger mt-1">{{StateAlp}}</div>
+        <!-- state -->
+      </div>
+      <div class="col-md-12 col-lg-6">
+        <div class="d-flex" style="position:absolute;padding-left: 8px;">
+          <div class="input-group-prepend span-input"><span class="input-group-text span-input-data"> {{Work}} </span>
+          </div>
+        </div>
+        <div style="position: relative;">
+          <div class="mt-2" style="position:absolute; padding-left: 72px;" include="form-input-select()">
+            <select class="dropdown-select-label" style="border:none; outline:none;width:48px;" required id="countyCode"
+              [(ngModel)]="countyCode" formControlName="countyCode" required
+              [ngClass]="(this.relation == 'Self' && this.workEntityType === 'Guarantor')?'disabled-bg':''">
+              <option value="" hidden disabled>+1</option>
+              <option *ngFor="let data of this.phoneCode | keyvalue" value="{{data.value}}">
+                +{{data.value}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <span class="">
+          <input type="text" mask="(000) 000-0000" class="form-control textfield-label" style="padding-left: 122px;"
+            id="homeNo" [(ngModel)]="homeNo" placeholder="Work" formControlName="homeNo"
+            [ngClass]="workAddressForm.get('homeNo').errors && myform.submitted?'form-control-invalid': 'form-control'">
+          <div *ngIf="workAddressForm.get('homeNo').hasError('minlength')" class="small text-danger mt-1">{{WorkNumVal}}
+          </div>
+        </span>
+      </div>
+      <div class="col-xs-12 col-md-12 col-sm-12 mt-4 d-flex">
+        <button type="reset" class="btn btn-primary  login-text-field shadow-none mx-2 enabledDiv"
+          style="width:43px;background-color: transparent;border:none;color: #FFFFFF;" tooltip="Back"
+          (click)="GoToHomeAddress()">
+          <div class="ellipse d-flex ellipse1"
+            style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;">
+            <img src="assets/images/icons/left-chevron.svg" alt="mail-msg" class="next-round-icon" />
+          </div>
+        </button>
+        <button type="submit" class="btn btn-primary  login-text-field shadow-none enabledDiv"
+          (click)="workAddressNext(workAddressForm.value)"
+          style="width:42px;background-color: transparent;border:none;color: #FFFFFF;" tooltip="Next">
+          <div class="ellipse d-flex ellipse1" style="background-color: #2494ED;">
+            <img src="assets/images/icons/right-chevron.svg" alt="mail-msg" class="next-round-icon" />
+          </div>
+        </button>
+      </div>
+      <div hidden>
+        <input type="text" class="form-control login-text-field" id="data" [(ngModel)]="data" placeholder="data"
+          formControlName="data" />
+      </div>
+    </form>
+  </div>
+</div>

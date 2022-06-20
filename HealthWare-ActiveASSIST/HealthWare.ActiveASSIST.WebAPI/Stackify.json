@@ -1,0 +1,5 @@
+{
+  "AppName": "CCube.PatientPortal",
+  "Environment": "Development",
+  "CaptureAllExceptions": true
+}

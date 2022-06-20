@@ -1,0 +1,13 @@
+.checkbox-icon {
+    width: 15px;
+    height: 15px;
+}
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: #E9ECEf;
+    opacity: 1;
+}
+select:disabled {
+    opacity: 1;
+    background-color: #E9ECEf;
+}

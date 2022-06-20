@@ -1,0 +1,11 @@
+#advocate-household .mat-button-toggle {
+    border: 1px solid #2494ED !important;
+    width: 77px !important;
+    height: 34px !important;
+}
+.count-button-width{
+    width: 70px;
+    text-align: center;
+    padding-left: 0px;
+    padding-right: 0px;
+}

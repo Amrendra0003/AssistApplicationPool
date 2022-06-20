@@ -1,0 +1,195 @@
+<div class="col-xs-12 col-md-12 col-sm-12 pt-5 dashboard-bg body-height" class={{this.virtualAssistPadding}}
+    [ngClass]=this.currentTheme id="advocate">
+    <div class="container-fluid px-4 py-4 ">
+        <app-spinner-overlay *ngIf="this.showLoader == true">
+        </app-spinner-overlay>
+        <form autocomplete="off" [formGroup]="dashboardAdvocateForm">
+            <input autocomplete="false" name="hidden" type="text" style="display:none;">
+            <div class="row col-xs-12 col-md-12 col-sm-12 page-width pt-2">
+                <div class=" d-flex"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-xs-10 col-md-10 col-sm-10' :'col-xs-9 col-md-9 col-sm-9' ">
+                    <div class="row m-0 w-100">
+                        <div class="col-md-4 col-xl-3 mb-2 colHalfPadding">
+                            <div class=" ">
+                                <label class="dashboard-title-p1 pt-2">{{PriorSubmissions}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-xl-2 mb-2 colHalfPadding">
+                            <div class=" " id="date">
+                                <select class="form-select form-select-sm dropdown-select-label" id="datelist"
+                                    aria-label="form-select-sm example" (change)="onChangeDays($event)"
+                                    formControlName="filter" [(ngModel)]="filter" required>
+                                    <option value="" hidden disabled>{{SelectDate}}</option>
+                                    <option value="Last 7 Days" Selected>{{Last7Days}}</option>
+                                    <option value="Today">{{Today}}</option>
+                                    <option value="Yesterday">{{Yesterday}}</option>
+                                    <option value="This Month">{{ThisMonth}}</option>
+                                    <option value="Last 3 Days">{{Last3Days}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-xl-2 mb-2 colHalfPadding">
+                            <div class=" " id="filter">
+                                <select class="form-select form-select-sm dropdown-select-label" id="filterlist"
+                                    aria-label="form-select-sm example" formControlName="orderBy" [(ngModel)]="orderBy"
+                                    (change)="onChangeOrders($event)" required>
+                                    <option value="" hidden disabled>{{SelectFilter}}</option>
+                                    <option value="Newest First" Selected>{{NewestFirst}}</option>
+                                    <option value="Oldest First">{{OldestFirst}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-xl-5 d-flex colHalfPadding">
+                            <input type="search" class="form-control dashboard-p2" id="search"
+                                formcontrolname="searchText" [(ngModel)]="searchText"
+                                placeholder="Search using First Name, Last Name and Assessment Id"
+                                (change)="getAdvocateDashboardDetails(this.searchText)"
+                                [ngModelOptions]="{standalone: true}">
+                            <img src="assets/images/icons/search.svg" class="dashboard-img"
+                                (click)="getAdvocateDashboardDetails(this.searchText)" style="cursor: pointer;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="float-right p-0 text-right"
+                    [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-xs-2 col-md-2 col-sm-2' :'col-xs-3 col-md-3 col-sm-3' "
+                    style="text-align: right;" *ngxPermissionsOnly="['CreateAssessmentByAdvocate']">
+                    <button type="button" class="btn btn-primary float-right px-4 fullWidthHeiAuto"
+                        style="width:auto;background-color: 1px solid #2494ED;color: #FFFFFF;"
+                        (click)="createAssessment()">{{StartNewAssessment}}</button>
+                </div>
+            </div>
+            <div style="height: 90vh;" *ngIf="this.showEmptyMessage == true">
+                <div class="contsiner-fluid mt-5 pt-5" style="text-align: center;height: 90vh">
+                    <label style="text-align: center;" class="flex appLanding-header px-5">{{NoRecordsFound}}</label>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-sm-12 pt-4" *ngIf="this.showEmptyMessage == false">
+                <div *ngFor="let data of result" class="mt-3">
+                    <div class="col-12">
+                        <label class="header-label">{{ data.createDate | date:'dd MMMM yyyy' }}</label>
+                    </div>
+                    <div class="col-md-12 d-flex">
+                        <div class="col-xs-2 col-sm-2 col-md-2 header-label">{{AssessmentID}}</div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 header-label">{{Status}}</div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 header-label">{{Patient}}</div>
+                        <div class="col-xs-1 col-sm-1 col-md-1 header-label">{{Gender}} / Age</div>
+                        <div class="col-xs-2 col-sm-2 col-md-2 header-label">{{From}}</div>
+                        <div class="col-xs-3 col-sm-3 col-md-3 header-label">{{this.Programs}}</div>
+                    </div>
+                    <mat-card class="col-xs-12 col-md-12 col-sm-12 mat-card mt-3 mb-3 d-flex p-0"
+                        *ngFor="let details of data.dashboardAssessments">
+                        <div class="col-xs-12 col-md-12 col-sm-12 d-flex ">
+                            <div class="col-xs-2 col-sm-2 col-md-2 pt-2 px-2 ">
+                                <label class="header-label py-2">{{details.assessmentId}}</label>
+                            </div>
+                            <div class="col-xs-2 col-sm-2 col-md-2 text-center py-2"
+                                [ngClass]="(details.assessmentStatus == 'Incomplete')?'dashboard-submit-div':'dashboard-underReview-div'">
+                                <label class="header-label div-color py-2">{{details.assessmentStatus}}</label>
+                            </div>
+                            <div class="col-xs-2 col-sm-2 col-md-2 d-flex  py-2" style="z-index: auto;">
+                                <img [src]="details.patientProfileImage" class="header-avator-img ms-2" alt="avator">
+                                <label class="header-label programs-overflow pointer py-2"
+                                    tooltip="{{details.patientName}}">{{details.patientName}}</label>
+                            </div>
+                            <div class="col-xs-1 col-sm-1 col-md-1  py-2">
+                                <label class="header-label">{{details.gender}} / {{details.age}}</label>
+                            </div>
+                            <div class="col-xs-2 col-sm-2 col-md-2 py-2">
+                                <label class="header-label">{{details.city}}, {{details.stateCode}}</label>
+                            </div>
+                            <div class="col-xs-3 col-sm-3 col-md-3 py-2 d-flex" style="cursor: pointer;">
+                                <div class="col-xs-11 col-sm-11 col-md-11">
+                                    <label class="header-label programs-overflow pointer py-2"
+                                        tooltip="{{details.programs}}">{{details.programs}}</label>
+                                </div>
+                                <div ngbDropdown class="d-inline-block" placement="left">
+                                    <span id="clickMoreOptions" class="pointer" style="cursor: pointer;">
+                                        <img src="assets/images/icons/vertical_more_options.svg" class="pointer me-4"
+                                            ngbDropdownToggle />
+                                    </span>
+                                    <div class="mt-2 " ngbDropdownMenu aria-labelledby="clickMoreOptions"
+                                        style="padding-right: 10px;">
+                                        <div class="d-flex">
+                                            <div class="example-button-container dash-rounded-icon ms-2"
+                                                *ngxPermissionsOnly="['UpdateAssessment']">
+                                                <button type="button" mat-mini-fab class="btnTray" tooltip="Edit"
+                                                    (click)="dashboardInfo(details.assessmentId,details.gender,details.age,details.patientName,details.assessmentStatus,details.assessmentPatientId,details.userId,details.submittedOn, '0')">
+                                                    <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                            height="15.983" viewBox="0 0 16 15.983">
+                                                            <defs></defs>
+                                                            <path class="a"
+                                                                d="M-2871.9-3114.117a.349.349,0,0,1-.091-.33l.975-3.917a.357.357,0,0,1,.092-.161l8.8-8.8,3.431,3.43-8.8,8.8a.343.343,0,0,1-.16.091l-3.917.976a.331.331,0,0,1-.084.01A.347.347,0,0,1-2871.9-3114.117Zm10.76-14.191,1.2-1.2a1.775,1.775,0,0,1,2.451,0l.98.98a1.722,1.722,0,0,1,.507,1.225,1.722,1.722,0,0,1-.507,1.225l-1.2,1.2Z"
+                                                                transform="translate(2872 3130)" />
+                                                        </svg></mat-icon>
+                                                </button>
+                                            </div>
+                                            <div class="example-button-container dash-rounded-icon ms-2">
+                                                <button type="button" mat-mini-fab class="btnTray" tooltip="E-forms"
+                                                    (click)="dashboardInfo(details.assessmentId,details.gender,details.age,details.patientName,details.assessmentStatus,details.assessmentPatientId,details.userId,details.submittedOn, '6')">
+                                                    <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="13"
+                                                            height="17.067" viewBox="0 0 13 17.067">
+                                                            <defs></defs>
+                                                            <path class="a"
+                                                                d="M-1434.167-5024.934a1.836,1.836,0,0,1-1.833-1.833v-13.4a1.835,1.835,0,0,1,1.833-1.833h5.967v3.833a1.168,1.168,0,0,0,1.167,1.167H-1423v10.233a1.836,1.836,0,0,1-1.833,1.833Zm.4-4.567a.5.5,0,0,0,.5.5h2.424a.5.5,0,0,0,.5-.5.5.5,0,0,0-.5-.5h-2.424A.5.5,0,0,0-1433.766-5029.5Zm0-2.667a.5.5,0,0,0,.5.5h7.333a.5.5,0,0,0,.5-.5.5.5,0,0,0-.5-.5h-7.333A.5.5,0,0,0-1433.766-5032.167Zm0-2.667a.5.5,0,0,0,.5.5h7.333a.5.5,0,0,0,.5-.5.5.5,0,0,0-.5-.5h-7.333A.5.5,0,0,0-1433.766-5034.834Zm6.733-3.167a.166.166,0,0,1-.167-.167v-3.626a1.861,1.861,0,0,1,.412.294l3.214,3.041a1.838,1.838,0,0,1,.35.458Z"
+                                                                transform="translate(1436 5042)" />
+                                                        </svg></mat-icon>
+                                                </button>
+                                            </div>
+                                            <div class="example-button-container dash-rounded-icon ms-2">
+                                                <button type="button" mat-mini-fab class="btnTray"
+                                                    tooltip="Verification"
+                                                    (click)="dashboardInfo(details.assessmentId,details.gender,details.age,details.patientName,details.assessmentStatus,details.assessmentPatientId,details.userId,details.submittedOn, '7')">
+                                                    <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                                            height="18.75" viewBox="0 0 20 18.75">
+                                                            <defs></defs>
+                                                            <path class="a"
+                                                                d="M7172.758-969.249a1.76,1.76,0,0,1-1.758-1.758v-10.547a1.76,1.76,0,0,1,1.758-1.758h8.926a5.261,5.261,0,0,0,5.214,4.688,5.242,5.242,0,0,0,2.93-.893v8.51a1.76,1.76,0,0,1-1.758,1.758Zm8.867-2.93a.586.586,0,0,0,.586.586h4.688a.586.586,0,0,0,.586-.586.586.586,0,0,0-.586-.586h-4.687A.586.586,0,0,0,7181.625-972.179Zm-7.7-5.273a2.34,2.34,0,0,0,.706,1.673,2.929,2.929,0,0,0-1.292,2.429v1.172a.585.585,0,0,0,.586.586h4.688a.586.586,0,0,0,.586-.586v-1.172a2.929,2.929,0,0,0-1.293-2.429,2.333,2.333,0,0,0,.708-1.673,2.346,2.346,0,0,0-2.344-2.344A2.346,2.346,0,0,0,7173.93-977.452Zm7.7,2.93a.586.586,0,0,0,.586.586h4.688a.586.586,0,0,0,.586-.586.586.586,0,0,0-.586-.586h-4.687A.586.586,0,0,0,7181.625-974.523Zm4.688-2.344a.586.586,0,0,0,.586.586.586.586,0,0,0,.586-.586.586.586,0,0,0-.586-.586A.586.586,0,0,0,7186.313-976.866Zm-2.344,0a.586.586,0,0,0,.586.586.586.586,0,0,0,.586-.586.586.586,0,0,0-.586-.586A.586.586,0,0,0,7183.969-976.866Zm-2.344,0a.586.586,0,0,0,.586.586.586.586,0,0,0,.586-.586.586.586,0,0,0-.586-.586A.586.586,0,0,0,7181.625-976.866Zm-7.109,4.1v-.586a1.76,1.76,0,0,1,1.758-1.758,1.76,1.76,0,0,1,1.758,1.758v.586Zm.586-4.687a1.174,1.174,0,0,1,1.172-1.172,1.173,1.173,0,0,1,1.172,1.172,1.173,1.173,0,0,1-1.172,1.172A1.174,1.174,0,0,1,7175.1-977.452Zm7.7-6.445a4.073,4.073,0,0,1,4.063-4.1,4.14,4.14,0,0,1,4.141,4.1,4.107,4.107,0,0,1-4.1,4.1A4.106,4.106,0,0,1,7182.8-983.9Zm1.929-.414a.586.586,0,0,0,0,.828l1.172,1.172a.586.586,0,0,0,.829,0l2.344-2.344a.584.584,0,0,0,0-.828.586.586,0,0,0-.829,0l-1.929,1.929-.758-.758a.586.586,0,0,0-.414-.172A.585.585,0,0,0,7184.726-984.312Z"
+                                                                transform="translate(-7171 987.999)" />
+                                                        </svg></mat-icon>
+                                                </button>
+                                            </div>
+                                            <div class="example-button-container dash-rounded-icon ms-2"
+                                                *ngxPermissionsOnly="['DeleteAssessment']">
+                                                <button type="button" mat-mini-fab class="btnTray" tooltip="Delete"
+                                                    data-bs-toggle="modal" data-bs-target="#deleteAssessment"
+                                                    (click)="openModel(details.assessmentId)">
+                                                    <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="14.625"
+                                                            height="18" viewBox="0 0 14.625 18">
+                                                            <defs></defs>
+                                                            <path class="a"
+                                                                d="M-2868.959-3112a1.685,1.685,0,0,1-1.685-1.607l-.464-9.74a.176.176,0,0,1,.176-.185h12.49a.175.175,0,0,1,.176.185l-.464,9.74a1.686,1.686,0,0,1-1.685,1.607Zm6.521-10.125v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2862.438-3122.125Zm-2.812,0v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2865.25-3122.125Zm-2.812,0v7.313a.562.562,0,0,0,.563.563.562.562,0,0,0,.563-.562v-7.312a.562.562,0,0,0-.562-.562A.562.562,0,0,0-2868.063-3122.125Zm-3.375-2.531a.563.563,0,0,1-.562-.563v-1.125a1.407,1.407,0,0,1,1.406-1.406h3.094v-.562a1.688,1.688,0,0,1,1.688-1.688h2.25a1.688,1.688,0,0,1,1.688,1.688v.562h3.094a1.407,1.407,0,0,1,1.406,1.406v1.125a.563.563,0,0,1-.562.563Zm5.063-3.656v.562H-2863v-.562a.563.563,0,0,0-.562-.562h-2.25A.563.563,0,0,0-2866.375-3128.313Z"
+                                                                transform="translate(2872 3130)" />
+                                                        </svg></mat-icon>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade modal-overlay" id="deleteAssessment"
+                                    aria-labelledby="deleteAssessmentLabel" role="dialog" data-bs-backdrop="false"
+                                    style="z-index: 1060;">
+                                    <div class="modal-dialog" style="margin-top: 15%;">
+                                        <div class="modal-content">
+                                            <div class="modal-body">
+                                                <div class="text-center py-4">
+                                                    <b class="modal-popup-title text-center">{{logoutMsg}}</b>
+                                                </div>
+                                                <div class="d-flex text-center py-1 justify-content-center">
+                                                    <button class="btn btn-outline mx-4 login-label pointer"
+                                                        data-bs-dismiss="modal" (click)="hideModal()">{{No}}</button>
+                                                    <button class="btn btn-primary mx-4 login-label pointer"
+                                                        data-bs-dismiss="modal" style="color: white;"
+                                                        (click)="deleteDashboardAssessment(details.assessmentId)">{{Yes}}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

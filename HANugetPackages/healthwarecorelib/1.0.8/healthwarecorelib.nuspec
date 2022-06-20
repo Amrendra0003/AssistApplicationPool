@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>HealthwareCoreLib</id>
+    <version>1.0.8</version>
+    <authors>Healthware</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework=".NETCoreApp3.1">
+        <dependency id="BCrypt.Net-Next" version="4.0.2" exclude="Build,Analyzers" />
+        <dependency id="Castle.Core" version="4.4.1" exclude="Build,Analyzers" />
+        <dependency id="Castle.Facilities.AspNet.SystemWeb" version="5.1.1" exclude="Build,Analyzers" />
+        <dependency id="Castle.Windsor" version="5.1.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.AspNetCore.Identity.EntityFrameworkCore" version="5.0.9" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore" version="5.0.9" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Relational" version="5.0.9" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.SqlServer" version="5.0.9" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Logging.Log4Net.AspNetCore" version="3.1.0" exclude="Build,Analyzers" />
+        <dependency id="NETCore.MailKit" version="2.0.3" exclude="Build,Analyzers" />
+        <dependency id="log4net" version="2.0.12" exclude="Build,Analyzers" />
+        <dependency id="log4net.Ext.Json" version="2.0.8.3" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework=".NETCoreApp3.1">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+    </frameworkReferences>
+    <contentFiles>
+      <files include="any/netcoreapp3.1/appsettings.Development.json" buildAction="Content" />
+      <files include="any/netcoreapp3.1/appsettings.json" buildAction="Content" />
+    </contentFiles>
+  </metadata>
+</package>

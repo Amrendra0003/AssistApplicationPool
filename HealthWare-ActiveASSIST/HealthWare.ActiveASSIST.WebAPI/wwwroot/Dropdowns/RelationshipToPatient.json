@@ -1,0 +1,37 @@
+{
+  "RelationshipToPatient": {
+    "ASC": "Associate",
+    "BRO": "Brother",
+    "CGV": "Care giver",
+    "CHD": "Child",
+    "DEP": "Handicapped dependent",
+    "DOM": "Life partner",
+    "EMC": "Emergency contact",
+    "EME": "Employee",
+    "EMR": "Employer",
+    "EXF": "Extended family",
+    "FCH": "Foster child",
+    "FND": "Friend",
+    "FTH": "Father",
+    "GCH": "Grandchild",
+    "GRD": "Guardian",
+    "GRP": "Grandparent",
+    "MGR": "Manager",
+    "MTH": "Mother",
+    "NCH": "Natural child",
+    "NON": "None",
+    "OAD": "Other adult",
+    "OTH": "Other",
+    "OWN": "Owner",
+    "PAR": "Parent",
+    "SCH": "Stepchild",
+    "SEL": "Self",
+    "SIB": "Sibling",
+    "SIS": "Sister",
+    "SPO": "Spouse",
+    "TRA": "Trainer",
+    "UNK": "Unknown",
+    "WRD": "Ward of court"
+
+  }
+}

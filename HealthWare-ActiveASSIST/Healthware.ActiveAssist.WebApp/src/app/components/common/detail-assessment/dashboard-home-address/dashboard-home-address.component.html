@@ -1,0 +1,141 @@
+<div class="col-xs-12 col-md-12 col-sm-12" [ngClass]=this.currentTheme>
+  <div class="col-xs-12 col-md-12 col-sm-12  d-flex"> <img src="assets/images/icons/home.svg" class="dash-icon" /><label
+      class="dashboard-p1 mx-2 mt-1"><b>{{HomeAddress}}</b></label></div>
+  <div class="col-xs-12 col-md-12 col-sm-12 mt-2 d-flex">
+    <form autocomplete="off" [formGroup]="homeAddressForm" class="col-xs-10 col-md-10 col-sm-10 row g-3"
+      #myform="ngForm" [ngClass]="{disabledDiv: !isEditAllowed}">
+      <input autocomplete="false" name="hidden" type="text" style="display:none;">
+      <div class="col-12">
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label" id="homeStreetName" [(ngModel)]="homeStreetName"
+            placeholder="Street Address" formControlName="homeStreetName" maxlength="251"
+            [ngClass]="homeAddressForm.get('homeStreetName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="homeAddressForm.get('homeStreetName').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{StreetAddressReg}}</div>
+        <div *ngIf="homeAddressForm.get('homeStreetName').hasError('maxlength')" class="small text-danger mt-1">
+          {{StreetAddressMax}}</div>
+      </div>
+      <div class="col-md-6">
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label" id="homeSuite" [(ngModel)]="homeSuite"
+            placeholder="Suite" formControlName="homeSuite" maxlength="251"
+            [ngClass]="homeAddressForm.get('homeSuite').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="homeAddressForm.get('homeSuite').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{SuiteReq}}</div>
+        <div *ngIf="homeAddressForm.get('homeSuite').hasError('maxlength')" class="small text-danger mt-1">{{SuiteMax}}
+        </div>
+      </div>
+      <div class="col-md-6" style="background-color: transparent;color: transparent;">
+        <input type="text" class="form-control textfield-label" placeholder="Suite" hidden>
+      </div>
+      <div class="col-md-6">
+        <!-- zipcode -->
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label" id="homePincode" [(ngModel)]="homePincode"
+            placeholder="Zip Code" formControlName="homePincode" maxlength="51" (keyup)="getStateAndCity()"
+            [ngClass]="homeAddressForm.get('homePincode').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="homeAddressForm.get('homePincode').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{ZipReq}}</div>
+        <div *ngIf="homeAddressForm.get('homePincode').hasError('pattern')" class="small text-danger mt-1">{{ZipNum}}
+        </div>
+        <div *ngIf="homeAddressForm.get('homePincode').hasError('invalid')" class="small text-danger mt-1">{{ZipVal}}
+        </div>
+        <div *ngIf="homeAddressForm.get('homePincode').hasError('minlength')" class="small text-danger mt-1">{{ZipMin}}
+        </div>
+        <div *ngIf="homeAddressForm.get('homePincode').hasError('maxlength')" class="small text-danger mt-1">{{ZipMax}}
+        </div>
+        <!-- zipcode -->
+      </div>
+      <div class="col-md-6">
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label disabledDiv" id="hometown" [(ngModel)]="hometown"
+            placeholder="County" formControlName="hometown" maxlength="51"
+            [ngClass]="homeAddressForm.get('hometown').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="homeAddressForm.get('hometown').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{CountyReq}}</div>
+        <div *ngIf="homeAddressForm.get('hometown').hasError('pattern')" class="small text-danger mt-1">{{CountyAlp}}
+        </div>
+        <div *ngIf="homeAddressForm.get('hometown').hasError('maxlength')" class="small text-danger mt-1">{{CountyMax}}
+        </div>
+      </div>
+      <div class="col-md-6">
+        <!-- city -->
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label disabledDiv" id="homeCity" [(ngModel)]="homeCity"
+            placeholder="City" formControlName="homeCity" maxlength="51"
+            [ngClass]="homeAddressForm.get('homeCity').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="homeAddressForm.get('homeCity').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{CityReq}}</div>
+        <div *ngIf="homeAddressForm.get('homeCity').hasError('pattern')" class="small text-danger mt-1">{{CityAlp}}
+        </div>
+        <div *ngIf="homeAddressForm.get('homeCity').hasError('maxlength')" class="small text-danger mt-1">{{CityMax}}
+        </div>
+        <!-- city -->
+      </div>
+      <div class="col-md-6">
+        <!-- state -->
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label disabledDiv" id="homeState" [(ngModel)]="homeState"
+            placeholder="State" formControlName="homeState" maxlength="51"
+            [ngClass]="homeAddressForm.get('homeState').errors && myform.submitted?'form-control-invalid': 'form-control'">
+        </div>
+        <div *ngIf="homeAddressForm.get('homeState').hasError('pattern')" class="small text-danger mt-1">{{StateAlp}}
+        </div>
+        <div *ngIf="homeAddressForm.get('homeState').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{StateReq}}</div>
+        <!-- State -->
+      </div>
+      <div class="col-md-12 col-lg-6">
+        <div class="d-flex" style="position:absolute;padding-left: 8px;">
+          <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">{{home}} </span>
+          </div>
+        </div>
+        <div style="position: relative;">
+          <div class="mt-2" style="position:absolute; padding-left: 72px;" include="form-input-select()">
+            <select class="dropdown-select-label" style="border:none; outline:none;width:48px;" required id="countyCode"
+              [(ngModel)]="countyCode" formControlName="countyCode" required
+              [ngClass]="(this.relation == 'Self' && this.homeEntityType === 'Guarantor')?'disabled-bg':''">
+              <option value="" hidden disabled>+1</option>
+              <option *ngFor="let data of this.phoneCode | keyvalue" value="{{data.value}}">
+                +{{data.value}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <span class="">
+          <input type="text" mask="(000) 000-0000" class="form-control textfield-label" style="padding-left: 122px;"
+            id="homeCellNumber" [(ngModel)]="homeCellNumber" placeholder="Home" formControlName="homeCellNumber"
+            [ngClass]="homeAddressForm.get('homeCellNumber').errors && myform.submitted?'form-control-invalid': 'form-control'">
+          <div *ngIf="homeAddressForm.get('homeCellNumber').hasError('minlength')" class="small text-danger mt-1">
+            {{ValidHomeNum}}</div>
+        </span>
+      </div>
+      <div class="col-xs-12 col-md-12 col-sm-12 mt-4 d-flex">
+        <button type="reset" class="btn btn-primary login-text-field shadow-none mx-2 enabledDiv"
+          style="width:38px;background-color: transparent;border:none;color: #FFFFFF;" tooltip="Back"
+          (click)="GoToInfo()">
+          <div class="ellipse d-flex ellipse1"
+            style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;">
+            <img src="assets/images/icons/left-chevron.svg" alt="mail-msg" class="next-round-icon" />
+          </div>
+        </button>
+        <button type="submit" class="btn btn-primary  login-text-field shadow-none enabledDiv"
+          style="width:38px;background-color: transparent;border:none;color: #FFFFFF;"
+          (click)="homeAddressNext(homeAddressForm.value)" tooltip="Next">
+          <div class="ellipse d-flex ellipse1" style="background-color: #2494ED;">
+            <img src="assets/images/icons/right-chevron.svg" alt="mail-msg" class="next-round-icon" />
+          </div>
+        </button>
+      </div>
+      <div hidden>
+        <input type="text" class="form-control login-text-field" id="data" [(ngModel)]="data" placeholder="data"
+          formControlName="data" />
+      </div>
+    </form>
+  </div>
+</div>

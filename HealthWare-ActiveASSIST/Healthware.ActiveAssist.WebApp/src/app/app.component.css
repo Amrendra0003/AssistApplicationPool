@@ -1,0 +1,152 @@
+:root {
+    /*light theme*/
+    --background: #EFF3F6;
+    --font-color: #546073;
+    --alert-background: #E66767;
+    --btn-primary: #2494ED;
+    --btn-outline: #2494ED;
+    --btn-outline-bg: #FFFFFF;
+    --success-status: #4AD295;
+    --header-background: #FFFFFF;
+    --dashboard-background: #FFFFFF;
+    --dashboard-append-cardbackground: #9DACBF;
+    --hightlight-2: #e2e3e5;
+    --link: #0366d6;
+}
+.dark-mode {
+    --background: #2d2d2d;
+    --font-color: white;
+    --alert-background: #E66767;
+    --btn-primary: #2494ED;
+    --btn-outline: #FFFFFF;
+    --btn-outline-bg: #2494ED;
+    --success-status: #4AD295;
+    --header-background: #000000;
+    --dashboard-background: #000000;
+    --dashboard-append-cardbackground: #9DACBF;
+    --hightlight-2: #e2e3e5;
+    --link: #0366d6;
+}
+html,
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100%;
+}
+a,
+.btn-link {
+    color: var(--link);
+}
+.alert-secondary {
+    background-color: var(--hightlight-2);
+    color: var(--font-color);
+}
+.table {
+    color: var(--font-color);
+    background: var(--background);
+}
+div .main {
+    background-color: var(--background);
+    color: var(--font-color);
+}
+.btn-primary {
+    color: #fff;
+    background-color: #42A5F5;
+}
+.btn-outline {
+    background: var(--btn-outline-bg);
+    border: 1px solid #2494ED;
+    color: var(--btn-outline);
+}
+.content {
+    padding-top: 1.1rem;
+}
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+.invalid {
+    outline: 1px solid red;
+}
+.validation-message {
+    color: red;
+}
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+/* Common Css*/
+.notes {
+    font-family: Roboto;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    color: #546073;
+}
+.button {
+    font-family: "Roboto";
+    font-weight: normal;
+    color: #FFFFFF;
+    background-color: #2494ED;
+    font-size: 16px;
+    line-height: 19px;
+}
+.title {
+    font-family: Roboto;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+    color: #546073;
+}
+.subtitle {
+    font-family: Roboto;
+    font-weight: normal;
+    font-size: 20px;
+    color: #546073;
+    line-height: 29px;
+}
+.ellipse {
+    background-color: #FFFFFF;
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    padding: 12px;
+    margin: 10px;
+}
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+.header-bg {
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    margin: 0px;
+    background: var(--header-background);
+}
+.dashboard-append-card {
+    background: var(--dashboard-append-cardbackground);
+}
+.dashboard-card {
+    background: var(--dashboard-background);
+}
+.font-light {
+    font-weight: 200 !important;
+}
+.vl {
+    border-left: 1px solid #AFBBCA;
+    height: 60px;
+}

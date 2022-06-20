@@ -1,0 +1,410 @@
+{
+    "data": {
+        "screen": [
+            {
+                "screenId": "1",
+                "screenName": "Start screen",
+                "leftPanelContent": "Let's get you started",
+                "leftDescription": "Select the patient type to proceed quick assessment.",
+                "questions": [
+                    {
+                        "id": "1",
+                        "name": "Let us know who the patient is.",
+                        "description": null,
+                        "uiType": "radio",
+                        "displayFormat":"header",
+                        "cssStyle": "rbn_style1",
+                        "screenQuestionMappingId": "1",
+                        "isRequired": true,
+                        "userResponse":"myself",
+                        "options": [
+                            {
+                                "id": "1",
+                                "name": "myself",
+                                "value": "Myself",
+                                "order":1
+                            },
+                            {
+                                "id": "2",
+                                "name": "relative/Friend/Other",
+                                "value": "Relative/Friend/Other",
+                                "order":2
+                            }
+                        ],
+                        "subQuestion": null
+                    }
+                ]
+            },
+            {
+                "screenId": "2",
+                "screenName": "Patient Zip Code",
+                "leftPanelContent": "Residential Zip Code",
+                "leftDescription": "Enter the Zip code to let us know your location to help you.",
+                "questions": [
+                    {
+                        "id": "2",
+                        "name": "Please enter your Zip code",
+                        "description": null,
+                        "uiType": "numerictext",
+                        "displayFormat":"header",
+                        "cssStyle": "txt_zip_style1",
+                        "screenQuestionMappingId": "2",
+                        "isRequired": true,
+                        "userResponse":"750201-55544",
+                        "options": null,
+                        "subQuestion": null
+                    },
+                    {
+                        "id": "3",
+                        "name": "City",
+                        "description": "Please enter your city",
+                        "uiType": "text",
+                        "displayFormat":"inline",
+                        "cssStyle": "txt_style1",
+                        "screenQuestionMappingId": "3",
+                        "isRequired": true,
+                        "userResponse":"",
+                        "options": null,
+                        "subQuestion": null
+                    },
+                    {
+                        "id": "4",
+                        "name": "State",
+                        "description": "",
+                        "uiType": "text",
+                        "displayFormat":"inline",
+                        "cssStyle": "txt_style1",
+                        "screenQuestionMappingId": "3",
+                        "isRequired": true,
+                        "userResponse":"",
+                        "options": null,
+                        "subQuestion": null
+                    }
+                    
+                    
+                ]
+            },
+            {
+                "screenId": "3",
+                "screenName": "Citizenship screen",
+                "leftPanelContent": "Citizenship Status",
+                "leftDescription": "Let us know your citizenship",
+                "questions": [
+                    {
+                        "id": "3",
+                        "name": "Confirm your citizenship status",
+                        "description": null,
+                        "uiType": "dropdown",
+                        "dataType": null,
+                        "values": null,
+                        "cssStyle": null,
+                        "screenQuestionMappingId": "3",
+                        "labels": [
+                            {
+                                "labelId": "6",
+                                "labelName": "U.S. Citizen",
+                                "keyName": "uscitizen",
+                                "required": false
+                            },
+                            {
+                                "labelId": "7",
+                                "labelName": "Legal Resident",
+                                "keyName": "legalResident",
+                                "required": false
+                            },
+                            {
+                                "labelId": "8",
+                                "labelName": "Undocumented",
+                                "keyName": "undocumented",
+                                "required": false
+                            },
+                            {
+                                "labelId": "9",
+                                "labelName": "Unknown",
+                                "keyName": "unknown",
+                                "required": false
+                            }
+                        ],
+                        "subQuestion": null
+                    }
+                ]
+            },
+            {
+                "screenId": "4",
+                "screenName": "Patient Demographics screen",
+                "leftPanelContent": "Patient Demographics",
+                "leftDescription": "Kindly fill your legal name and other demographic details.",
+                "questions": [
+                    {
+                        "id": "6",
+                        "name": "Tell us about yourself",
+                        "description": null,
+                        "displayFormat":"header",
+                        "uiType": "label",
+                        "cssStyle": "col-12",
+                        "screenQuestionMappingId": "4",
+                        "keyName":"",
+                        "isRequired": false,
+                        "options": null,
+                        "subQuestion": null
+                    },
+                    {
+                        "id": "6",
+                        "name": "First Name",
+                        "description": "",
+                        "uiType": "textbox",
+                        "displayFormat":"inline",
+                        "cssStyle": "col-md-6",
+                        "screenQuestionMappingId": "6",
+                        "isRequired": true,
+                        "keyName":"firstName",
+                        "userResponse":"Mohan",
+                        "options": null,
+                        "subQuestion": null
+                    },
+                    {
+                        "id": "7",
+                        "name": "Last Name",
+                        "description": "",
+                        "uiType": "textbox",
+                        "displayFormat":"inline",
+                        "cssStyle": "col-md-6",
+                        "screenQuestionMappingId": "6",
+                        "isRequired": true,
+                        "keyName":"lastName",
+                        "userResponse":"B",
+                        "options": null,
+                        "subQuestion": null
+                    },
+                    {
+                        "id": "8",
+                        "name": "date of birth",
+                        "description": "",
+                        "uiType": "date",
+                        "displayFormat":"inline",
+                        "cssStyle": "col-md-6",
+                        "screenQuestionMappingId": "7",
+                        "isRequired": true,
+                        "keyName":"dob",
+                        "userResponse":"07/25/1990",
+                        "options": null,
+                        "subQuestion": null
+                    },
+                    {
+                        "id": "9",
+                        "name": "Gender",
+                        "description": "",
+                        "uiType": "dropdown",
+                        "displayFormat":"inline",
+                        "cssStyle": "col-md-6",
+                        "screenQuestionMappingId": "7",
+                        "isRequired": false,
+                        "keyName":"gender",
+                        "userResponse":"Male",
+                        "subQuestion": null,
+                        "options": [
+                            {
+                                "id": "1",
+                                "name": "male",
+                                "value": "Male",
+                                "order":1
+                            },
+                            {
+                                "id": "2",
+                                "name": "female",
+                                "value": "Female",
+                                "order":2
+                            }
+                        ]
+                    },
+                    {
+                        "id": "8",
+                        "name": "Marital Status",
+                        "description": "",
+                        "uiType": "dropdown",
+                        "displayFormat":"inline",
+                        "cssStyle": "col-md-6",
+                        "screenQuestionMappingId": "7",
+                        "isRequired": true,
+                        "keyName":"maritalStatus",
+                        "userResponse":"Married",
+                        "options": [
+                            {
+                                "id": "1",
+                                "value": "married",
+                                "name": "Married",
+                                "order":1
+                            },
+                            {
+                                "id": "2",
+                                "value": "unMarried",
+                                "name": "Unmarried",
+                                "order":2
+                            }
+                        ],
+                        "subQuestion": null
+                    },
+                    {
+                        "id": "8",
+                        "name": "Email",
+                        "description": "",
+                        "uiType": "textbox",
+                        "displayFormat":"partition",
+                        "cssStyle": "col-12",
+                        "screenQuestionMappingId": "7",
+                        "isRequired": true,
+                        "keyName":"email",
+                        "userResponse":"mohan.b@zucisystems.com",
+                        "options": null,
+                        "subQuestion": null
+                    },
+                    {
+                        "id": "8",
+                        "name": "Cell",
+                        "description": "",
+                        "uiType": "cell",
+                        "displayFormat":"partition",
+                        "cssStyle": "col-md-6",
+                        "screenQuestionMappingId": "7",
+                        "isRequired": false,
+                        "keyName":"cell",
+                        "userResponse":"+91,9841751226",
+                        "subQuestion": null,
+                        "options": [
+                            {
+                                "id": "1",
+                                "name": "india",
+                                "value": "+91",
+                                "order":1
+                            },
+                            {
+                                "id": "2",
+                                "name": "us",
+                                "value": "+1",
+                                "order":2
+                            }
+                        ]
+                    }
+                    
+                ]
+            },
+            {
+                "screenId": "5",
+                "screenName": "Insurance screen",
+                "leftPanelContent": "Insurance Coverage",
+                "leftDescription": "Do you have/had any health insurance? If yes, let us know your insurance details.",
+                "questions": [
+                    {
+                        "id": "5",
+                        "name": "Do you currently or in the last 60 days have/had health insurance",
+                        "description": null,
+                        "uiType": "toggle",
+                        "displayFormat":"header",
+                        "cssStyle": null,
+                        "isRequired": true,
+                        "screenQuestionMappingId": "5",
+                        "options": [
+                            {
+                                "id": "1",
+                                "name": "yes",
+                                "value": "Yes",
+                                "order":1
+                            },
+                            {
+                                "id": "2",
+                                "name": "no",
+                                "value": "No",
+                                "order":2
+                            }
+                        ],
+                        "subQuestions": 
+                            {
+                                "question":[
+                                    {
+                                        "id": "6",
+                                        "name": "Enter the following details",
+                                        "description": null,
+                                        "keyName":"label",
+                                        "uiType": "label",
+                                        "cssStyle": "col-12",
+                                        "displayFormat":"header",
+                                        "isRequired": false,
+                                        "screenQuestionMappingId": "6"
+                                    },
+                                    {
+                                        "id": "6",
+                                        "name": "Payer name",
+                                        "keyName":"payerName",
+                                        "description": null,
+                                        "uiType": "textbox",
+                                        "cssStyle": "col-12 d-flex",
+                                        "displayFormat":"inline",
+                                        "isRequired": true,
+                                        "screenQuestionMappingId": "6"
+                                    },
+                                    {
+                                        "id": "6",
+                                        "name": "Group name",
+                                        "keyName":"groupName",
+                                        "description": null,
+                                        "uiType": "textbox",
+                                        "cssStyle": "col-12 d-flex",
+                                        "displayFormat":"inline",
+                                        "isRequired": true,
+                                        "screenQuestionMappingId": "6"
+                                    },
+                                    {
+                                        "id": "6",
+                                        "name": "Group No",
+                                        "keyName":"groupNo",
+                                        "description": null,
+                                        "uiType": "numerictextbox",
+                                        "cssStyle": "col-md-6 d-flex",
+                                        "displayFormat":"partition",
+                                        "isRequired": true,
+                                        "screenQuestionMappingId": "6"
+                                    },
+                                    {
+                                        "id": "6",
+                                        "name": "Policy No",
+                                        "keyName":"policyNo",
+                                        "description": null,
+                                        "uiType": "numerictextbox",
+                                        "cssStyle": "col-md-6 d-flex",
+                                        "displayFormat":"partition",
+                                        "isRequired": true,
+                                        "screenQuestionMappingId": "6"
+                                    },
+                                    {
+                                        "id": "6",
+                                        "name": "Effective From",
+                                        "keyName":"effectiveFrom",
+                                        "description": null,
+                                        "uiType": "date",
+                                        "cssStyle": "col-md-6 d-flex",
+                                        "displayFormat":"partition",
+                                        "isRequired": true,
+                                        "screenQuestionMappingId": "6"
+                                    },
+                                    {
+                                        "id": "6",
+                                        "name": "Termination",
+                                        "keyName":"termination",
+                                        "description": null,
+                                        "uiType": "date",
+                                        "cssStyle": "col-md-6 d-flex",
+                                        "displayFormat":"partition",
+                                        "isRequired": true,
+                                        "screenQuestionMappingId": "6"
+                                    }
+                                ]
+                            }
+                        }
+                ]
+            }
+        ]
+    },
+    "wasSuccessful": true,
+    "errors": [],
+    "nextAction": null
+}

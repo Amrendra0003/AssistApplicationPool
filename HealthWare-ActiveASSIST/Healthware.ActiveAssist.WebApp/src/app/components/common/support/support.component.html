@@ -1,0 +1,34 @@
+<div class="col-xs-12 col-md-12 col-sm-12 jumbotron appLanding-bg pt-5 mb-4 pb-4 body-height">
+    <div class="container d-flex align-items-center justify-content-center my-5">
+        <div class="d-flex justify-content-center pt-3 my-5 jumbotron vertical-center">
+            <!-- No User detected! -->
+            <div *ngIf="this.activateUser == 'false'"
+                class="col-xs-9 col-md-9 col-sm-9 my-4 pt-2 justify-content-center text-align-center">
+                <div class="px-5 mx-5 test1 text-align-center padding-0Tab">
+                    <label class="flex appLanding-header px-5 mx-3 title text-align-center">
+                       {{message1}}<a
+                            class="pointer">{{this.email}}</a> {{message2}}
+                    </label>
+                </div>
+            </div>
+            <!-- User detected! -->
+            <div *ngIf="this.activateUser == 'true'"
+                class="col-xs-9 col-md-9 col-sm-9 my-4 pt-2 justify-content-center text-align-center">
+                <div>
+                    <h4 class="appLanding-Title px-3" style="font-weight: bold;font-size: large; display: none;">
+                        {{TodayCost}}</h4>
+                </div>
+                <div class="px-5 mx-5 test1 text-align-center padding-0Tab">
+                    <label class="flex appLanding-header px-5 mx-3 title text-align-center">{{messageTitle}}</label>
+                </div>
+                <div class="px-3 mt-4">
+                    <button type="button" class="btn btn-primary pointer" style="color: #FFFFFFDD;"
+                        (click)="createNewAccount()">{{buttonLabel}}</button>
+                </div>
+                <div class="px-3 mt-3 mb-2">
+                    <p class="align-content-center appLanding-notes p-3">{{messageInfo}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

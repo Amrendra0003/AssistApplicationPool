@@ -1,0 +1,59 @@
+:root {
+    --font-color: #546073;
+    --disabled-color: -internal-light-dark(rgba(16, 16, 16, 0.3), rgba(255, 255, 255, 0.3));
+    --modal-background-color: #FFFFFF;
+}
+.dark-mode {
+    --font-color: #FFFFFF;
+    --disabled-color: #95989c;
+    --modal-background-color: #607D8B;
+}
+.application-submit {
+    background-color: #4AD295;
+    color: #FFFFFF;
+    font-size: 15px;
+    line-height: 18px;
+    font-weight: normal;
+    border-radius: 4px !important;
+    border: 1px solid #4AD295;
+}
+.view-form {
+    border: none;
+    background: transparent;
+}
+button.disabled {
+    pointer-events: none;
+    color: var(--disabled-color);
+}
+button:not(:disabled),
+[type=button]:not(:disabled),
+[type=reset]:not(:disabled),
+[type=submit]:not(:disabled) {
+    cursor: pointer;
+    color: var(--font-color);
+}
+button:disabled {
+    pointer-events: none;
+}
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.5;
+    color: -internal-light-dark(rgba(16, 16, 16, 0.3), rgba(255, 255, 255, 0.3));
+}
+a.enable {
+    opacity: 1
+}
+.disable-next {
+    width: 9px;
+}
+.modal-overlay {
+    z-index: 1060;
+}
+.themes-modal {
+    background-color: var(--modal-background-color);
+}
+.form-check-input {
+    width: 1.6rem;
+    height: 1.6rem;
+}

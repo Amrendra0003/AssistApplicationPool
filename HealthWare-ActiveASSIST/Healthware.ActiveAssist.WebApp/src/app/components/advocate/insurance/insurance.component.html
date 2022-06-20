@@ -1,0 +1,168 @@
+<div class="col-12 cal-height" [ngClass]=this.currentTheme>
+    <div class="col-xs-12 col-md-12 col-sm-12 ">
+        <form autocomplete="off" class="col-xs-9 col-md-9 col-sm-9 pt-5" [formGroup]="insuranceForm" #myform="ngForm">
+            <input autocomplete="false" name="hidden" type="text" style="display:none;">
+            <div class="col-xs-12 col-md-12 col-sm-12">
+                <label class="col-12 dashboard-p1">{{Last60DaysIncome}}</label>
+            </div>
+            <p class="dashboard-select-label pt-2">{{InsuranceMsg1}}<br>{{InsuranceMsg2}}</p>
+            <div class="col-12">
+                <div class="col-xs-2 col-md-2 col-sm-2 mt-4">
+                    <mat-button-toggle-group name="fontStyle" aria-label="Font Style" formControlName="insurance"
+                        [(ngModel)]="insurance" (click)="insuranceDetails(insuranceForm.value)" required>
+                        <mat-button-toggle value="false"
+                            style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                            {{No}}</mat-button-toggle>
+                        <mat-button-toggle value="true"
+                            style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">{{Yes}}
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+                </div>
+                <div *ngIf="this.insuranceErrorMessage != '' " class="small text-danger mt-1 ps-1">
+                    {{this.insuranceErrorMessage}}</div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-sm-12 row g-3 mt-2" *ngIf="this.insuranceDetailsShow == true ">
+                <div>
+                    <label class="dashboard-p1 mb-1">{{FollowingDetails}}</label>
+                </div>
+                <div class="col-12">
+                    <input class="form-control textfield-label" [(ngModel)]="payerName" (keyup)="onKey($event)"
+                        formControlName="payerName"
+                        [ngClass]="(this.payerNameErrorMessage != '')?'form-control-invalid': 'form-control' "
+                        type="textbox" placeholder="Payer Name" required />
+                    <div *ngIf="this.payerNameErrorMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.payerNameErrorMessage}}</div>
+                    <div *ngIf="insuranceForm.get('payerName').hasError('pattern')" class="small text-danger mt-1">
+                        {{PayerNameAlp}}</div>
+                    <div *ngIf="insuranceForm.get('payerName').hasError('maxlength')" class="small text-danger mt-1">
+                        {{PaterMax}}</div>
+                    <div *ngIf="insuranceForm.get('payerName').hasError('minlength')" class="small text-danger mt-1">
+                        {{PayerNumOfChar}}</div>
+                </div>
+                <div class="col-12">
+                    <input class="form-control textfield-label" [(ngModel)]="groupName" (keyup)="onKey($event)"
+                        formControlName="groupName"
+                        [ngClass]="(this.groupNameErrorMessage != '')?'form-control-invalid': 'form-control'"
+                        type="textbox" placeholder="Group Name" required />
+                    <div *ngIf="this.groupNameErrorMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.groupNameErrorMessage}}</div>
+                    <div *ngIf="insuranceForm.get('groupName').hasError('pattern')" class="small text-danger mt-1">
+                        {{GroupAlp}}</div>
+                    <div *ngIf="insuranceForm.get('groupName').hasError('maxlength')" class="small text-danger mt-1">
+                        {{GroupNameCharMax}}</div>
+                    <div *ngIf="insuranceForm.get('groupName').hasError('minlength')" class="small text-danger mt-1">
+                        {{GroupNameCharMin}}</div>
+                </div>
+                <div class="col-md-6 ">
+                    <div style="position:absolute; padding-left: 8px;width: 90px;">
+                        <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">
+                                {{GroupNo}}
+                            </span>
+                        </div>
+                    </div>
+                    <input class="form-control textfield-label" style="padding-left: 100px;" [(ngModel)]="groupNumber"
+                        formControlName="groupNumber"
+                        [ngClass]="(this.groupNumberErrorMessage != '')?'form-control-invalid': 'form-control'"
+                        placeholder="Group Number" (keyup)="onKey($event)" maxlength="51" required />
+                    <div *ngIf="this.groupNumberErrorMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.groupNumberErrorMessage}}</div>
+                    <div *ngIf="insuranceForm.get('groupNumber').hasError('pattern')" class="small text-danger mt-1">
+                        {{GroupAlp}}</div>
+                    <div *ngIf="insuranceForm.get('groupNumber').hasError('maxlength')" class="small text-danger mt-1">
+                        {{GroupNameCharMax}}</div>
+                </div>
+                <div class="col-md-6">
+                    <div style="position:absolute; padding-left: 8px;width: 90px;">
+                        <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">
+                                {{PolicyNo}}</span>
+                        </div>
+                    </div>
+                    <input class="form-control textfield-label" style="padding-left: 100px;" [(ngModel)]="policyNumber"
+                        formControlName="policyNumber"
+                        [ngClass]="(this.policyNumberErrorMessage != '')?'form-control-invalid': 'form-control' "
+                        (keyup)="onKeyPolicyNumber($event)" placeholder="Policy Number" required maxlength="51" />
+                    <div *ngIf="this.policyNumberErrorMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.policyNumberErrorMessage}}</div>
+                    <div *ngIf="insuranceForm.get('policyNumber').hasError('pattern')" class="small text-danger mt-1">
+                        {{PolicyNumAlp}}</div>
+                    <div *ngIf="insuranceForm.get('policyNumber').hasError('maxlength')" class="small text-danger mt-1">
+                        {{PolicyNumMax}}</div>
+                </div>
+                <div class="col-md-6">
+                    <div style="position:absolute; padding-left: 8px;width: 120px;">
+                        <div class="input-group-prepend span-input"><span class="input-group-text span-input-data pe-5">
+                                <label>{{EffectiveFrom}} </label></span>
+                        </div>
+                    </div>
+                    <input formControlName="effectiveFrom" [(ngModel)]="effectiveFrom" style="padding-left: 130px;"
+                        id="effectiveFrom" [(bsValue)]="this.bsValEffectiveFrom" class="form-control textfield-label"
+                        maxlength="10"
+                        [ngClass]="(this.effectiveFromErrorMessage != '')?'form-control-invalid': 'form-control'"
+                        (bsValueChange)="selectEffectiveFromDate()" placeholder="mm/dd/yyyy" autocomplete="off"
+                        (keypress)='keyPress($event)' (keydown.tab)="closeCalendar('effectiveFrom')"
+                        (keydown.enter)="closeCalendar('effectiveFrom')" bsDatepicker (click)="onKey($event)"
+                        (change)="clickEffectiveFrom()" required />
+                    <div style="float:right;position: relative;">
+                        <i style="position: absolute;"><img
+                                style="cursor: pointer;margin-left: -33px;margin-top: -84px;"
+                                src="assets/images/icons/calendar.svg" /></i>
+                    </div>
+                    <div *ngIf="this.effectiveFromErrorMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.effectiveFromErrorMessage}}</div>
+                </div>
+                <div class="col-md-6">
+                    <div style="position:absolute; padding-left: 8px;width: 110px;">
+                        <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">
+                                {{Termination}} </span>
+                        </div>
+                    </div>
+                    <input formControlName="termination" [(ngModel)]="termination" style="padding-left: 115px;"
+                        class="form-control textfield-label" maxlength="10" id="termination"
+                        [(bsValue)]="this.bsValTermination"
+                        [ngClass]="(this.terminationErrorMessage != '')?'form-control-invalid': 'form-control'"
+                        placeholder="mm/dd/yyyy" autocomplete="off" (keypress)='keyPress($event)'
+                        (bsValueChange)="selectTerminationDate()" (click)="onKey($event)" (blur)="check()" #datePicker
+                        (change)="clickTermination()" (keydown.tab)="closeCalendar('termination')"
+                        (keydown.enter)="closeCalendar('termination')" bsDatepicker />
+                    <div style="float:right;position: relative;">
+                        <i style="position: absolute;"><img
+                                style="cursor: pointer;margin-left: -33px;margin-top: -84px;"
+                                src="assets/images/icons/calendar.svg" /></i>
+                    </div>
+                    <div *ngIf="this.terminationErrorMessage != '' " class="small text-danger mt-1 ps-1">
+                        {{this.terminationErrorMessage}}</div>
+                </div>
+            </div>
+            <div class="col-xs-11 col-md-11 col-sm-11 d-flex mt-1 mt-3" style="background-color: #EFF3F6; width:97%"
+                *ngIf="this.insuranceDetailsMessageShow == true ">
+                <div class="p-2">
+                    <img src="assets/images/icons/important.svg" />
+                </div>
+                <div class="d-flex p-2">
+                    <label class="dropdown-select-label pt-1">{{VisitoeInfo}}</label>
+                </div>
+            </div>
+            <div class="col-xs-11 col-md-11 col-sm-11 d-flex mt-1 d-flex mt-2 mt-3"
+                style="background-color: #FAE1E1; width:97%" *ngIf="this.validatePolicyNumberErrorMessage == true">
+                <div class="p-2">
+                    <img src="assets/images/icons/alert.svg" />
+                </div>
+                <div class="d-flex p-2">
+                    <label class="dropdown-select-label pt-1">{{InvalidPolicyNumber}}</label>
+                </div>
+            </div>
+            <div class="mt-5 mb-3 pb-5 d-flex"
+                *ngIf="this.nextButtonDisable == true && this.insuranceDetailsMessageShow == false">
+                <button type="submit" class="btn btn-primary  login-text-field shadow-none pointer next-button"
+                    tooltip="Next" (click)="saveInsuranceDetails(insuranceForm.value)">
+                    <div class="ellipse d-flex ellipse1 next-button-ellipse">
+                        <img src="assets/images/icons/qucikassessment-left-chevron.svg" alt="mail-msg"
+                            class="next-round-icon" />
+                    </div>
+                </button>
+                <label class="dashboard-p2 mt-2 mx-2 pointer"
+                    (click)="saveInsuranceDetails(insuranceForm.value)">{{Next}}</label>
+            </div>
+        </form>
+    </div>
+</div>

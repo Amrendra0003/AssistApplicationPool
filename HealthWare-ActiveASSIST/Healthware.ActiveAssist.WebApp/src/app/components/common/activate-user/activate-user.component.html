@@ -1,0 +1,230 @@
+<div class="jumbotron appLanding-bg" [ngClass]=this.currentTheme>
+    <div class="container d-flex align-items-center justify-content-center body-height">
+        <div class="container d-flex justify-content-center">
+            <div class="col-xs-12 col-md-12 col-sm-12 pt-5 d-flex justify-content-center text-center">
+                <form *ngIf="this.showForm == true"
+                    class="col-xs-8 col-md-8 col-sm-8 pt-5 d-flex justify-content-center" [formGroup]="newAccountForm"
+                    #myform="ngForm">
+                    <div class="col-md-10 col-xs-10 col-sm-10 row g-2 container justify-content-center">
+                        <div>
+                            <h4 class="dashboard-title-p1 p-3 d-flex justify-content-center">Create Account</h4>
+                        </div>
+                        <div class="col-md-5">
+                            <input autocomplete="false" name="hidden" type="text" class="form-control textfield-label"
+                                id="firstName" placeholder="First Name" formControlName="firstName"
+                                [(ngModel)]="firstName" maxlength="51"
+                                [ngClass]="newAccountForm.get('firstName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                            <div *ngIf="newAccountForm.get('firstName').hasError('required')&& myform.submitted"
+                                class="leftAlign small text-danger mt-1">{{NameReq}}</div>
+                            <div *ngIf="newAccountForm.get('firstName').hasError('pattern')"
+                                class="leftAlign small text-danger mt-1">
+                                {{NameAlp}}</div>
+                            <div *ngIf="newAccountForm.get('firstName').hasError('maxlength')"
+                                class="leftAlign small text-danger mt-1">
+                                {{NameMax}}</div>
+                            <div *ngIf="newAccountForm.get('firstName').hasError('minlength')"
+                                class="leftAlign small text-danger mt-1">
+                                {{NameChar}}</div>
+                        </div>
+                        <div class="col-md-5">
+                            <div style="position: relative;">
+                                <input autocomplete="false" name="hidden" type="text"
+                                    class="form-control textfield-label" id="middleName" placeholder="Middle Name"
+                                    formControlName="middleName" [(ngModel)]="middleName" maxlength="51"
+                                    [ngClass]="newAccountForm.get('middleName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                            </div>
+                            <div *ngIf="newAccountForm.get('middleName').hasError('required')&& myform.submitted"
+                                class="leftAlign small text-danger mt-1">{{MidNameReq}}</div>
+                            <div *ngIf="newAccountForm.get('middleName').hasError('pattern')"
+                                class="leftAlign small text-danger mt-1">
+                                {{MidNameAlp}}</div>
+                            <div *ngIf="newAccountForm.get('middleName').hasError('maxlength')"
+                                class="leftAlign small text-danger mt-1">
+                                {{MidNameMax}}</div>
+                        </div>
+                        <div class="col-md-5">
+                            <div style="position: relative;">
+                                <input autocomplete="false" name="hidden" type="text"
+                                    class="form-control textfield-label" id="lastName" placeholder="Last Name"
+                                    formControlName="lastName" [(ngModel)]="lastName" maxlength="51"
+                                    [ngClass]="newAccountForm.get('lastName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                            </div>
+                            <div *ngIf="newAccountForm.get('lastName').hasError('required')&& myform.submitted"
+                                class="leftAlign small text-danger mt-1">{{LastNamereq}}</div>
+                            <div *ngIf="newAccountForm.get('lastName').hasError('pattern')"
+                                class="leftAlign small text-danger mt-1">
+                                {{LastNameAlp}}</div>
+                            <div *ngIf="newAccountForm.get('lastName').hasError('maxlength')"
+                                class="leftAlign small text-danger mt-1">
+                                {{LastNameMax}}</div>
+                            <div *ngIf="newAccountForm.get('lastName').hasError('minlength')"
+                                class="leftAlign small text-danger mt-1">
+                                {{LastNameMin}}</div>
+                        </div>
+                        <div class="col-md-5 d-flex">
+                            <div class="col-12" style="position: relative;" [(bsValue)]="this.bsVal" bsDatepicker
+                                [maxDate]="today" (bsValueChange)="selectDate($event)">
+                                <input autocomplete="false" name="hidden" type="text"
+                                    class="form-control textfield-label" id="dob" placeholder="Date of Birth"
+                                    formControlName="dob" [(ngModel)]="dob"
+                                    [ngClass]="newAccountForm.get('dob').errors && myform.submitted?'form-control-invalid': 'form-control'"
+                                    (keyup)="captureDateInDatepicker()" minlength="10" maxlength="10"
+                                    (keypress)='keyPress($event)' (keydown.tab)="closeCalendar()"
+                                    (keydown.enter)="closeCalendar()">
+                                <div *ngIf="newAccountForm.get('dob').hasError('required')&& myform.submitted"
+                                    class="leftAlign small text-danger mt-1">{{DateReq}}</div>
+                                <div *ngIf="newAccountForm.get('dob').hasError('minlength')"
+                                    class="leftAlign small text-danger mt-1 text-align-left">{{DateFormate}} </div>
+                                <div *ngIf="newAccountForm.get('dob').hasError('validateDateFormat')"
+                                    class="leftAlign small text-danger mt-1 text-align-left">{{DateFormate}} </div>
+                                <div *ngIf="newAccountForm.get('dob').hasError('futureDateValidation')"
+                                    class="leftAlign small text-danger mt-1 text-align-left">{{DateFut}} </div>
+                                <div *ngIf="newAccountForm.get('dob').hasError('pattern')"
+                                    class="leftAlign small text-danger mt-1">
+                                    {{this.dobErrorMessage}} </div>
+                            </div>
+                            <div style="float:right;">
+                                <i style="position: absolute;"><img style="cursor: pointer;margin-left: -33px;"
+                                        src="assets/images/icons/cake-candle.svg" /></i>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div style="position: relative;">
+                                <select class="form-select form-select-sm dropdown-select-label" id="gender"
+                                    aria-label="form-select-sm example" [(ngModel)]="gender" formControlName="gender"
+                                    required
+                                    [ngClass]="newAccountForm.get('gender').errors && myform.submitted?'form-select-invalid': 'form-select'">
+                                    <option value="" hidden disabled>Gender</option>
+                                    <option *ngFor="let data of this.genderval | keyvalue" value={{data.value}}>
+                                        {{data.value}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div *ngIf="newAccountForm.get('gender').hasError('required')&& myform.submitted"
+                                class="leftAlign small text-danger mt-1">{{GenderReq}}</div>
+                        </div>
+                        <div class="col-md-5" style="position: relative;">
+                            <div style="position:absolute; padding-left: 8px;">
+                                <div class="input-group-prepend span-input">
+                                    <span class="input-group-text span-input-data">
+                                        {{Cell}} </span>
+                                </div>
+                            </div>
+                            <div style="position: relative;">
+                                <div class="mt-2" style="position:absolute; padding-left: 58px;"
+                                    include="form-input-select()">
+                                    <select class="dropdown-select-label" style="border:none; outline:none;width:48px;"
+                                        id="countyCode" formControlName="countyCode" [(ngModel)]="countyCode" required>
+                                        <option value="" hidden disabled>+1</option>
+                                        <option *ngFor="let data of this.phoneCode | keyvalue" value="{{data.value}}">
+                                          +{{data.value}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <span>
+                                <input autocomplete="false" name="hidden" type="text" mask="(000) 000-0000"
+                                    style="padding-left: 110px;" class="form-control textfield-label" id="cellNumber"
+                                    [(ngModel)]="cellNumber" placeholder="Cell Number" formControlName="cellNumber"
+                                    [ngClass]="newAccountForm.get('cellNumber').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                                <div *ngIf="newAccountForm.get('cellNumber').hasError('required')&& myform.submitted"
+                                    class="leftAlign small text-danger mt-1">{{CellNumReq}}</div>
+                                <div *ngIf="newAccountForm.get('cellNumber').hasError('minlength')"
+                                    class="leftAlign small text-danger mt-1">{{CellVal}}</div>
+                            </span>
+                        </div>
+                        <div class="col-md-10">
+                            <div style="position: relative;">
+                                <select class="form-select form-select-sm dropdown-select-label" id="maritalStatus"
+                                    aria-label="form-select-sm example" [(ngModel)]="maritalStatus"
+                                    formControlName="maritalStatus" required
+                                    [ngClass]="newAccountForm.get('maritalStatus').errors && myform.submitted?'form-select-invalid': 'form-select'">
+                                    <option value="" hidden disabled>Marital</option>
+                                    <option *ngFor="let data of this.martialStatusVal | keyvalue" value={{data.value}}>
+                                        {{data.value}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div *ngIf="newAccountForm.get('maritalStatus').hasError('required')&& myform.submitted"
+                                class="leftAlign small text-danger mt-1">{{MartialReq}}</div>
+                        </div>
+                        <div class="col-md-10">
+                            <input autocomplete="false" name="hidden" type="text" class="form-control textfield-label"
+                                id="emailAddress" placeholder="Email ID" [(ngModel)]="emailAddress"
+                                formControlName="emailAddress" required  (keydown)="space($event)"
+                                (keydown.enter)="$event.preventDefault()"
+                                [ngClass]="newAccountForm.get('emailAddress').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                            <div *ngIf="newAccountForm.get('emailAddress').hasError('required')&& myform.submitted"
+                                class="leftAlign small text-danger mt-1">{{EmailReq}}</div>
+                            <div *ngIf="newAccountForm.get('emailAddress').hasError('pattern')"
+                                class="leftAlign small text-danger mt-1">{{EmailVal}}</div>
+                            <div *ngIf="newAccountForm.get('emailAddress').hasError('maxlength')"
+                                class="leftAlign small text-danger mt-1">{{EmailMax}}</div>
+                        </div>
+                        <div class="col-md-10" style="position: relative;">
+                            <div class="col-md-2 ps-4" style="float:right;">
+                                <i class="mt-2 mx-5" style="position: absolute;cursor: pointer; right:0;"
+                                    (click)="togglePassword()">
+                                    <img *ngIf="this.passwordField=='password'"
+                                        src="assets/images/icons/eye-slash.svg" />
+                                    <img *ngIf="this.passwordField=='text'" src="assets/images/icons/eye-open.png" />
+                                </i>
+                            </div>
+                            <input autocomplete="false" name="hidden" [type]="this.passwordField"
+                                class="form-control login-text-field" id="newPassword" placeholder="Password"
+                                formControlName="newPassword"
+                                [ngClass]="newAccountForm.get('newPassword').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                            <div *ngIf="newAccountForm.get('newPassword').hasError('required')&& myform.submitted"
+                                class="leftAlign small text-danger mt-1">{{NewPassReq}}</div>
+                            <div *ngIf="newAccountForm.get('newPassword').hasError('pattern')"
+                                class="leftAlign small text-danger mt-1">{{PassVal}}</div>
+                            <div *ngIf="newAccountForm.get('newPassword').hasError('minlength')"
+                                class="leftAlign small text-danger mt-1">Password must contain {{this.MinLength}}
+                                characters!</div>
+                            <div *ngIf="newAccountForm.get('newPassword').hasError('maxlength')"
+                                class="leftAlign small text-danger mt-1">Password should not exceed {{this.MaxLength}}
+                                characters!</div>
+                        </div>
+                        <div class="col-md-10 imp-div mt-3">
+                            <p style="margin-top: 12px;" class="note"><img src="assets/images/icons/important.svg"
+                                    class="important-icon m-12" alt="important-img" width="20" />
+                                Your password must contain at least {{this.MinLength}} characters including an upper
+                                case, a lower case, a number and a special character.
+                            </p>
+                        </div>
+                        <div class="col-md-10" style="position: relative;">
+                            <div class="col-md-2 ps-4" style="float:right;">
+                                <i class="mt-2 mx-5" style="position: absolute;cursor: pointer; right:0;"
+                                    (click)="toggleConfirmPassword()">
+                                    <img *ngIf="this.ConfirmPasswordField=='password'"
+                                        src="assets/images/icons/eye-slash.svg" />
+                                    <img *ngIf="this.ConfirmPasswordField=='text'"
+                                        src="assets/images/icons/eye-open.png" />
+                                </i>
+                            </div>
+                            <input autocomplete="false" name="hidden" [type]="this.ConfirmPasswordField"
+                                class="form-control login-text-field" id="confirmnewPassword"
+                                placeholder="Confirm Password" formControlName="confirmnewPassword"
+                                [ngClass]="newAccountForm.get('confirmnewPassword').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                            <div *ngIf="newAccountForm.get('confirmnewPassword').hasError('required')&& myform.submitted"
+                                class="leftAlign small text-danger mt-1">{{ReEnterYourPassword}}</div>
+                            <div *ngIf="newAccountForm.get('confirmnewPassword').hasError('mustMatch')"
+                                class="leftAlign small text-danger mt-1">{{PasswordMustMatch}}</div>
+                        </div>
+                        <div class="p-4">
+                            <button class="btn btn-primary mb-3 login-button-label "
+                                style="background-color: 1px solid #2494ED;color: #FFFFFF;cursor: pointer;"
+                                type="submit" (click)="createUserAccount(newAccountForm.value)">{{Create}}</button>
+                        </div>
+                    </div>
+                </form>
+                <div *ngIf="this.showForm == false"
+                    class="col-md-10 col-xs-10 col-sm-10 row g-2 container justify-content-center">
+                    <div>
+                        <h4 class="dashboard-title-p1 p-3 d-flex justify-content-center">{{errorText}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

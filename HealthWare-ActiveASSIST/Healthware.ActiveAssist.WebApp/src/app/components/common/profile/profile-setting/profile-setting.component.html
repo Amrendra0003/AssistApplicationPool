@@ -1,0 +1,296 @@
+<div class="col-xs-12 col-sm-12 col-md-12">
+    <form autocomplete="off" class="col-xs-12 col-sm-12 col-md-12 mt-3" [formGroup]="profileSettingForm"
+        #myform="ngForm" (keydown.enter)="$event.preventDefault()">
+        <input autocomplete="false" name="hidden" type="text" style="display:none;">
+        <div class="col-md-12 col-xs-12 col-sm-12 d-flex justify-content-end" *ngxPermissionsOnly="['EditTheme']">
+            <label class="dashboard-p1 pe-2 pt-2">{{Theme}}</label>
+            <mat-button-toggle-group [(ngModel)]="themeSettings" id="themeSettings" name="fontStyle"
+                formControlName="themeSettings" aria-label="Font Style" class="mx-3"
+                (change)="changeTheme($event.value)">
+                <mat-button-toggle value="false" class="toggleCss"
+                    style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">{{Light}}
+                </mat-button-toggle>
+                <mat-button-toggle value="true" class="toggleCss"
+                    style="border-top-right-radius: 25px; border-bottom-right-radius: 25px;">
+                    &nbsp;{{Dark}}&nbsp;&nbsp;
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+        <div class="col-md-10 col-xs-10 col-sm-10">
+            <div class="col-md-12 col-xs-12 col-sm-12 p-3 assessmentCount mt-4" *ngIf="this.showAdvocatepanel == true">
+                <label class="dashboard-title-profile-count">{{this.assessmentCount}}
+                    <a class="dashboard-quickAssessment-subtitle px-2">
+                        <b> {{prifileSettingMsg1 }}{{this.firstName}}{{prifileSettingMsg2}}</b> {{prifileSettingMsg3}}
+                    </a>
+                </label>
+            </div>
+            <div class="col-xs-6 col-md-6 col-sm-6 text-align-left pt-3">
+                <label class="dashboard-title-p1">{{PSet}}</label>
+            </div>
+            <p class="dashboard-p1  pt-4">{{PersonalInfo}}</p>
+            <div class="col-md-12 col-xs-12 col-sm-12 row g-3">
+                <div class="col-md-4">
+                    <input type="text" class="form-control textfield-label" id="firstName" placeholder="First Name"
+                        formControlName="firstName" [(ngModel)]="firstName" maxlength="51"
+                        [ngClass]="profileSettingForm.get('firstName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                    <div *ngIf="profileSettingForm.get('firstName').hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{NameReq}}</div>
+                    <div *ngIf="profileSettingForm.get('firstName').hasError('pattern')" class="small text-danger mt-1">
+                        {{NameAlp}}</div>
+                    <div *ngIf="profileSettingForm.get('firstName').hasError('maxlength')"
+                        class="small text-danger mt-1">
+                        {{NameMax}}</div>
+                    <div *ngIf="profileSettingForm.get('firstName').hasError('minlength')"
+                        class="small text-danger mt-1">
+                        {{NameChar}}</div>
+                </div>
+                <div class="col-md-4">
+                    <div style="position: relative;">
+                        <input type="text" class="form-control textfield-label" id="middleName"
+                            placeholder="Middle Name" formControlName="middleName" [(ngModel)]="middleName"
+                            maxlength="51"
+                            [ngClass]="profileSettingForm.get('middleName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                    </div>
+                    <div *ngIf="profileSettingForm.get('middleName').hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{MidNameReq}}</div>
+                    <div *ngIf="profileSettingForm.get('middleName').hasError('pattern')"
+                        class="small text-danger mt-1">
+                        {{MidNameAlp}}</div>
+                    <div *ngIf="profileSettingForm.get('middleName').hasError('maxlength')"
+                        class="small text-danger mt-1">
+                        {{MidNameMax}}</div>
+                </div>
+                <div class="col-md-4">
+                    <div style="position: relative;">
+                        <input type="text" class="form-control textfield-label" id="lastName" placeholder="Last Name"
+                            formControlName="lastName" [(ngModel)]="lastName" maxlength="51"
+                            [ngClass]="profileSettingForm.get('lastName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                    </div>
+                    <div *ngIf="profileSettingForm.get('lastName').hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{LastNamereq}}</div>
+                    <div *ngIf="profileSettingForm.get('lastName').hasError('pattern')" class="small text-danger mt-1">
+                        {{LastNameAlp}}</div>
+                    <div *ngIf="profileSettingForm.get('lastName').hasError('maxlength')"
+                        class="small text-danger mt-1">
+                        {{LastNameMax}}</div>
+                </div>
+                <div class="col-md-4 d-flex">
+                    <div class="col-12" style="position: relative;" [(bsValue)]="this.bsVal" bsDatepicker
+                        [maxDate]="today" (bsValueChange)="selectDate($event)">
+                        <input type="text" class="form-control textfield-label" id="dob" placeholder="Date of Birth"
+                            formControlName="dob" [(ngModel)]="dob"
+                            [ngClass]="profileSettingForm.get('dob').errors && myform.submitted?'form-control-invalid': 'form-control'"
+                            (keyup)="captureDateInDatepicker()" minlength="10" maxlength="10"
+                            (keypress)='keyPress($event)' (keydown.tab)="closeCalendar()"
+                            (keydown.enter)="closeCalendar()">
+                        <div *ngIf="profileSettingForm.get('dob').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{DateReq}}</div>
+                        <div *ngIf="profileSettingForm.get('dob').hasError('minlength')"
+                            class="small text-danger mt-1 text-align-left">{{DateFormate}}</div>
+                        <div *ngIf="profileSettingForm.get('dob').hasError('validateDateFormat')"
+                            class="small text-danger mt-1 text-align-left">{{DateFormate}}</div>
+                        <div *ngIf="profileSettingForm.get('dob').hasError('futureDateValidation')"
+                            class="small text-danger mt-1 text-align-left">{{DateFut}} </div>
+                        <div *ngIf="profileSettingForm.get('dob').hasError('pattern')" class="small text-danger mt-1">
+                            {{this.dobErrorMessage}} </div>
+                    </div>
+                    <div style="float:right;">
+                        <i style="position: absolute;"><img style="cursor: pointer;margin-left: -33px;"
+                                src="assets/images/icons/cake-candle.svg" /></i>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div style="position: relative;">
+                        <select class="form-select form-select-sm dropdown-select-label mdb-select md-form" id="gender"
+                            aria-label="form-select-sm example" formControlName="gender" [(ngModel)]="gender" required
+                            [ngClass]="profileSettingForm.get('gender').errors && myform.submitted?'form-select-invalid': 'form-select'">
+                            <option value="" hidden disabled>{{Gender}}</option>
+                            <option *ngFor="let data of this.genderval | keyvalue" value="{{data.value}}">{{data.value}}
+                            </option>
+                        </select>
+                    </div>
+                    <div *ngIf="profileSettingForm.get('gender').hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{GenderReq}}</div>
+                </div>
+                <div class="col-md-4">
+                </div>
+                <label class="col-md-12 dashboard-p1 ps-2">{{ContactDetails}}</label>
+                <div class="col-md-8">
+                    <input class="form-control textfield-label" [(ngModel)]="email" formControlName="email"
+                        type="textbox" placeholder="Email" id="email"
+                        [ngClass]="(profileSettingForm.get('email').errors && myform.submitted)?'form-control-invalid': 'form-control' "
+                        required readonly/>
+                    <div *ngIf="profileSettingForm.get('email').hasError('pattern') && myform.submitted"
+                        class="small text-danger mt-1">{{Emailreq}}</div>
+                    <div *ngIf="profileSettingForm.get('email').hasError('pattern')" class="small text-danger mt-1">
+                        {{EmailVal}}</div>
+                    <div *ngIf="profileSettingForm.get('email').hasError('maxlength')" class="small text-danger mt-1">
+                        {{EmailMax}}</div>
+                </div>
+                <div class="col-md-8 col-xl-4" style="position: relative;">
+                    <div style="position:absolute; padding-left: 8px;">
+                        <div class="input-group-prepend span-input">
+                            <span class="input-group-text span-input-data">
+                                {{Cell}} </span>
+                        </div>
+                    </div>
+                    <div style="position: relative;">
+                        <div class="mt-2" style="position:absolute; padding-left: 58px;" include="form-input-select()">
+                            <select class="dropdown-select-label" style="border:none; outline:none;width:48px;"
+                                id="contactCountyCode" formControlName="contactCountyCode"
+                                [(ngModel)]="contactCountyCode" required>
+                                <option value="" hidden disabled>+1</option>
+                                <option *ngFor="let data of this.phoneCode | keyvalue" value="{{data.value}}">
+                                  +{{data.value}}
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <span>
+                        <input type="text" mask="(000) 000-0000" style="padding-left: 110px;"
+                            class="form-control textfield-label" id="contactCellNumber" [(ngModel)]="contactCellNumber"
+                            placeholder="Cell Number" formControlName="contactCellNumber"
+                            [ngClass]="profileSettingForm.get('contactCellNumber').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                        <div *ngIf="profileSettingForm.get('contactCellNumber').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{CellNumReq}}</div>
+                        <div *ngIf="profileSettingForm.get('contactCellNumber').hasError('minlength')"
+                            class="small text-danger mt-1">{{CellVal}}</div>
+                    </span>
+                </div>
+
+                <div>
+                    <label class="dashboard-p1" *ngIf="this.showAdvocatepanel == false">{{HomeAddress}}</label>
+                    <label class="dashboard-p1" *ngIf="this.showAdvocatepanel == true">{{MailingAddress}}</label>
+                </div>
+                <div class="col-md-8">
+                    <div style="position: relative;">
+                        <input type="text" class="form-control textfield-label" id="streetName"
+                            placeholder="Street Address" formControlName="streetName" [(ngModel)]="streetName"
+                            maxlength="251"
+                            [ngClass]="profileSettingForm.get('streetName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+
+                    </div>
+                    <div *ngIf="profileSettingForm.get('streetName').hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{StreetAddressReg}}</div>
+                    <div *ngIf="profileSettingForm.get('streetName').hasError('maxlength')"
+                        class="small text-danger mt-1">
+                        {{StreetAddressMax}}</div>
+                </div>
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
+                    <div style="position: relative;">
+                        <input type="text" class="form-control textfield-label" id="suite" placeholder="Suite"
+                            formControlName="suite" [(ngModel)]="suite" maxlength="251"
+                            [ngClass]="profileSettingForm.get('suite').errors && myform.submitted?'form-control-invalid': 'form-control'">
+
+                    </div>
+                    <div *ngIf="profileSettingForm.get('suite').hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{SuiteReq}}</div>
+                    <div *ngIf="profileSettingForm.get('suite').hasError('maxlength')" class="small text-danger mt-1">
+                        {{SuiteMax}}</div>
+                </div>
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
+                    <div style="position: relative;">
+                        <input type="text" class="form-control textfield-label" id="zipcode" placeholder="Zip Code"
+                            formControlName="zipcode" [(ngModel)]="zipcode" maxlength="51" (keyup)="getStateAndCity()"
+                            [ngClass]="profileSettingForm.get('zipcode').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                    </div>
+                    <div *ngIf="profileSettingForm.get('zipcode').hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{ZipReq}}</div>
+                    <div *ngIf="profileSettingForm.get('zipcode').hasError('invalid')" class="small text-danger mt-1">
+                        {{ZipVal}}</div>
+                    <div *ngIf="profileSettingForm.get('zipcode').hasError('pattern')" class="small text-danger mt-1">
+                        {{ZipNum}}</div>
+                    <div *ngIf="profileSettingForm.get('zipcode').hasError('minlength')" class="small text-danger mt-1">
+                        {{ZipMin}}</div>
+                    <div *ngIf="profileSettingForm.get('zipcode').hasError('maxlength')" class="small text-danger mt-1">
+                        {{ZipMax}}</div>
+                </div>
+                <div class="col-md-4">
+                    <div style="position: relative;">
+                        <input type="text" class="form-control textfield-label disabledDiv" id="county"
+                            placeholder="County" formControlName="county" [(ngModel)]="county" maxlength="51"
+                            [ngClass]="profileSettingForm.get('county').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                    </div>
+                    <div *ngIf="profileSettingForm.get('county').hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{CountyReq}}</div>
+                    <div *ngIf="profileSettingForm.get('county').hasError('pattern')" class="small text-danger mt-1">
+                        {{CountyAlp}}</div>
+                    <div *ngIf="profileSettingForm.get('county').hasError('maxlength')" class="small text-danger mt-1">
+                        {{CountyMax}}</div>
+                </div>
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
+                    <div style="position: relative;">
+                        <input type="text" class="form-control textfield-label disabledDiv" id="city" placeholder="City"
+                            formControlName="city" [(ngModel)]="city" maxlength="51"
+                            [ngClass]="profileSettingForm.get('city').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                    </div>
+                    <div *ngIf="profileSettingForm.get('city').hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{CityReq}}</div>
+                    <div *ngIf="profileSettingForm.get('city').hasError('pattern')" class="small text-danger mt-1">
+                        {{CityAlp}}</div>
+                    <div *ngIf="profileSettingForm.get('city').hasError('maxlength')" class="small text-danger mt-1">
+                        {{CityMax}}</div>
+                </div>
+                <div class="col-md-4" include="form-input-select()">
+                    <div style="position: relative;">
+                        <input type="text" class="form-control textfield-label disabledDiv" id="state"
+                            placeholder="State" formControlName="state" [(ngModel)]="state" maxlength="51"
+                            [ngClass]="profileSettingForm.get('state').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                    </div>
+                    <div *ngIf="profileSettingForm.get('state').hasError('pattern')" class="small text-danger mt-1">
+                        {{StateAlp}}</div>
+                    <div *ngIf="profileSettingForm.get('state').hasError('required')&& myform.submitted"
+                        class="small text-danger mt-1">{{StateReq}}</div>
+                </div>
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-8 col-xl-4">
+                    <div class="d-flex" style="position:absolute;padding-left: 8px;">
+                        <div class="input-group-prepend span-input">
+                            <span class="input-group-text span-input-data"
+                                *ngIf="this.showAdvocatepanel == false">{{home}}</span>
+                            <span class="input-group-text span-input-data"
+                                *ngIf="this.showAdvocatepanel == true">{{Phone}}</span>
+                        </div>
+                    </div>
+                    <div style="position: relative;">
+                        <div class="mt-2" style="position:absolute; padding-left: 72px;" include="form-input-select()">
+                            <select class="dropdown-select-label" style="border:none; outline:none;width:48px;" required
+                                id="homeCountyCode" formControlName="homeCountyCode" [(ngModel)]="homeCountyCode">
+                                <option value="" hidden disabled>+1</option>
+                                <option *ngFor="let data of this.phoneCode | keyvalue" value="{{data.value}}">
+                                    +{{data.value}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <span class="">
+                        <input type="text" mask="(000) 000-0000" class="form-control textfield-label"
+                            style="padding-left: 122px;" id="homeCellNumber" [(ngModel)]="homeCellNumber"
+                            placeholder="Home" formControlName="homeCellNumber"
+                            [ngClass]="profileSettingForm.get('homeCellNumber').errors && myform.submitted?'form-control-invalid': 'form-control'">
+
+                        <div *ngIf="profileSettingForm.get('homeCellNumber').hasError('minlength')"
+                            class="small text-danger mt-1">{{ValidHomeNum}}</div>
+                    </span>
+                </div>
+                <div class="d-flex mt-0 pt-0">
+                    <div class="col-xs-7 col-md-7 col-sm-7 mt-4 fl">
+                        <button type="submit" class="btn btn-primary mb-3 login-button-label "
+                            style="background-color: 1px solid #2494ED;color: #FFFFFF;cursor: pointer;"
+                            (click)="saveProfileSettingsDetails(profileSettingForm.value)">{{Update}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

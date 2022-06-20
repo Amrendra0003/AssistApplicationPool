@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\assets",
+    "\\src\\assets\\lib",
+    "\\src\\assets\\lib\\core",
+    "\\src\\assets\\lib\\core\\external",
+    "\\src\\wv-resources",
+    "\\src\\wv-resources\\lib",
+    "\\src\\wv-resources\\lib\\core",
+    "\\src\\wv-resources\\lib\\core\\external"
+  ],
+  "SelectedNode": "\\src\\wv-resources\\lib\\core\\external\\model-viewer-legacy-1.3.0.min.js",
+  "PreviewInSolutionExplorer": false
+}

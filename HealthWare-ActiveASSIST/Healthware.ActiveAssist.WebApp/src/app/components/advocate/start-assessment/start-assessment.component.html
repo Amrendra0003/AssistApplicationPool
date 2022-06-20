@@ -1,0 +1,85 @@
+<div class="col-xs-12 col-md-12 col-sm-12 jumbotron dashboard-list-background pt-5 body-height"
+  class={{this.virtualAssistPadding}} [ngClass]=this.currentTheme>
+  <div class="container d-flex align-items-center justify-content-center mt-5">
+    <div class="d-flex justify-content-center mt-5 jumbotron vertical-center">
+      <div class="col-xs-9 col-md-9 col-sm-9  justify-content-center" style="text-align:center;">
+        <form autocomplete="off" [formGroup]="startAssessmentForm" #myform="ngForm"
+          class="col-xs-12 col-md-12 col-sm-12 mt-2 justify-content-center">
+          <div class="pb-3">
+            <h4 class="appLanding-Title px-3">{{PatientInfoEnter}}</h4>
+          </div>
+          <input autocomplete="false" name="hidden" type="text" style="display:none;">
+          <div class="row g-3 px-5">
+            <div class="col-md-6">
+              <div style="position: relative;">
+                <input type="text" class="form-control textfield-label" id="patientName" [(ngModel)]="patientName"
+                  placeholder="Patient Name"
+                  [ngClass]="(startAssessmentForm.get('patientName').errors && myform.submitted)?'form-control-invalid': 'form-control' "
+                  formControlName="patientName" maxlength="51" (keyup)="clearData()">
+              </div>
+              <div *ngIf="startAssessmentForm.get('patientName').hasError('required') && myform.submitted"
+                class="small text-danger mt-1 text-align-left">{{PatientNameReq}}</div>
+              <div *ngIf="startAssessmentForm.get('patientName').hasError('pattern')"
+                class="small text-danger mt-1 text-align-left">{{PatientNameAlp}}</div>
+              <div *ngIf="startAssessmentForm.get('patientName').hasError('maxlength')"
+                class="small text-danger mt-1 text-align-left">{{PatientNameMax}}</div>
+              <div *ngIf="startAssessmentForm.get('patientName').hasError('minlength')"
+                class="small text-danger mt-1 text-align-left">{{PatientNameMin}}</div>
+            </div>
+            <div class="col-md-5">
+              <div class="col-12 d-flex">
+                <div class="col-12" style="position: relative;" #bsdatepickerDOB [(bsValue)]="this.bsVal" bsDatepicker
+                  [maxDate]="today" (bsValueChange)="selectDate($event)">
+                  <input type="text" class="form-control textfield-label" id="dob"
+                    [ngClass]="(startAssessmentForm.get('dob').errors && myform.submitted)?'form-control-invalid': 'form-control' "
+                    [(ngModel)]="dob" placeholder="mm/dd/yyyy" formControlName="dob"
+                    (keydown.enter)="closeCalendarOnEnter()" (keyup)="clearData()" minlength="10" maxlength="10"
+                    (keypress)='keyPress($event)' (keydown.tab)="closeCalendar()">
+                </div>
+                <div style="float:right;">
+                  <i style="position: absolute;"><img style="cursor: pointer;margin-left: -40px;"
+                      src="assets/images/icons/cake-candle.svg" /></i>
+                </div>
+              </div>
+              <div *ngIf="startAssessmentForm.get('dob').hasError('minlength')"
+                class="small text-danger mt-1 text-align-left">{{DateFormate}} </div>
+              <div *ngIf="startAssessmentForm.get('dob').hasError('required') && myform.submitted"
+                class="small text-danger mt-1 text-align-left">{{DateReq}}</div>
+              <div *ngIf="startAssessmentForm.get('dob').hasError('validateDateFormat')"
+                class="small text-danger mt-1 text-align-left">{{DateFormate}} </div>
+              <div *ngIf="startAssessmentForm.get('dob').hasError('futureDateValidation')"
+                class="small text-danger mt-1 text-align-left">{{DateFormateFutureErr}} </div>
+            </div>
+          </div>
+          <div class="px-3 mt-4">
+            <button type="submit" id=locate class="btn btn-primary mb-3 login-button-label"
+              (click)="searchName(startAssessmentForm.value)"
+              style="background-color: 1px solid #2494ED;color: #FFFFFF;cursor: pointer;">{{Locate}}</button>
+          </div>
+          <label *ngIf="this.showWarning == true" class="text-danger"
+            style="align-items: center;font-weight: bold;">{{No}}
+            Records Found!</label>
+          <label *ngIf="this.showWarning == false" class="appLanding-subText"
+            style="align-items: center;">{{ConfirmPatientName}}</label>
+          <div class="row g-3 px-5" *ngIf="this.showWarning == false">
+            <div class="col-6 mb-2 mt-2 form-check d-flex pe-2 text-start" *ngFor="let name of patientNameList">
+              <input class="form-check-input me-2" formControlName="patient" id="patient" #patient
+                (change)="OnClickPatientName(patient.checked,name.patientId,name.fullName)" type="radio"
+                [value]="name.patientId" />
+              <label class="pt-2 px-2  login-text-field pointer">{{name.fullName}}</label>
+            </div>
+          </div>
+          <div class="px-3 mt-4" *ngIf="this.isNextBtn == true ">
+            <button type="submit" class="btn btn-primary mb-1 login-button-label"
+              (click)="navigateToQuickAssessment(startAssessmentForm.value)"
+              style="background-color: 1px solid #2494ED;color: #FFFFFF;cursor: pointer;">Next</button>
+          </div>
+          <div class="small text-danger mt-1 text-align-left px-5">{{this.patientClick}}</div>
+          <div class="px-3 mt-4">
+            <p class="align-content-center appLanding-notes p-3">{{StartAssessmentInfo}}</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

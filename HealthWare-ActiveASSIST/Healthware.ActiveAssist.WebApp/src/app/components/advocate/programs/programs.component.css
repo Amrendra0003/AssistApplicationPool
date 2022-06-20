@@ -1,0 +1,12 @@
+.pointer-events {
+    pointer-events: none;
+}
+.programs-checkbox {
+    width: 35px;
+    height: 35px;
+    border-radius: 18px;
+}
+.programs-checkbox-sq {
+    width: 1.6rem;
+    height: 1.6rem;
+}

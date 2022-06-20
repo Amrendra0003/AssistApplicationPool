@@ -1,0 +1,190 @@
+<div class="col-xs-12 col-md-12 col-sm-12" [ngClass]=this.currentTheme>
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex mb-3 dashboard-green-top-div">
+        <div class="p-2">
+            <img src="assets/images/icons/applicationForms-icon.svg" />
+        </div>
+        <div class="d-flex p-1">
+            <label class="dashboard-quickAssessment-subtitle  pt-2"><b>{{DashboardFormInfo1}}</b>
+                {{DashboardFormInfo2}}</label>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex mb-3" *ngIf="this.isAdvocate == false"
+        style="background-color: #FFFFFF;">
+        <div class="p-2">
+            <img src="assets/images/icons/important.svg" />
+        </div>
+        <div class="d-flex p-1">
+            <label class="dashboard-select-label pt-2">{{EligibilityExperts}}<b>{{scheduleAppointment}}</b></label>
+        </div>
+    </div>
+    <form [formGroup]="applicationForm">
+        <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+            <div class="col-xs-12 col-md-12 col-sm-12 dashboard-boxshadow mb-5 p-4"
+                *ngIf="this.toShowActivePrograms == false && this.showLoader == false">
+                <div style="text-align: center;" class="my-5 py-5 ">
+                    <label class="dashboard-p2 py-5">{{KindlyReview}}</label>
+                </div>
+            </div>
+            <!-- spinner start -->
+            <app-spinner-overlay *ngIf="this.showLoader == true">
+            </app-spinner-overlay>
+            <!-- spinner end-->
+            <!-- Programs Applied start-->
+            <div class="col-xs-2 col-md-2 col-sm-2 mt-5" *ngIf="this.toShowActivePrograms == true">
+                <div *ngFor="let data of this.activeReviewProgramDetails">
+                    <div
+                        class="{{programMenuDivClass[data.programId]}} col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2 mb-2">
+                        <label (click)="ProgramsOnChange(data.programId)"
+                            class="{{programMenuDivClass[data.programId]}} dashboard-p2 pointer enabledDiv">{{data.programName}}</label>
+                        <span *ngIf="data.programId == this.currentselectedProgram" class="upperCurve"></span>
+                        <span *ngIf="data.programId == this.currentselectedProgram" class="lowerCurve"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-10 col-md-10 col-sm-10 dashboard-boxshadow mb-7 p-4 "
+                *ngIf="this.toShowActivePrograms == true && this.showLoader == false">
+                <div class="col-xs-12 col-md-12 col-sm-12">
+                    <div lass="col-xs-12 col-md-12 col-sm-12 mt-4">
+                        <div class="col-xs-12 col-md-12 col-sm-12 d-flex mt-4">
+                            <div class="col-xs-9 col-md-9 col-sm-9 float-left mt-2 mb-2">
+                                <label class="dashboard-select-label"><b>{{this.programName}}</b></label>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-sm-12 mt-2">
+                        <div class="">
+                            <label class="dashboard-p2 my-2"><b>{{Forms}}</b></label>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-sm-12">
+                            <div *ngFor="let data of this.programDocumentDetails"
+                                class="col-xs-12 col-md-12 col-sm-12 d-flex docMargin">
+                                <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+                                    <div class="col-xs-1 col-md-1 col-sm-1">
+                                        <img src="assets/images/icons/pdf-icon.svg" class="format-icon" />
+                                    </div>
+                                    <div class="col-xs-11 col-md-11 col-sm-11 px-2">
+                                        <div class="col-xs-12 col-md-12 col-sm-12 d-flex">
+                                            <label
+                                                class="col-xs-7 col-md-7 col-sm-7 dashboard-select-label"><b>{{data.documentName}}</b></label>
+                                            <div class="">
+                                                <div class="d-flex"
+                                                    *ngIf="data.isProgramDocumentEsigned == true || this.EsignStatus[data.programDocumentId] == true">
+                                                    <img src="assets/images/icons/valid-icon.svg">
+                                                    <label class="textfield-label p-1"
+                                                        style="font-weight: bold; color: #4AD295;">Uploaded!</label>
+                                                    <span
+                                                        class="col-md-4 pointer dashboard-p2 ps-2 align-self-center enabledDiv showless"
+                                                        (click)="previewDocument(data.documentId)"
+                                                        tooltip="{{data.documentName}}"
+                                                        style="text-decoration: underline ;">{{data.documentName}}</span>
+                                                </div>
+                                                <div class="d-flex" *ngIf="data.isProgramDocumentEsigned == false && this.notSigned == true && 
+                                                    this.EsignStatus[data.programDocumentId] != true">
+                                                    <img src="assets/images/icons/invalid-icon.svg">
+                                                    <label class="textfield-label p-1"
+                                                        style="font-weight: bold; color: #E66767">{{NotUploaded}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <label class="dashboard-select-label">{{data.documentDescription}}</label>
+                                        <div
+                                            class="col-xs-12 col-md-12 col-sm-12 d-flex justify-content-center my-1 ps-3 applicationForm-div">
+                                            <div class="py-2 d-flex px-4" *ngxPermissionsOnly="['ViewEsignAssessment']">
+                                                <img src="assets/images/icons/esign-icon.svg" class="upload1-icon mt-1 "
+                                                    data-bs-toggle="modal" data-bs-target="#programsformsModal"
+                                                    style="cursor: pointer;" />
+                                                <label class="textfield-label p-1" style="cursor: pointer;"
+                                                    (click)="loadDocumentOpen(data.documentName, data.programDocumentId, data.documentId)"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#programsformsModal">{{ESign}}
+                                                </label>
+                                            </div>
+                                            <div class="px-4 py-2 d-flex" *ngxPermissionsOnly="['ViewShareAssessment']">
+                                                <img src="assets/images/icons/share-icon.svg"
+                                                    class="upload-icon mt-1" />
+                                                <label class="textfield-label p-1">{{Share}}</label>
+                                            </div>
+                                            <div class="px-4 py-2 d-flex enabledDiv"
+                                                *ngxPermissionsOnly="['ViewDownloadAssessment']">
+                                                <img src="assets/images/icons/download-icon.svg"
+                                                    style="cursor: pointer;" class="upload-icon mt-1"
+                                                    (click)="downloadApplicationForm(data.programDocumentId)" />
+                                                <a style="cursor: pointer;"
+                                                    (click)="downloadApplicationForm(data.programDocumentId)">
+                                                    <label style="cursor: pointer;"
+                                                        class="textfield-label p-1">{{download}}</label>
+                                                </a>
+                                            </div>
+                                            <div class="px-4 py-2 d-flex"
+                                                *ngxPermissionsOnly="['ViewUploadAssessment']">
+                                                <img style="cursor: pointer;" (click)="Programfile.click()"
+                                                    src="assets/images/icons/upload-icon.svg"
+                                                    class="upload-icon mt-1" />
+                                                <label style="cursor: pointer;" (click)="Programfile.click()"
+                                                    class="textfield-label p-1">{{uploadForms}}</label>
+                                                <input hidden type="file"
+                                                    id="{{data.programDocumentId}}_{{data.programId}}" #Programfile
+                                                    (change)="HandleProgramDocument($event)" accept=".pdf">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4" style="display: flex;">
+                                <button type="submit"
+                                    class="btn btn-primary login-text-field mx-2 shadow-none round-icon enabledDiv"
+                                    tooltip="Back" (click)="navBackward(this.currentselectedProgram)">
+                                    <div class="ellipse ellipse1"
+                                        style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;">
+                                        <img src="assets/images/icons/left-chevron.svg" alt="mail-msg"
+                                            class="next-round-icon" />
+                                    </div>
+                                </button>
+                                <button type="submit"
+                                    class="btn btn-primary  login-text-field shadow-none round-icon enabledDiv"
+                                    tooltip="Next" (click)="navForward(this.currentselectedProgram)">
+                                    <div class="ellipse ellipse1"
+                                        style="background-color: #2494ED;box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;">
+                                        <img src="assets/images/icons/right-chevron.svg" alt="mail-msg"
+                                            class="next-round-icon" />
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Programs Applied end-->
+        </div>
+    </form>
+</div>
+<div class="modal" id="programsformsModal" aria-labelledby="programsformsModalLabel" role="dialog"
+    data-bs-backdrop="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body mt-3">
+                <div class="col-12 d-flex p-3 " style="background-color: #EFF3F6;">
+                    <div class="col-md-3 d-flex justify-content-start float-left">
+                        <input type="text" aria-colcount="col-md-3" class="form-control dashboard-p2"
+                            placeholder="{{this.documentName}}" style="pointer-events: none;">
+                        <label class="header-label">.pdf</label>
+                    </div>
+                    <div class="col-md-9 d-flex justify-content-end float-right">
+                        <button class="btn btn-primary white-color mx-2 login-button-label"
+                            (click)="downloadDocument()">{{download}}</button>
+                        <button class="btn btn-primary white-color mx-3 login-button-label" style="width: fit-content;"
+                            (click)="saveApplication()" data-bs-dismiss="modal">{{saveClose}}</button>
+                        <button class="btn btn-primary white-color mx-2 login-button-label"
+                            style="background-color: #9DACBF;" data-bs-dismiss="modal" aria-label="Close"
+                            (click)="closeDocument()" data-bs-dismiss="modal">{{close}}</button>
+                    </div>
+                </div>
+                <div class="page">
+                    <div #viewer class="viewer-class">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

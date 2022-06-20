@@ -1,0 +1,19 @@
+:root {
+  --modal-background-color: #FFFFFF;
+}
+.dark-mode {
+  --modal-background-color: #607D8B;
+}
+.mat-content-custom {
+  flex: none !important;
+}
+#openMorePrograms .modal-overlay {
+  z-index: 20;
+}
+.themes-modal {
+  background-color: var(--modal-background-color);
+}
+.form-check-input {
+  width: 1.6rem;
+  height: 1.6rem;
+}

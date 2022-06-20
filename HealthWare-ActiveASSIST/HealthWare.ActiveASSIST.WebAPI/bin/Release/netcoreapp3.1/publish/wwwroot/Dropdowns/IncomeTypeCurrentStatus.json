@@ -1,0 +1,8 @@
+{
+  "IncomeTypeCurrentStatus": {
+    "C": "Current",
+    "NCM": "Not Current, but in month of patient care",
+    "NLT6": "Not Current, but from 6 months or less ago",
+    "NGT6": "Not Current, but from 6 or more months ago"
+  }
+}

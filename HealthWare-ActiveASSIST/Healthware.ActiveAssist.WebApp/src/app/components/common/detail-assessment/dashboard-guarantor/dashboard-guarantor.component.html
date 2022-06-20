@@ -1,0 +1,346 @@
+<div class="col-xs-12 col-md-12 col-sm-12" style="display: flex;" [ngClass]=this.currentTheme>
+  <app-spinner-overlay *ngIf="this.showLoader == true">
+  </app-spinner-overlay>
+  <div class="col-xs-2 col-md-2 col-sm-2 mt-5">
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex" *ngxPermissionsOnly="['ViewComponentGuarantorBasicInfo']">
+      <div [ngClass]="(this.guarantorInfoFlag == true)?'dasboard-side-div':''"
+        class="col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2">
+        <label (click)="guarantorInfo()" class="dashboard-p2 pointer"
+          [ngClass]="(this.guarantorInfoFlag == true)?'dashboard-side-div-label':''">Guarantor Info</label>
+        <span style="position: absolute; right: 10px;">
+          <img *ngIf="isGuarantorSaved == false || isInfoComplete == false" src="assets/images/icons/invalid-icon.svg">
+          <img *ngIf="isGuarantorSaved == true && isInfoComplete != false" src="assets/images/icons/valid-icon.svg">
+        </span>
+        <span class="upperCurve" *ngIf="this.guarantorInfoFlag == true"></span>
+        <span class="lowerCurve" *ngIf="this.guarantorInfoFlag == true"></span>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex" *ngxPermissionsOnly="['ViewComponentGuarantorHomeAddress']">
+      <div [ngClass]="(this.guarantorHomeAddressFlag == true)?'dasboard-side-div':''"
+        class="col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2">
+        <label (click)="guarantorHomeAddress()" class="dashboard-p2 pointer"
+          [ngClass]="(this.guarantorHomeAddressFlag == true)?'dashboard-side-div-label':''">Home Address</label>
+        <span style="position: absolute; right: 10px;">
+          <img *ngIf="isHomeSaved == false || isHomeComplete == false" src="assets/images/icons/invalid-icon.svg">
+          <img *ngIf="isHomeSaved == true && isHomeComplete != false" src="assets/images/icons/valid-icon.svg">
+        </span>
+        <span class="upperCurve" *ngIf="this.guarantorHomeAddressFlag == true"></span>
+        <span class="lowerCurve" *ngIf="this.guarantorHomeAddressFlag == true"></span>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-12 col-sm-12 d-flex" *ngxPermissionsOnly="['ViewComponentGuarantorWorkAddress']">
+      <div [ngClass]="(this.guarantorWorkAddressFlag == true)?'dasboard-side-div':''"
+        class="col-xs-12 col-md-12 col-sm-12 dasboard-side-label  mt-2">
+        <label (click)="guarantorWorkAddress()" class="dashboard-p2 pointer"
+          [ngClass]="(this.guarantorWorkAddressFlag == true)?'dashboard-side-div-label':''">Work Address</label>
+        <span style="position: absolute; right: 10px;">
+          <img *ngIf="isWorkSaved == false || isWorkComplete == false" src="assets/images/icons/invalid-icon.svg">
+          <img *ngIf="isWorkSaved == true && isWorkComplete != false" src="assets/images/icons/valid-icon.svg">
+        </span>
+        <span class="upperCurve" *ngIf="this.guarantorWorkAddressFlag == true"></span>
+        <span class="lowerCurve" *ngIf="this.guarantorWorkAddressFlag == true"></span>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-10 col-md-10 col-sm-10 dashboard-boxshadow mb-5 p-4" id="guarantorInfo"
+    *ngIf="this.guarantorInfoFlag == true">
+    <div *ngxPermissionsOnly="['ViewComponentGuarantorBasicInfo']">
+      <div class="col-xs-12 col-md-12 col-sm-12">
+        <div class="col-xs-12 col-md-12 col-sm-12 mx-2" style="display: flex;"> <img
+            src="assets/images/icons/guarantor-info.svg" class="dash-icon" /><label
+            class="dashboard-p1 mx-2 mt-1"><b>{{guarantor}}</b></label></div>
+        <div class="col-xs-12 col-md-12 col-sm-12 mt-1" style="display: flex;">
+          <form autocomplete="off" [formGroup]="guarantorInfoForm" #myform="ngForm"
+            class="col-xs-10 col-md-10 col-sm-10 row g-3" [ngClass]="{disabledDiv: !isEditAllowed}">
+            <div class="col-md-6 pt-1">
+              <label class="dashboard-p2 pt-2 fr ">{{relationTitle}}</label>
+            </div>
+            <input autocomplete="false" name="hidden" type="text" style="display:none;">
+            <div class="col-md-6" include="form-input-select()">
+              <select required formControlName="relation" [(ngModel)]="relation" id="relation" placeholder="Relation"
+                formControlName="relation" class="form-select form-select-sm dropdown-select-label"
+                aria-label="form-select-sm example" (change)="relationChange()"
+                [ngClass]="guarantorInfoForm.get('relation').hasError('required') && myform.submitted?'form-select-invalid': 'form-select'">
+                <option value="" hidden disabled>Relationship/Role</option>
+                <option *ngFor="let data of this.relationval | keyvalue" value="{{data.value}}">{{data.value}}</option>
+              </select>
+              <div *ngIf="guarantorInfoForm.get('relation').hasError('required')&& myform.submitted"
+                class="small text-danger mt-1">Relation is required!</div>
+            </div>
+            <div class="col-md-6">
+              <div style="position: relative;">
+                <input type="text" class="form-control textfield-label" id="firstName" [(ngModel)]="firstName"
+                  [readonly]="disableSelf" placeholder="First Name" formControlName="firstName" maxlength="51"
+                  (keydown.enter)="$event.preventDefault()"
+                  [ngClass]="guarantorInfoForm.get('firstName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+              </div>
+              <div *ngIf="guarantorInfoForm.get('firstName').hasError('required')&& myform.submitted"
+                class="small text-danger mt-1">First name is required!</div>
+              <div *ngIf="guarantorInfoForm.get('firstName').hasError('pattern')" class="small text-danger mt-1">First
+                name should contain only alphabets!</div>
+              <div *ngIf="guarantorInfoForm.get('firstName').hasError('maxlength')" class="small text-danger mt-1">First
+                name should not exceed 50 characters!</div>
+              <div *ngIf="guarantorInfoForm.get('firstName').hasError('minlength')" class="small text-danger mt-1">First
+                name must contain atleast 2 characters!</div>
+            </div>
+            <div class="col-md-6">
+              <div style="position: relative;">
+                <input type="text" class="form-control textfield-label" id="middleName" [(ngModel)]="middleName"
+                  [readonly]="disableSelf" placeholder="Middle Name" formControlName="middleName" maxlength="51"
+                  (keydown.enter)="$event.preventDefault()"
+                  [ngClass]="guarantorInfoForm.get('middleName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+              </div>
+              <div *ngIf="guarantorInfoForm.get('middleName').hasError('pattern')" class="small text-danger mt-1">Middle
+                name should contain only alphabets!</div>
+              <div *ngIf="guarantorInfoForm.get('middleName').hasError('maxlength')" class="small text-danger mt-1">
+                Middle
+                name should not exceed 50 characters!</div>
+            </div>
+            <div class="col-md-6">
+              <div style="position: relative;">
+                <input type="text" class="form-control textfield-label" id="lastName" [(ngModel)]="lastName"
+                  [readonly]="disableSelf" placeholder="Last Name" formControlName="lastName" maxlength="51"
+                  (keydown.enter)="$event.preventDefault()"
+                  [ngClass]="guarantorInfoForm.get('lastName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+              </div>
+              <div *ngIf="guarantorInfoForm.get('lastName').hasError('required')&& myform.submitted"
+                class="small text-danger mt-1">Last name is required!</div>
+              <div *ngIf="guarantorInfoForm.get('lastName').hasError('pattern')" class="small text-danger mt-1">Last
+                name
+                should contain only alphabets!</div>
+              <div *ngIf="guarantorInfoForm.get('lastName').hasError('maxlength')" class="small text-danger mt-1">Last
+                name should not exceed 50 characters!</div>
+            </div>
+            <div [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-2' :'col-md-3' "
+              [ngClass]="(this.advocatepanel == true)? 'col-md-3' :'col-md-4 col-lg-3 col-xl-2' ">
+              <div style="position: relative;">
+                <input type="text" class="form-control textfield-label" id="suffix" [(ngModel)]="suffix"
+                  [readonly]="disableSelf" placeholder="Suffix" formControlName="suffix" maxlength="51"
+                  (keydown.enter)="$event.preventDefault()"
+                  [ngClass]="guarantorInfoForm.get('suffix').errors && myform.submitted?'form-control-invalid': 'form-control'">
+              </div>
+              <div *ngIf="guarantorInfoForm.get('suffix').hasError('pattern')" class="small text-danger mt-1"
+                style="white-space: nowrap;">Suffix should contain only alphabets!</div>
+              <div *ngIf="guarantorInfoForm.get('suffix').hasError('maxlength')" class="small text-danger mt-1"
+                style="white-space: nowrap;">Suffix should not exceed 50 characters!</div>
+            </div>
+            <div class="col-12">
+              <div style="position: relative;">
+                <input type="text" class="form-control textfield-label" id="email" [(ngModel)]="email"
+                  placeholder="Email" [readonly]="disableSelf" formControlName="email" maxlength="101"
+                  (keydown.enter)="$event.preventDefault()" (keydown)="space($event)"
+                  [ngClass]="guarantorInfoForm.get('email').errors && myform.submitted?'form-control-invalid': 'form-control'">
+              </div>
+              <div *ngIf="guarantorInfoForm.get('email').hasError('required')&& myform.submitted"
+                class="small text-danger mt-1">Email is required!</div>
+              <div *ngIf="guarantorInfoForm.get('email').hasError('pattern')" class="small text-danger mt-1">Enter a
+                valid
+                email!</div>
+              <div *ngIf="guarantorInfoForm.get('email').hasError('maxlength')" class="small text-danger mt-1">Email
+                should not exceed 100 characters!</div>
+            </div>
+            <div class="col-md-6 d-flex">
+              <div class="col-12" style="position: relative;" [(bsValue)]="this.bsVal" bsDatepicker [maxDate]="today"
+                (bsValueChange)="selectDate($event)">
+                <input type="text" class="form-control textfield-label" id="dob" [(ngModel)]="dob"
+                  [readonly]="disableSelf" placeholder="mm/dd/yyyy" (keypress)='keyPress($event)' formControlName="dob"
+                  (keydown.enter)="$event.preventDefault()"
+                  [ngClass]="guarantorInfoForm.get('dob').errors && myform.submitted?'form-control-invalid': 'form-control'"
+                  maxlength="10" minlength="10" (keyup)="captureDateInDatepicker()" (keydown.tab)="closeCalendar()"
+                  (keydown.enter)="closeCalendar()">
+                <div *ngIf="guarantorInfoForm.get('dob').hasError('required')&& myform.submitted"
+                  class="small text-danger mt-1">Date of birth is required!</div>
+                <div *ngIf="guarantorInfoForm.get('dob').hasError('minlength')" class="small text-danger mt-1">Date must
+                  be in mm/dd/yyyy format.</div>
+                <div *ngIf="guarantorInfoForm.get('dob').hasError('validateDateFormat')" class="small text-danger mt-1">
+                  Date must be in mm/dd/yyyy format.</div>
+                <div *ngIf="guarantorInfoForm.get('dob').hasError('futureDateValidation')"
+                  class="small text-danger mt-1">
+                  Date of Birth can not be in future.</div>
+              </div>
+              <div style="float:right;">
+                <i style="position: absolute;"><img style="cursor: pointer;margin-left: -33px;"
+                    src="assets/images/icons/cake-candle.svg" /></i>
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+              <div style="position:absolute; padding-left: 8px;">
+                <div class="input-group-prepend span-input"><span class="input-group-text span-input-data">
+                    {{cellLabel}}
+                  </span>
+                </div>
+              </div>
+              <div style="position: relative;">
+                <div class="mt-2" style="position:absolute; padding-left: 58px;" include="form-input-select()">
+                  <select class="dropdown-select-label" style="border:none; outline:none;width:48px;" id="countyCode"
+                    [(ngModel)]="countyCode" formControlName="countyCode" [ngClass]="(this.relation == 'Self')?'disabled-bg':''">
+                    <option value="" hidden disabled>+1</option>
+                    <option *ngFor="let data of this.phoneCode | keyvalue" value="{{data.value}}">
+                      +{{data.value}}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <span class="">
+                <input type="text" mask="(000) 000-0000" style="padding-left: 110px;"
+                  class="form-control textfield-label" [readonly]="disableSelf" id="cellno" [(ngModel)]="cellno"
+                  placeholder="Cell Number" formControlName="cellno" (keydown.enter)="$event.preventDefault()"
+                  [ngClass]="guarantorInfoForm.get('cellno').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                <div *ngIf="guarantorInfoForm.get('cellno').hasError('required')&& myform.submitted"
+                  class="small text-danger mt-1">Cell number is required!</div>
+                <div *ngIf="guarantorInfoForm.get('cellno').hasError('minlength')" class="small text-danger mt-1">Enter
+                  a
+                  valid cell number!</div>
+              </span>
+            </div>
+            <!-- sssn -->
+            <div [ngClass]="this.showAdvocatePanel == true? 'col-md-12 col-xl-6 col-sm-6 col-lg-6':'col-md-6'"
+              *ngIf="this.relation == 'Self'">
+              <div style="position:absolute;padding-left: 8px;">
+                <div class="input-group-prepend span-input"><span class="input-group-text span-input-data"> {{ssnLabel}}
+                  </span>
+                </div>
+              </div>
+              <span class="">
+                <input type="text" style="padding-left: 73px;" class="form-control textfield-label" id="sssn"
+                  [readonly]="disableSelf" [(ngModel)]="sssn" placeholder="000-00-0000" formControlName="sssn"
+                  (keydown.enter)="$event.preventDefault()"
+                  [ngClass]="guarantorInfoForm.get('sssn').errors && myform.submitted?'form-control-invalid': 'form-control'">
+              </span>
+            </div>
+            <div class="col-md-12 col-lg-6" *ngIf="this.relation == 'Self'">
+              <input type="text" class="form-control textfield-label" placeholder="Reason No SSN"
+                [value]="this.reasonNoSSN" [readonly]="disableSelf">
+            </div>
+            <!-- ssn -->
+            <div [ngClass]="this.showAdvocatePanel == true? 'col-md-12 col-xl-6 col-sm-6 col-lg-6':'col-md-6'"
+              *ngIf="this.relation != 'Self'">
+              <div style="position:absolute;padding-left: 8px;">
+                <div class="input-group-prepend span-input"><span class="input-group-text span-input-data"> {{ssnLabel}}
+                  </span>
+                </div>
+              </div>
+              <div style="position: relative;">
+              </div>
+              <span class="">
+                <input type="text" style="padding-left: 73px;" class="form-control textfield-label" id="ssn"
+                  [(ngModel)]="ssn" placeholder="000-00-0000" formControlName="ssn"
+                  (keydown.enter)="$event.preventDefault()" (input)="ssnChange($event)"
+                  [ngClass]="guarantorInfoForm.get('ssn').errors && myform.submitted?'form-control-invalid': 'form-control'"
+                  [hiddenInput]="maskEnabled" mask="XXX-XX-0000" (focus)="focusIn()" (blur)="focusOut()">
+                <div *ngIf="guarantorInfoForm.get('ssn').hasError('required')&& myform.submitted"
+                  class="small text-danger mt-1">SSN
+                  is required!</div>
+                <div *ngIf="guarantorInfoForm.get('ssn').hasError('pattern')" class="small text-danger mt-1">Enter a
+                  valid
+                  SSN number!</div>
+              </span>
+            </div>
+            <div *ngIf="this.relation != 'Self'"
+              [ngClass]=" this.showAdvocatePanel == true? 'col-md-12 col-lg-6':'col-md-7 col-lg-6'">
+              <div style="position: relative;">
+                <select class="form-select form-select-sm dropdown-select-label" id="reasonNoSSN"
+                  (change)="noSSNChange()" [(ngModel)]="reasonNoSSN" aria-label="form-select-sm example"
+                  formControlName="reasonNoSSN"
+                  [ngClass]="guarantorInfoForm.get('reasonNoSSN').errors && myform.submitted?'form-select-invalid': 'form-select'">
+                  <option value="" hidden disabled>Reason No SSN</option>
+                  <option value=null hidden disabled>Reason No SSN</option>
+                  <option *ngFor="let data of this.reasons | keyvalue" value="{{data.value}}">{{data.value}}
+                  </option>
+                </select>
+              </div>
+              <div *ngIf="guarantorInfoForm.get('reasonNoSSN').hasError('required')&& myform.submitted"
+                class="small text-danger mt-1">Kindly select reason for no SSN!</div>
+            </div>
+            <div class="col-md-6" hidden>
+              <input type="text" style="padding-left: 73px;" class="form-control textfield-label" placeholder="id"
+                formControlName="id">
+            </div>
+            <div class=" mt-4" style="display: flex;">
+              <button (click)="PersonalTab()" class="btn btn-primary  login-text-field shadow-none mx-2 enabledDiv"
+                style="width:38px;background-color: transparent;border:none;color: #FFFFFF;" tooltip="Back">
+                <div class="ellipse ellipse1"
+                  style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;display:flex;">
+                  <img class="required" src="assets/images/icons/left-chevron.svg" alt="mail-msg"
+                    class="next-round-icon" />
+                </div>
+              </button>
+              <button type="submit" class="btn btn-primary  login-text-field shadow-none enabledDiv"
+                style="width:38px;background-color: transparent;border:none;color: #FFFFFF;"
+                (click)="updateGuarantor(guarantorInfoForm.value)" tooltip="Next">
+                <div class="ellipse ellipse1" style="background-color: #2494ED;display:flex;">
+                  <img src="assets/images/icons/right-chevron.svg" alt="mail-msg" class="next-round-icon" />
+                </div>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-10 col-md-10 col-sm-10 dashboard-boxshadow mb-5 p-4" id="guarantorHomeAddress"
+    *ngIf="this.guarantorHomeAddressFlag == true">
+    <div *ngxPermissionsOnly="['ViewComponentGuarantorHomeAddress']">
+      <div style="text-align: center;" class="mt-5 pt-5 " *ngIf="this.guarantorNotFoundFlag == true">
+        <label class="py-5 dashboard-p2">Need to create guarantor first.Then Only you can create Home Address
+          details</label>
+        <div class="col-xs-12 col-md-12 col-sm-12 mt-5 pt-5 d-flex">
+          <button type="reset" class="btn btn-primary  login-text-field shadow-none mx-2 enabledDiv"
+            style="width:43px;background-color: transparent;border:none;color: #FFFFFF;" tooltip="Back"
+            (click)="goToBasicInfo()">
+            <div class="ellipse d-flex ellipse1"
+              style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;">
+              <img src="assets/images/icons/left-chevron.svg" alt="mail-msg" class="next-round-icon" />
+            </div>
+          </button>
+          <button type="submit" class="btn btn-primary  login-text-field shadow-none enabledDiv"
+            (click)="homeAddressNext()" style="width:42px;background-color: transparent;border:none;color: #FFFFFF;"
+            tooltip="Next">
+            <div class="ellipse d-flex ellipse1" style="background-color: #2494ED;">
+              <img src="assets/images/icons/right-chevron.svg" alt="mail-msg" class="next-round-icon" />
+            </div>
+          </button>
+        </div>
+      </div>
+      <div *ngIf="this.guarantorNotFoundFlag == false">
+        <app-dashboard-home-address (nextButtonClicked)='nextButtonClickedEvent($event)'
+          (backToGuarantor)='backToGuarantorEvent($event)' [homeStreetAddress]="streetName" [suite]="suite"
+          [city]="city" [country]="country" [homeNo]="homeNo" [state]="state" [pincode]="pincode" [homedata]="datas"
+          [homeEntityType]="entityType" [homeTown]="town" [homeAddressId]="addressID" [homeGuarantor]="isguarantor"
+          [homeCountyCode]="guarantorCountyCode"></app-dashboard-home-address>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-10 col-md-10 col-sm-10 dashboard-boxshadow mb-5 p-4" id="guarantorWorkAddress"
+    *ngIf="this.guarantorWorkAddressFlag == true">
+    <div *ngxPermissionsOnly="['ViewComponentGuarantorWorkAddress']">
+      <div style="text-align: center;" class="mt-5 pt-5 " *ngIf="this.guarantorNotFoundFlag == true">
+        <label class="py-5 dashboard-p2">Need to create guarantor first.Then Only you can create Work Address
+          details</label>
+        <div class="col-xs-12 col-md-12 col-sm-12 mt-5 pt-5 d-flex">
+          <button type="reset" class="btn btn-primary  login-text-field shadow-none mx-2 enabledDiv"
+            style="width:43px;background-color: transparent;border:none;color: #FFFFFF;" tooltip="Back"
+            (click)="GoToHomeAddress()">
+            <div class="ellipse d-flex ellipse1"
+              style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;">
+              <img src="assets/images/icons/left-chevron.svg" alt="mail-msg" class="next-round-icon" />
+            </div>
+          </button>
+          <button type="submit" class="btn btn-primary  login-text-field shadow-none enabledDiv"
+            (click)="workAddressNext()" style="width:42px;background-color: transparent;border:none;color: #FFFFFF;"
+            tooltip="Next">
+            <div class="ellipse d-flex ellipse1" style="background-color: #2494ED;">
+              <img src="assets/images/icons/right-chevron.svg" alt="mail-msg" class="next-round-icon" />
+            </div>
+          </button>
+        </div>
+      </div>
+      <div *ngIf="this.guarantorNotFoundFlag == false">
+        <app-dashboard-work-address [workEmployer]='employer' (backToGuarantorHome)='backToGuarantorHomeEvent($event)'
+          [workStreetAddress]="streetName" [workSuite]="suite" [workCity]="city" [workCountry]="country"
+          [workHomeNo]="homeNo" [workState]="state" [workPincode]="pincode" [workData]="datas"
+          [workEntityType]="entityType" [workAddressId]="addressID" [workGuarantor]="isguarantor"
+          [workCountyCode]="guarantorCountyCode"></app-dashboard-work-address>
+      </div>
+    </div>
+  </div>

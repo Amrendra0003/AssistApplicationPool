@@ -1,0 +1,11 @@
+﻿<Project>
+  <ItemGroup>
+    <StaticWebAsset Include="$(MSBuildThisFileDirectory)..\staticwebassets\**">
+      <SourceType>Package</SourceType>
+      <SourceId>HealthwareCoreLib</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/HealthwareCoreLib</BasePath>
+      <RelativePath>%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
+    </StaticWebAsset>
+  </ItemGroup>
+</Project>

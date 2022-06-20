@@ -1,0 +1,757 @@
+<div class="col-12 page-height " class={{this.virtualAssistPadding}} [ngClass]=this.currentTheme
+  style="overflow:hidden !important;">
+  <app-spinner-overlay *ngIf="this.showLoader == true">
+  </app-spinner-overlay>
+  <div class="col-xs-12 col-md-12 col-sm-12 progress pt-5 page-width position-state">
+    <div class="progress-bar progressCss patient-progress-width position-state" role="progressbar"></div>
+  </div>
+  <div class="h-100">
+    <form autocomplete="off" [formGroup]="myForm" class="row col-xs-12 col-md-12 col-sm-12 d-flex h-100 m-0 p-0"
+      #dynamicForm="ngForm">
+      <input autocomplete="false" name="hidden" type="text" style="display:none;">
+      <div class="d-flex align-items-center justify-content-center h-100 left-panel-bg "
+        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-xs-3 col-md-3 col-sm-3' :'col-xs-4 col-md-4 col-sm-4' ">
+        <img src="assets/images/icons/left-chevron.svg" class="dashboard-img pointer"
+          *ngIf="jsonFormData?.screens[0]?.previousScreenId != null  "
+          (click)="backToLastStep(dynamicForm,'backward')" />
+        <div class="align-items-center justify-content-center "
+          [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'mx-2' :'mx-2' ">
+          <div>
+            <label class="mb-3 assessment-sidemenu-label">{{jsonFormData?.screens[0]?.leftHeader}} </label>
+            <div class="align-items-center justify-content-center h-100">
+              <p class="dashboard-assessment-label">{{jsonFormData?.screens[0]?.leftContent}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex align-items-center right-panel-bg page-height "
+        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-xs-9 col-md-9 col-sm-9' :'col-xs-8 col-md-8 col-sm-8  ' "
+        style="box-shadow: -5px 0 5px -5px #333;overflow:hidden !important;">
+        <div
+          [ngClass]="(this.screenId == '6')?'col-xs-12 col-md-12 col-sm-12 ps-5 mt-3 p-2 scrollHeight dynamic' :'col-xs-12 col-md-12 col-sm-12 ps-5 mt-3 p-2'">
+          <div class="col-xs-12 col-md-12 col-sm-12 float-left">
+            <input type="text" [formControlName]="'screenId'" hidden [ngModel]="this.screenNumber" />
+            <div class="dynamic-questions-main">
+              <!--Two Columns testing-->
+              <div *ngFor="let control of jsonFormData?.screens[0]?.controls" class="col-xs-12 col-md-12 col-sm-12">
+                <label class="col-12  dashboard-p1 pb-3 pt-4"
+                  [ngClass]="(control.screenHeaderPatientLabel == null)? 'display-none' :'' "
+                  *ngIf="this.patient == null || control.screenId == '1' && control.screenHeaderPatientLabel != ' ' ">{{
+                  control.screenHeaderPatientLabel}}</label>
+                <label class="col-12  dashboard-p1 pb-3 pt-4"
+                  [ngClass]="(control.screenHeaderPatientLabel == null)? 'display-none' :'' "
+                  *ngIf="this.patient == 'Myself'  && control.screenId != '1' && control.uniqueKey != 'programServices' && control.screenHeaderPatientLabel != '' ">{{
+                  control.screenHeaderPatientLabel}}</label>
+                <label class="col-12  dashboard-p1 pb-3 pt-4"
+                  [ngClass]="(control.screenHeaderOthersLabel == null)? 'display-none' :'' "
+                  *ngIf="this.patient != 'Myself' && control.screenId != '1' && control.uniqueKey != 'programServices' && control.screenHeaderOthersLabel != '' ">{{
+                  control.screenHeaderOthersLabel}}</label>
+              </div>
+              <!--Two Columns-->
+              <div *ngFor="let control of jsonFormData.screens[0].controls"
+                class="col-xs-12 col-md-12 col-sm-12 col-lg-12 "
+                [ngClass]="(control.uniqueKey == 'isEmployed' || control.uniqueKey == 'isHouseholdEmployed')? 'matsub-main' : (control.subQuestion?.length || control.type == 'countButton' || control.uniqueKey == 'householdIncome' 
+                || control.uniqueKey == 'incomePayPeriod' || control.uniqueKey == 'householdResources' || control.uniqueKey == 'serviceProgram'
+                 || control.uniqueKey == 'healthConditiion' || control.uniqueKey == 'beenInjured' || control.uniqueKey == 'ssnNumber' || control.uniqueKey =='reasonNoSSN'
+                 || control.uniqueKey == 'agreementCheckBox' || control.uniqueKey == 'citizenship')? 'dynamic-questions-main': 'sub-main' ">
+                <label class="col-5  quick-assessment-title mb-4 pb-2 pt-1 household-margin-right"
+                  [ngClass]="(control.patientLabel == null)? 'display-none' :'' " 
+                  [ngClass]="(control.patientLabel == null)? 'display-none' :'' " 
+                  *ngIf="this.patient == 'Myself'  && control.screenId != '1' && control.patientLabel != ' '">{{
+                  control.patientLabel}}</label>
+                <label class="col-5  quick-assessment-title mb-4 pb-2 pt-1 household-margin-right" 
+                  [ngClass]="(control.patientLabel == null)? 'display-none' :'' "
+                  *ngIf="this.patient != 'Myself' && control.patientLabel != ' ' ">{{
+                  control.othersLabel}}</label>
+                <div *ngIf="control.type == 'textfield' " class={{control.class}}>
+                  <div style="position:absolute; padding-left: 8px;" *ngIf="control.isInlineLabel == true">
+                    <div class="input-group-prepend span-input">
+                      <span class="input-group-text span-input-data">
+                        {{control.inlineLabel}}</span>
+                    </div>
+                  </div>
+                  <input type="text" class="form-control textfield-label " *ngIf="control.isInlineLabel != true"
+                    (keyup)="getTextFieldValidation(control.customValidation,$event,control.validators.max)"
+                    [placeholder]="control.placeholder" [formControlName]="control.uniqueKey" [id]="control.questionId"
+                    [attr.screenId]="control.screenId" [attr.questionId]="control.questionId"
+                    [attr.fieldType]="control.type" [(ngModel)]="control.value"
+                    [ngClass]="myForm.get(control.uniqueKey).errors && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'" />
+                  <input type="text" class="form-control textfield-label"
+                    *ngIf="control.isInlineLabel == true && control.uniqueKey == 'email'" style="padding-left: 80px;"
+                    (keyup)="getTextFieldValidation(control.customValidation,$event,control.validators.max)"
+                    (keydown)="space($event)" [placeholder]="control.placeholder" [formControlName]="control.uniqueKey"
+                    [id]="control.questionId" [(ngModel)]="control.value" [attr.screenId]="control.screenId"
+                    [attr.questionId]="control.questionId" [attr.fieldType]="control.type"
+                    [ngClass]="myForm.get(control.uniqueKey).errors && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'" />
+                  <input type="text" class="form-control textfield-label"
+                    *ngIf="control.isInlineLabel == true && control.uniqueKey != 'email'" style="padding-left: 80px;"
+                    (keyup)="getTextFieldValidation(control.customValidation,$event,control.validators.max)"
+                    [placeholder]="control.placeholder" [formControlName]="control.uniqueKey" [id]="control.questionId"
+                    [(ngModel)]="control.value" [attr.screenId]="control.screenId"
+                    [attr.questionId]="control.questionId" [attr.fieldType]="control.type"
+                    [ngClass]="myForm.get(control.uniqueKey).errors && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'" />
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('required') && this.toshowrequiredMessage == true"
+                    class="small text-danger mt-1">{{control?.fieldName}} a required field!<br/></span>
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('pattern')" class="small text-danger mt-1">
+                    Please enter a valid {{control?.fieldName}}!<br/></span>
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('maxlength')" class="small text-danger mt-1">
+                    {{control?.fieldName}} should not exceed {{control.validators.maxLength}} characters!<br/></span>
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('minlength')" class="small text-danger mt-1">
+                    {{control?.fieldName}} must contain {{control.validators.minLength}} characters!<br/></span>
+                  <span
+                    *ngIf="myForm.get(control.uniqueKey).hasError('max') && control.uniqueKey == 'householdResources' "
+                    class="small text-danger  mt-1 mb-2">{{control?.fieldName}} Should not exceed
+                    {{control.validators.max}}!<br/></span>
+                  <span *ngIf="this.householdIncomeMaxErrorMessage == true && control.uniqueKey == 'householdIncome' "
+                    class="small text-danger  mt-1 mb-2">{{control?.fieldName}} should not exceed
+                    ${{control.validators.max}} per annum!<br/></span>
+                  <label class=" legal-name pt-2"
+                    [ngClass]="control.textBoxSubLabel == null? 'display-none': '' ">{{control.textBoxSubLabel}}</label>
+                </div>
+                <div class="col-12" *ngIf="control.messageInfo != null && control.type == 'radio' ">
+                  <div class="col-xs-8 col-md-8 col-sm-8 d-flex mb-2 mt-0 pt-0" style="background-color: #EFF3F6;">
+                    <div class="p-2">
+                      <img src="assets/images/icons/important.svg" />
+                    </div>
+                    <div class="d-flex py-2">
+                      <label class="dropdown-select-label py-1">{{control.messageInfo}}</label>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="control.type == 'radio' " class={{control.class}}>
+                  <div class="col-md-12 mb-2" *ngFor="let radioOptions of control.options">
+                    <div class="form-check">
+                      <input class="form-check-input dashboard-p2" [id]="radioOptions.name"
+                        (change)="OnChangeOptions(control.screenId,$event,control.customValidation,'questions')"
+                        type="radio" [id]="control.questionId" [attr.screenId]="control.screenId"
+                        [attr.questionId]="control.questionId" [attr.fieldType]="control.type"
+                        [value]="radioOptions.value " [(ngModel)]="control.value"
+                        [formControlName]="control.uniqueKey" />
+                      <label class="dashboard-p2 mt-2 mx-3">{{radioOptions.value}}</label>
+                    </div>
+                  </div>
+                  <span *ngIf="myForm.get(control.uniqueKey)?.hasError('required') && this.toshowrequiredMessage == true"
+                    class="small text-danger mt-1">{{control?.fieldName}} is required!<br/></span>
+                </div>
+                <div *ngIf="control.type == 'dropdown' && control.uniqueKey != 'reasonNoSSN' " class={{control.class}}>
+                  <select class="form-select form-select-sm dropdown-select-label" aria-label="form-select-sm example"
+                    [formControlName]="control.uniqueKey" [id]="control.questionId" [attr.screenId]="control.screenId"
+                    [attr.questionId]="control.questionId" [attr.fieldType]="control.type" [(ngModel)]="control.value"
+                    [ngClass]="myForm.get(control.uniqueKey).errors && this.toshowrequiredMessage == true?'form-select-invalid': 'form-select'"
+                    (change)="OnChangeOptions(control.screenId,$event,control.customValidation,'questions')">
+                    <option value=null hidden disabled>{{control.placeholder}}</option>
+                    <option [value]="radioOptions.value" *ngFor="let radioOptions of control.options">
+                      {{radioOptions.value}}</option>
+                  </select>
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('required') && this.toshowrequiredMessage == true"
+                    class="small text-danger mt-1">{{control?.fieldName}} a required field!<br/></span>
+                </div>
+                <div *ngIf="control.type == 'cell' " class={{control.class}} style="position: relative;">
+                  <div style="position:absolute; padding-left: 8px;">
+                    <div class="input-group-prepend span-input">
+                      <span class="input-group-text span-input-data">
+                        {{control.inlineLabel}}</span>
+                    </div>
+                  </div>
+                  <div style="position: relative;">
+                    <div class="mt-2" style="position:absolute; padding-left: 58px;" include="form-input-select()">
+                      <select class="dropdown-select-label" style="border:none; outline:none;width:48px;"
+                        id="countyCode" tabindex="-1">
+                        <option value="" hidden disabled>+1</option>
+                        <option *ngFor="let data of this.phoneCode | keyvalue" value="{{data.value}}">
+                          +{{data.value}}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <input type="tel" id="phone" onInput="this.value = phoneFormat(this.value)" mask="(000) 000-0000"
+                    style="padding-left: 110px;" class="form-control textfield-label"
+                    [placeholder]="control.placeholder" [formControlName]="control.uniqueKey"
+                    [attr.fieldType]="control.type" [(ngModel)]="control.value" [attr.screenId]="control.screenId"
+                    [attr.questionId]="control.questionId"
+                    [ngClass]="myForm.get(control.uniqueKey).errors && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'">
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('required') && this.toshowrequiredMessage == true"
+                    class="small text-danger mt-1">{{control?.fieldName}} a required field!<br/></span>
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('maxlength')" class="small text-danger mt-1">
+                    {{control?.fieldName}} should not exceed {{control.validators.maxLength}} characters!<br/></span>
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('minlength')" class="small text-danger mt-1">
+                    {{control?.fieldName}} must contain {{control.validators.minLength}} characters!<br/></span>
+                </div>
+                <div *ngIf="control.type == 'date' " class={{control.class}}>
+                  <input type="text" class="form-control textfield-label" bsDatepicker [(ngModel)]="control.value"
+                    [(bsValue)]="this.bsVal" (bsValueChange)="selectDate(control.uniqueKey)" autocomplete="off"
+                    (keypress)='keyPress($event)' (keydown.tab)="closeCalendar(control.uniqueKey)"
+                    (keydown.enter)="closeCalendar(control.uniqueKey)" (change)="checkPattern(control.uniqueKey)"
+                    [placeholder]="control.placeholder" [formControlName]="control.uniqueKey" [id]="control.uniqueKey"
+                    [attr.screenId]="control.screenId" [attr.questionId]="control.questionId"
+                    [attr.fieldType]="control.type" [name]="control.uniqueKey"
+                    [ngClass]="myForm.get(control.uniqueKey).errors && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'"
+                    [maxDate]="today">
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('required')&& this.toshowrequiredMessage == true"
+                    class="small text-danger mt-1">{{control?.fieldName}} required!<br/></span>
+                  <span *ngIf="this.dobErrorMessage != ''" class="small text-danger mt-1 ps-1">
+                    {{this.dobErrorMessage}}!
+                    <br/></span>
+                  <div style="float:right;">
+                    <i style="position: absolute;"><img class="field-image" src="assets/images/icons/cake-candle.svg" /></i>
+                  </div>
+                </div>
+                <div *ngIf="control.type == 'countButton' " class={{control.class}} id="countButton">
+                  <div class="col-md-5">
+                    <div aria-required="true">
+                      <div class="d-flex">
+                        <button type="button" class="count-button"
+                          (click)="decrement(control.uniqueKey,myForm.value,$event)">
+                          <img src="assets/images/icons/decrement-btn.svg" class="count-button-image"/>
+                        </button>
+                        <input type="text" class="form-control textfield-label"
+                          style="border-radius: 0px;text-align: center;" (paste)="paste($event)" (drop)="paste($event)"
+                          (input)="HouseholdMemberValidator(control.uniqueKey,myForm.value,$event)"
+                          (keyup)="getTextFieldValidation(control.customValidation,$event,control.validators.max)"
+                          [formControlName]="control.uniqueKey" [id]="control.uniqueKey"
+                          [attr.screenId]="control.screenId" [attr.questionId]="control.questionId"
+                          [attr.fieldType]="control.type"
+                          [ngClass]="myForm.get(control.uniqueKey).errors && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'" />
+                        <button type="button" class="count-button"
+                          (click)="increment(control.uniqueKey,myForm.value,$event)">
+                          <img src="assets/images/icons/increment-btn.svg"  class="count-button-image" />
+                        </button>
+                      </div>
+                    </div>
+                    <span
+                      *ngIf="myForm.get(control.uniqueKey).hasError('required') && this.toshowrequiredMessage == true"
+                      class="small text-danger mt-1" style="white-space: nowrap;">{{control?.fieldName}} a required
+                      field!<br/></span>
+                    <span *ngIf="myForm.get(control.uniqueKey).hasError('pattern')" class="small text-danger mt-1">
+                      Please enter a valid {{control?.fieldName}}!<br/></span>
+                    <span *ngIf="myForm.get(control.uniqueKey).hasError('maxlength')" class="small text-danger mt-1">
+                      {{control?.fieldName}} should not exceed {{control.validators.maxLength}} characters!<br/></span>
+                    <span *ngIf="myForm.get(control.uniqueKey).hasError('minlength')" class="small text-danger mt-1">
+                      {{control?.fieldName}} must contain {{control.validators.minLength}} characters!<br/></span>
+                  </div>
+                </div>
+                <div *ngIf="control.type == 'ssn'" class={{control.class}}>
+                  <div class="" style="position: relative;">
+                    <div style="position:absolute;padding-left: 8px;">
+                      <div class="input-group-prepend span-input"><span class="input-group-text span-input-data"><img
+                            src="assets/images/icons/lock-icon.svg" alt="lock-icon" style="width: 16px;" /></span>
+                      </div>
+                    </div>
+                    <div class="col-md-2 ps-3 pe-5" style="float:right;">
+                      <i class="mt-2 mx-2" style="position: absolute;cursor: pointer;" (click)="toggleField()">
+                        <img *ngIf="this.fieldType=='password'" src="assets/images/icons/eye-slash.svg" />
+                        <img *ngIf="this.fieldType=='text'" src="assets/images/icons/eye-open.png" />
+                      </i>
+                    </div>
+                    <div class="">
+                      <input [type]="this.fieldType" class="form-control textfield-label" style="padding-left: 46px;"
+                        [placeholder]="control.placeholder" [formControlName]="control.uniqueKey"
+                        [id]="control.questionId" [attr.screenId]="control.screenId"
+                        [attr.questionId]="control.questionId" [attr.fieldType]="control.type"
+                        [(ngModel)]="control.value" mask="000-00-0000" (keyup)="onKey($event)"
+                        (input)="ssnChange(control.uniqueKey,myForm.value,$event)"
+                        [ngClass]="myForm.get(control.uniqueKey).hasError('required') && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'">
+                    </div>
+                  </div>
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('required') && this.toshowrequiredMessage == true"
+                    class="small text-danger mt-1">{{control?.fieldName}} is required!<br/></span>
+                </div>
+                <div *ngIf="control.type == 'dropdown' && control.uniqueKey == 'reasonNoSSN'"
+                  class="{{control.class}} mt-3">
+                  <select class="form-select form-select-sm dropdown-select-label" aria-label="form-select-sm example"
+                    [formControlName]="control.uniqueKey" [id]="control.questionId" [attr.screenId]="control.screenId"
+                    [attr.questionId]="control.questionId" [attr.fieldType]="control.type" [(ngModel)]="control.value"
+                    [ngClass]="myForm.get(control.uniqueKey).errors && this.toshowrequiredMessage == true?'form-select-invalid': 'form-select'"
+                    (change)="noSSNChange(control.uniqueKey,myForm.value,$event)">
+                    <option value=null hidden disabled>{{control.placeholder}}</option>
+                    <option [value]="radioOptions.value" *ngFor="let radioOptions of control.options">
+                      {{radioOptions.value}}</option>
+                  </select>
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('required') && this.toshowrequiredMessage == true"
+                    class="small text-danger mt-1">{{control?.fieldName}} a required field!<br/></span>
+                </div>
+                <div *ngIf="control.type == 'toggle' " class={{control.class}}>
+                  <div class="d-flex">
+                    <div class="col-md-5 ">
+                      <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="col-md-12"
+                        [formControlName]="control.uniqueKey" [attr.fieldType]="control.type"
+                        [attr.screenId]="control.screenId" [attr.questionId]="control.questionId"
+                        [(ngModel)]="control.value"
+                        (click)="toggleOnChange(control.customValidation,control.uniqueKey,$event)" required>
+                        <mat-button-toggle [value]="control.options[0].value"
+                          style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                          {{control.options[0].value}}</mat-button-toggle>
+                        <mat-button-toggle [value]="control.options[1].value"
+                          style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">
+                          {{control.options[1].value}}
+                        </mat-button-toggle>
+                      </mat-button-toggle-group>
+                    </div>
+                  </div>
+                  <span *ngIf="myForm.get(control.uniqueKey).hasError('required') && this.toshowrequiredMessage == true"
+                    class="small text-danger mt-1">{{control?.fieldName}} a required field!<br/></span>
+                </div>
+                <div *ngIf="control.type == 'checkbox' && control.uniqueKey == 'agreementCheckBox' "
+                  class="{{control.class}}" style="z-index: auto;">
+                  <div class="col-8 mt-2 d-flex" *ngFor="let checkOptions of control.options" style="z-index:-1;">
+                    <input class="form-check-input-rememberMe dashboard-p2 pointer-events p-2" type="checkbox"
+                      (change)="onAgreeChange(control.uniqueKey,checkOptions.value,$event,control.subQuestion)"
+                      [attr.screenId]="control.screenId" [attr.questionId]="control.questionId"
+                      [attr.fieldType]="control.type" [formArrayName]="control.uniqueKey" [id]="checkOptions.id"
+                      [value]="checkOptions.value" checked/>
+                    <a class="dashboard-select-label mx-2 pointer" id="pointer"
+                    data-bs-toggle="modal" data-bs-target="#content">{{checkOptions.value}}</a>
+                    <!--Modal popup-->
+                    <div class="modal fade modal-overlay" id="content" aria-labelledby="termAndConditionPopup" role="dialog"
+                        data-bs-backdrop="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content themes-modal">
+                                <label class="mt-4 assessment-sidemenu-label text-align-center">{{control.termAndConditionsMessageLabel}}</label>
+                                <div class="modal-body">
+                                    <div class="">
+                                        <label class="dashboard-select-label mx-2 mb-3">
+                                          {{control.termAndConditionPopupMessage}}
+                                        </label>
+                                    </div>
+                                    <div class="d-flex text-center py-1 justify-content-center">
+                                        <button class="btn btn-primary mx-2 login-label pointer " style="color: white;"
+                                            data-bs-dismiss="modal">
+                                            OK</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Modal popup-->
+                  </div>
+                </div>
+                <div *ngIf="control.type == 'checkbox' && control.uniqueKey != 'agreementCheckBox' "
+                  class="{{control.class}}">
+                  <!-- Question label for checkbox! -->
+                  <label class="dashboard-p1 pb-2" style="white-space: nowrap;"
+                    [ngClass]="(control.screenHeaderPatientLabel == null)? 'display-none' :'' "
+                    *ngIf="this.patient == 'Myself' && control.uniqueKey == 'programServices' && control.screenHeaderPatientLabel != '' ">{{
+                    control.screenHeaderPatientLabel}}</label>
+                  <label class="dashboard-p1 pb-2" style="white-space: nowrap;"
+                    [ngClass]="(control.screenHeaderOthersLabel == null)? 'display-none' :'' "
+                    *ngIf="this.patient != 'Myself' && control.uniqueKey == 'programServices' && control.screenHeaderOthersLabel != '' ">{{
+                    control.screenHeaderOthersLabel}}</label>
+                  <div *ngFor="let checkboxOptions of control.options;let i = index;" class="col-md-12  fl"
+                    [formArrayName]="control.uniqueKey">
+                    <div class="form-check ">
+                      <input class="form-check-input" (keydown.enter)="onChangeCheckboxOptions(control.uniqueKey,checkboxOptions.value,$event,control.subQuestion)" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="this.values[this.screenNumber+'_'+checkboxOptions.value]" [id]="checkboxOptions.id"
+                        type="checkbox"
+                        (change)="onChangeCheckboxOptions(control.uniqueKey,checkboxOptions.value,$event,control.subQuestion)" />
+                      <label class="mt-2 mx-3 dashboard-p2">{{checkboxOptions.value}}</label>
+                    </div>
+                  </div>
+                </div>
+                <!-- Sub Question -->
+                <div *ngIf="control.subQuestion?.length && this.toShowSubQuestions == true"
+                  class="col-xs-12 col-md-12 col-sm-12 ">
+                  <div class="subquestion-dynamic-questions-main">
+                    <div *ngFor="let subQuestions of control.subQuestion " class="col-xs-12 col-md-12 col-sm-12">
+                      <label class="col-12  dashboard-p1 pb-3 pt-4"
+                        [ngClass]="(subQuestions.screenHeaderPatientLabel == null)? 'display-none' :'' "
+                        *ngIf="this.patient == 'Myself'  && control.screenId != '1' && subQuestions.screenHeaderPatientLabel != '' ">{{
+                        subQuestions.screenHeaderPatientLabel}}</label>
+                      <label class="col-12  dashboard-p1 pb-3 pt-4"
+                        [ngClass]="(subQuestions.screenHeaderOthersLabel == null)? 'display-none' :'' "
+                        *ngIf="this.patient != 'Myself' && subQuestions.screenHeaderPatientLabel != '' ">{{
+                        subQuestions.screenHeaderOthersLabel}}</label>
+                    </div>
+                    <div *ngFor="let subQuestions of control.subQuestion"
+                      [ngClass]="(subQuestions.subQuestion?.length)? 'dynamic-questions-main': 'sub-main' "
+                      class="col-xs-12 col-md-12 col-sm-12 ">
+                      <label class="col-4 quick-assessment-title mb-4 pb-2 pt-1"
+                        [ngClass]="(subQuestions.patientLabel == null)? 'display-none' :'' "
+                        *ngIf="this.patient == 'Myself' && control.uniqueKey !='beenInjured' ">{{subQuestions.patientLabel}}</label>
+                      <label class="col-4 quick-assessment-title mb-4 pb-2 pt-1"
+                        [ngClass]="(subQuestions.patientLabel == null)? 'display-none' :'' "
+                        *ngIf="this.patient != 'Myself' && control.uniqueKey !='beenInjured' ">{{
+                        subQuestions.othersLabel}}</label>
+                      <!--Checkbox subquestion labels-->
+                      <div class="col-6 report-filed-label"
+                        *ngIf="subQuestions.uniqueKey == 'crimeReportFiled' && this.toShowCheckboxCrimeSubQuestions == true">
+                        <label class="quick-assessment-title mb-4 pb-2 pt-1"
+                          [ngClass]="(subQuestions.patientLabel == null)? 'display-none' :'' "
+                          *ngIf="this.patient == 'Myself' ">{{subQuestions.patientLabel}}</label>
+                        <label class="quick-assessment-title mb-4 pb-2 pt-1"
+                          [ngClass]="(subQuestions.patientLabel == null)? 'display-none' :'' "
+                          *ngIf="this.patient != 'Myself' ">{{
+                          subQuestions.othersLabel}}</label>
+                      </div>
+                      <div class="col-6" style="margin-left:2%;margin-top: -76px;"
+                        *ngIf="subQuestions.uniqueKey == 'motorReportFiled' && this.toShowCheckboxMotorSubQuestions == true">
+                        <label class="quick-assessment-title mb-4 pb-2 pt-1"
+                          [ngClass]="(subQuestions.patientLabel == null)? 'display-none' :'' "
+                          *ngIf="this.patient == 'Myself' ">{{subQuestions.patientLabel}}</label>
+                        <label class="quick-assessment-title mb-4 pb-2 pt-1"
+                          [ngClass]="(subQuestions.patientLabel == null)? 'display-none' :'' "
+                          *ngIf="this.patient != 'Myself' ">{{
+                          subQuestions.othersLabel}}</label>
+                      </div>
+                      <div class="col-6" style="margin-left: 105%;
+                        margin-top: -55px;"
+                        *ngIf="subQuestions.uniqueKey == 'jobReportFiled' && this.toShowCheckboxJobSubQuestions == true">
+                        <label class="quick-assessment-title mb-4 pb-2 pt-1"
+                          [ngClass]="(subQuestions.patientLabel == null)? 'display-none' :'' "
+                          *ngIf="this.patient == 'Myself' ">{{subQuestions.patientLabel}}</label>
+                        <label class="quick-assessment-title mb-4 pb-2 pt-1"
+                          [ngClass]="(subQuestions.patientLabel == null)? 'display-none' :'' "
+                          *ngIf="this.patient != 'Myself' ">{{
+                          subQuestions.othersLabel}}</label>
+                      </div>
+                      <!--Checkbox subquestion label-->
+                      <div *ngIf="subQuestions.type == 'radio' ">
+                        <div class="col-md-12 mb-2" *ngFor="let radioOptions of subQuestions.options">
+                          <div class="form-check">
+                            <input class="form-check-input dashboard-p2" [id]="radioOptions.name"
+                              (change)="OnChangeOptions(subQuestions.screenId,$event,subQuestions.customValidation,'subquestions')"
+                              type="radio" [id]="subQuestions.questionId" [attr.screenId]="subQuestions.screenId"
+                              [attr.questionId]="subQuestions.questionId" [attr.fieldType]="subQuestions.type"
+                              [value]="radioOptions.value " [(ngModel)]="control.value"
+                              formControlName={{subQuestions.uniqueKey}} [required]="subQuestions.required" />
+                            <label class="dashboard-p2 mt-2 mx-3">{{radioOptions.value}}</label>
+                          </div>
+                        </div>
+                      </div>
+                      <!--checkbox options toggle button-->
+                      <div *ngIf="subQuestions.type == 'toggle' && control.uniqueKey =='beenInjured' "
+                        class={{control.class}}>
+                        <div class="d-flex report-filed"
+                          *ngIf="subQuestions.uniqueKey == 'crimeReportFiled' && this.toShowCheckboxCrimeSubQuestions == true">
+                          <div class="col-md-5 ">
+                            <div class="ps-1">
+                              <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
+                                [formControlName]="subQuestions.uniqueKey" [attr.fieldType]="subQuestions.type"
+                                [attr.screenId]="subQuestions.screenId" [attr.questionId]="subQuestions.questionId"
+                                [(ngModel)]="subQuestions.value"
+                                (click)="wasReportFiledChange('crimeReportFiled',$event)">
+                                <mat-button-toggle [value]="subQuestions.options[0].value"
+                                  style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                                  {{subQuestions.options[0].value}}</mat-button-toggle>
+                                <mat-button-toggle [value]="subQuestions.options[1].value"
+                                  style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">
+                                  {{subQuestions.options[1].value}}
+                                </mat-button-toggle>
+                              </mat-button-toggle-group>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex " style="margin-top: -76px;"
+                          *ngIf="subQuestions.uniqueKey == 'motorReportFiled' && this.toShowCheckboxMotorSubQuestions == true">
+                          <div class="col-md-5 ">
+                            <div class="ps-1">
+                              <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
+                                [formControlName]="subQuestions.uniqueKey" [attr.fieldType]="subQuestions.type"
+                                [attr.screenId]="subQuestions.screenId" [attr.questionId]="subQuestions.questionId"
+                                [(ngModel)]="subQuestions.value"
+                                (click)="wasReportFiledChange('motorReportFiled',$event)">
+                                <mat-button-toggle [value]="subQuestions.options[0].value"
+                                  style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                                  {{subQuestions.options[0].value}}</mat-button-toggle>
+                                <mat-button-toggle [value]="subQuestions.options[1].value"
+                                  style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">
+                                  {{subQuestions.options[1].value}}
+                                </mat-button-toggle>
+                              </mat-button-toggle-group>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="d-flex" style=" margin-top: -55px;"
+                          *ngIf="subQuestions.uniqueKey == 'jobReportFiled' && this.toShowCheckboxJobSubQuestions == true; ">
+                          <div class="col-md-5 ">
+                            <div class="ps-1">
+                              <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
+                                [formControlName]="subQuestions.uniqueKey" [attr.fieldType]="subQuestions.type"
+                                [attr.screenId]="subQuestions.screenId" [attr.questionId]="subQuestions.questionId"
+                                [(ngModel)]="subQuestions.value"
+                                (click)="wasReportFiledChange('jobReportFiled',$event)">
+                                <mat-button-toggle [value]="subQuestions.options[0].value"
+                                  style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                                  {{subQuestions.options[0].value}}</mat-button-toggle>
+                                <mat-button-toggle [value]="subQuestions.options[1].value"
+                                  style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">
+                                  {{subQuestions.options[1].value}}
+                                </mat-button-toggle>
+                              </mat-button-toggle-group>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!--Checkbox toggle button-->
+                      <div *ngIf="subQuestions.type == 'toggle' && control.uniqueKey !='beenInjured' "
+                        class={{control.class}}>
+                        <div class="d-flex">
+                          <div class="col-md-5 ">
+                            <div class="ps-1">
+                              <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
+                                [formControlName]="subQuestions.uniqueKey" [attr.fieldType]="subQuestions.type"
+                                [attr.screenId]="subQuestions.screenId" [attr.questionId]="subQuestions.questionId"
+                                [(ngModel)]="subQuestions.value"
+                                (click)="subQuestiontoggleOnChange(subQuestions.customValidation,subQuestions.uniqueKey,$event)"
+                                required>
+                                <mat-button-toggle value="false" [value]="subQuestions.options[0].value"
+                                  style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                                  {{subQuestions.options[0].value}}</mat-button-toggle>
+                                <mat-button-toggle [value]="subQuestions.options[1].value"
+                                  style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">
+                                  {{subQuestions.options[1].value}}
+                                </mat-button-toggle>
+                              </mat-button-toggle-group>
+                            </div>
+                          </div>
+                        </div>
+                        <span
+                          *ngIf="myForm.get(subQuestions.uniqueKey).hasError('required') && this.toshowrequiredMessage == true"
+                          class="small text-danger mt-1">{{subQuestions.fieldName}} a required field!<br/></span>
+                      </div>
+                      <!-- Nested Subquestions-->
+                      <div *ngIf="subQuestions.subQuestion?.length && this.toShowNestedSubQuestions == true">
+                        <div *ngFor="let nestedQuestion of subQuestions.subQuestion "
+                          class="col-12 nested-Question-main">
+                          <label class="col-12  dashboard-p1 pb-3 pt-1"
+                            [ngClass]="(nestedQuestion.screenHeaderPatientLabel == null)? 'display-none' :'' "
+                            *ngIf="this.patient == 'Myself'  && nestedQuestion.screenId != '1' && nestedQuestion.screenHeaderPatientLabel != '' ">{{
+                            nestedQuestion.screenHeaderPatientLabel}}</label>
+                          <label class="col-12  dashboard-p1 pb-3 pt-1"
+                            [ngClass]="(nestedQuestion.screenHeaderOthersLabel == null)? 'display-none' :'' "
+                            *ngIf="this.patient != 'Myself' && nestedQuestion.screenHeaderPatientLabel != '' ">{{
+                            nestedQuestion.screenHeaderOthersLabel}}</label>
+                        </div>
+                      </div>
+                      <div *ngIf="subQuestions.subQuestion?.length && this.toShowNestedSubQuestions == true"
+                        class="col-xs-12 col-md-12 col-sm-12 row g-3 nested-Question-main">
+                        <div *ngFor="let nestedQuestion of subQuestions.subQuestion" class="col-12">
+                          <label class="col-12 quick-assessment-title mb-4 pb-2 pt-1"
+                            [ngClass]="(nestedQuestion.patientLabel == null)? 'display-none' :'' "
+                            *ngIf="this.patient == 'Myself' ">{{nestedQuestion.patientLabel}}</label>
+                          <label class="col-12 quick-assessment-title mb-4 pb-2 pt-1"
+                            [ngClass]="(nestedQuestion.patientLabel == null)? 'display-none' :'' "
+                            *ngIf="this.patient != 'Myself' ">{{
+                            nestedQuestion.othersLabel}}</label>
+                          <div class="col-8"
+                            *ngIf="nestedQuestion.messageInfo != '' && nestedQuestion.messageInfo != null ">
+                            <div class="col-xs-10 col-md-10 col-sm-10 d-flex  mb-2" style="background-color: #EFF3F6;">
+                              <div class="p-2">
+                                <img src="assets/images/icons/important.svg" />
+                              </div>
+                              <div class="d-flex p-2">
+                                <label class="dropdown-select-label pt-1">{{nestedQuestion.messageInfo}}</label>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="nestedQuestion.type == 'checkbox' " class="{{nestedQuestion.class}}">
+                            <div *ngFor="let checkboxOptions of nestedQuestion.options;let i = index;"
+                              class="col-md-12  fl" [formArrayName]="nestedQuestion.uniqueKey">
+                              <div class="form-check ">
+                                <input class="form-check-input " (keydown.enter)="onChangeCheckboxOptions(nestedQuestion.uniqueKey,checkboxOptions.value,$event,nestedQuestion.subQuestion)"
+                                  [ngModelOptions]="{standalone: true}"
+                                  [(ngModel)]="this.values[this.screenNumber+'_'+checkboxOptions.value]"
+                                  [id]="checkboxOptions.id" type="checkbox"
+                                  (change)="onChangeCheckboxOptions(nestedQuestion.uniqueKey,checkboxOptions.value,$event,nestedQuestion.subQuestion)" />
+                                <label class="mt-2 mx-3 dashboard-p2">{{checkboxOptions.value}}</label>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="nestedQuestion.type == 'radio' " class="col-12">
+                            <div class="col-md-12 mb-2" *ngFor="let radioOptions of nestedQuestion.options">
+                              <div class="form-check">
+                                <input class="form-check-input dashboard-p2"
+                                  (change)="OnChangeOptions(nestedQuestion.screenId,$event,nestedQuestion.customValidation,'nestedSubquestion')"
+                                  type="radio" [id]="nestedQuestion.questionId" [(ngModel)]="control.value"
+                                  [attr.screenId]="nestedQuestion.screenId"
+                                  [attr.questionId]="nestedQuestion.questionId" [attr.fieldType]="nestedQuestion.type"
+                                  [value]="radioOptions.value " formControlName={{nestedQuestion.uniqueKey}} />
+                                <label class="dashboard-p2 mt-2 mx-3">{{radioOptions.value}}</label>
+                              </div>
+                            </div>
+                            <!--Sub Nested-->
+                            <div *ngIf="nestedQuestion.subQuestion?.length && this.toShowSubNestedSubQuestions == true"
+                              class="col-xs-12 col-md-12 col-sm-12 row g-3">
+                              <div *ngFor="let subNestedQuestion of nestedQuestion.subQuestion" class="col-12">
+                                <div class="pb-0 mb-0" *ngIf="subNestedQuestion.patientLabel != '' ">
+                                  <label class="col-12 dynamic-field dashboard-p1"
+                                    *ngIf="this.patient == 'Myself' ">{{nestedQuestion.patientLabel}}</label>
+                                  <label class="col-12 dynamic-field dashboard-p1" *ngIf="this.patient != 'Myself' ">{{
+                                    nestedQuestion.othersLabel}}</label>
+                                </div>
+                                <div class="col-xs-3 col-md-3 col-sm-3 mt-2"
+                                  *ngIf="subNestedQuestion.type == 'toggle' ">
+                                  <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
+                                    [formControlName]="subNestedQuestion.uniqueKey"
+                                    [attr.fieldType]="subNestedQuestion.type"
+                                    [attr.screenId]="subNestedQuestion.screenId"
+                                    [attr.questionId]="subNestedQuestion.questionId" [(ngModel)]="control.value">
+                                    <mat-button-toggle value="false" [value]="subNestedQuestion.options[0].value"
+                                      style="border-top-left-radius: 25px;border-bottom-left-radius: 25px;">
+                                      {{subNestedQuestion.options[0].value}}</mat-button-toggle>
+                                    <mat-button-toggle [value]="subNestedQuestion.options[1].value"
+                                      style="border-top-right-radius: 25px;border-bottom-right-radius: 25px;">
+                                      {{subNestedQuestion.options[1].value}}
+                                    </mat-button-toggle>
+                                  </mat-button-toggle-group>
+                                </div>
+                              </div>
+                            </div>
+                            <!--Sub Nested-->
+                          </div>
+                        </div>
+                      </div>
+                      <!--Nested Subquestion-->
+                      <div *ngIf="subQuestions.type == 'textfield' " class={{subQuestions.class}}>
+                        <div style="position:absolute; padding-left: 8px;" *ngIf="subQuestions.isInlineLabel == true">
+                          <div class="input-group-prepend span-input">
+                            <span class="input-group-text span-input-data">
+                              {{subQuestions.inlineLabel}}</span>
+                          </div>
+                        </div>
+                        <input type="text" class="form-control textfield-label"
+                          *ngIf="subQuestions.isInlineLabel != true"
+                          (keyup)="getTextFieldValidation(subQuestions.customValidation,$event,subQuestions.validators.max)"
+                          [placeholder]="subQuestions.placeholder" [formControlName]="subQuestions.uniqueKey"
+                          [id]="subQuestions.questionId" [attr.screenId]="subQuestions.screenId"
+                          [attr.questionId]="subQuestions.questionId" [attr.fieldType]="subQuestions.type"
+                          [ngClass]="myForm.get(subQuestions.uniqueKey).errors && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'" />
+                        <input type="text" class="form-control textfield-label"
+                          *ngIf="subQuestions.isInlineLabel == true" style="padding-left: 110px;"
+                          (keyup)="getTextFieldValidation(subQuestions.customValidation,$event,subQuestions.validators.max)"
+                          [placeholder]="subQuestions.placeholder" [formControlName]="subQuestions.uniqueKey"
+                          [id]="subQuestions.questionId" [attr.screenId]="subQuestions.screenId"
+                          [attr.questionId]="subQuestions.questionId" [attr.fieldType]="subQuestions.type"
+                          [ngClass]="myForm.get(subQuestions.uniqueKey).errors && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'" />
+                        <span
+                          *ngIf="myForm.get(subQuestions.uniqueKey).hasError('required') && this.toshowrequiredMessage == true"
+                          class="small text-danger mt-1">{{subQuestions.fieldName}} is required!<br/></span>
+                        <span *ngIf="myForm.get(subQuestions.uniqueKey).hasError('pattern')"
+                          class="small text-danger mt-1">
+                          Please enter a valid {{subQuestions.fieldName}}!<br/></span>
+                        <span *ngIf="myForm.get(subQuestions.uniqueKey).hasError('maxlength')"
+                          class="small text-danger mt-1">
+                          {{subQuestions.fieldName}} should not exceed {{subQuestions.validators.maxLength}}
+                          characters!<br/></span>
+                        <span *ngIf="myForm.get(subQuestions.uniqueKey).hasError('minlength')"
+                          class="small text-danger mt-1">
+                          {{subQuestions.fieldName}} must contain {{subQuestions.validators.minLength}}
+                          characters!<br/></span>
+                      </div>
+                      <div *ngIf="subQuestions.type == 'date' " class={{subQuestions.class}}>
+                        <div style="position:absolute; padding-left: 8px;" *ngIf="subQuestions.isInlineLabel == true">
+                          <div class="input-group-prepend span-input">
+                            <span class="input-group-text span-input-data">
+                              {{subQuestions.inlineLabel}}</span>
+                          </div>
+                        </div>
+                        <input type="text" class="form-control textfield-label" bsDatepicker [(bsValue)]="this.bsVal"
+                          (bsValueChange)="selectDate(subQuestions.uniqueKey)" autocomplete="off"
+                          (keypress)='keyPress($event)' (keydown.tab)="closeCalendar(subQuestions.uniqueKey)"
+                          (keydown.enter)="closeCalendar(subQuestions.uniqueKey)"
+                          (change)="checkPattern(subQuestions.uniqueKey)" *ngIf="subQuestions.isInlineLabel != true"
+                          [placeholder]="subQuestions.placeholder" [formControlName]="subQuestions.uniqueKey"
+                          [id]="subQuestions.uniqueKey" [attr.screenId]="subQuestions.screenId"
+                          [attr.questionId]="subQuestions.questionId" [attr.fieldType]="subQuestions.type"
+                          [ngClass]="myForm.get(subQuestions.uniqueKey).errors && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'">
+                          <div *ngIf="subQuestions.isInlineLabel == true && subQuestions.uniqueKey == 'effectiveFrom'" [(bsValue)]="this.bsValEffectiveFrom" bsDatepicker
+                          (bsValueChange)="selectEffectiveFromDate($event)">
+                          <input type="text" [id]="subQuestions.uniqueKey" class="form-control textfield-label"
+                          autocomplete="off" (keypress)='keyPress($event)' [(bsValue)]="this.bsValEffectiveFrom" bsDatepicker
+                          (bsValueChange)="selectEffectiveFromDate($event)"
+                          (keydown.tab)="closeCalendar(subQuestions.uniqueKey)"
+                          (keydown.enter)="closeCalendar(subQuestions.uniqueKey)"
+                          *ngIf="subQuestions.isInlineLabel == true && subQuestions.uniqueKey == 'effectiveFrom'"
+                          [placeholder]="subQuestions.placeholder" [formControlName]="subQuestions.uniqueKey"
+                          style="padding-left: 130px;" [attr.screenId]="subQuestions.screenId"
+                          [attr.questionId]="subQuestions.questionId" [attr.fieldType]="subQuestions.type"
+                          [ngClass]="myForm.get(subQuestions.uniqueKey).errors && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'">
+                        </div>
+                        <div *ngIf="subQuestions.isInlineLabel == true && subQuestions.uniqueKey == 'termination' " [(bsValue)]="this.bsValTermination" bsDatepicker
+                        (bsValueChange)="selectTerminationDate($event)">
+                          <input type="text" [id]="subQuestions.uniqueKey" class="form-control textfield-label"
+                          autocomplete="off" (keypress)='keyPress($event)' [(bsValue)]="this.bsValTermination" bsDatepicker
+                          (bsValueChange)="selectTerminationDate($event)"
+                          (keydown.tab)="closeCalendar(subQuestions.uniqueKey)"
+                          (keydown.enter)="closeCalendar(subQuestions.uniqueKey)"
+                          *ngIf="subQuestions.isInlineLabel == true && subQuestions.uniqueKey == 'termination' "
+                          [placeholder]="subQuestions.placeholder" [formControlName]="subQuestions.uniqueKey"
+                          style="padding-left: 130px;" [attr.screenId]="subQuestions.screenId"
+                          [attr.questionId]="subQuestions.questionId" [attr.fieldType]="subQuestions.type"
+                          [ngClass]="myForm.get(subQuestions.uniqueKey).errors && this.toshowrequiredMessage == true?'form-control-invalid': 'form-control'"
+                          [ngClass]="this.terminationErrorMessage != '' && subQuestions.uniqueKey == 'termination' ? 'form-control-invalid': 'form-control'">
+                          </div>
+                        <span
+                          *ngIf="myForm.get(subQuestions.uniqueKey).hasError('required')&& this.toshowrequiredMessage == true"
+                          class="small text-danger mt-1">{{subQuestions.fieldName}} required!<br/></span>
+                        <span *ngIf="this.effectiveFromErrorMessage != '' && subQuestions.uniqueKey == 'effectiveFrom' "
+                          class="small text-danger mt-1 ps-1">
+                          {{this.effectiveFromErrorMessage}}<br/>
+                        </span>
+                        <span *ngIf="this.terminationErrorMessage != ' ' && subQuestions.uniqueKey == 'termination'"
+                          class="small text-danger mt-1 ps-1">
+                          {{this.terminationErrorMessage}}
+                        </span>
+                        <div style="float:right;">
+                          <i style="position: absolute;"><img class="field-image" src="assets/images/icons/calendar.svg" /></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Sub Question -->
+                <div class="col-xs-8 col-md-8 col-sm-8 d-flex mt-4 ms-2" style="background-color: #FAE1E1;"
+                  *ngIf="this.toShowWarningMessage == true && control.alertInfo != '' ">
+                  <div class="p-2">
+                    <img src="assets/images/icons/alert.svg" />
+                  </div>
+                  <div class="d-flex p-2">
+                    <label class="dropdown-select-label pt-1">{{control.alertInfo}}</label>
+                  </div>
+                </div>
+                <div class="col-xs-8 col-md-8 col-sm-8 d-flex mt-2 ms-2" style="background-color: #EFF3F6;"
+                  *ngIf="this.toShowMessageInfo == true && control.errorMessageInfo != ''">
+                  <div class="p-2">
+                    <img src="assets/images/icons/important.svg" />
+                  </div>
+                  <div class="d-flex p-2">
+                    <label class="dropdown-select-label pt-1">{{control.errorMessageInfo}}</label>
+                  </div>
+                </div>
+                <div class="col-12 pt-3"
+                  *ngIf="control.messageInfo != null && (control.type == 'textfield' || control.type =='dropdown' || control.type == 'ssn') ">
+                  <div class="col-xs-8 col-md-8 col-sm-8 d-flex mb-2 mt-0 pt-0" style="background-color: #EFF3F6;">
+                    <div class="p-2">
+                      <img src="assets/images/icons/important.svg" />
+                    </div>
+                    <div class="d-flex py-2">
+                      <label class="dropdown-select-label py-1">{{control.messageInfo}}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex mt-3 "
+              *ngIf="jsonFormData?.screens[0]?.nextScreenId != null && this.buttonHidden == false"
+              style="z-index: auto;">
+              <button class="btn btn-primary  login-text-field shadow-none pointer next-button" tabindex="-1"
+                type="submit" tooltip="Next" (click)="onSubmit(dynamicForm,'forward')">
+                <div class="ellipse d-flex ellipse1 next-button-ellipse" tabindex="0" id="mainnav"
+                  (keyup)="handleKeyUp($event)">
+                  <img src="assets/images/icons/qucikassessment-left-chevron.svg" alt="mail-msg"
+                    class="next-round-icon" />
+                </div>
+              </button>
+              <label class="dashboard-p2 mt-2 mx-2 pointer">{{NextLabel}}</label>
+            </div>
+            <div class=" mt-4 d-flex" *ngIf="jsonFormData?.screens[0]?.nextScreenId == null">
+              <button type="submit" class="btn btn-primary mb-3 login-button-label px-3"
+                [disabled]="!myForm.valid || !this.checked"
+                style="background-color: 1px solid #2494ED;color: #FFFFFF;cursor: pointer;width:auto"
+                (click)="createNewAssessment()">{{buttonLabel}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,347 @@
+<div class="col-xs-12 col-md-12 col-sm-12" style="display: flex;" [ngClass]=this.currentTheme>
+    <app-spinner-overlay *ngIf="this.showLoader == true">
+    </app-spinner-overlay>
+    <div class="col-xs-12 col-md-12 col-sm-12 dashboard-boxshadow mb-5 pb-5 px-4 pt-4">
+        <div class="col-xs-12 col-md-12 col-sm-12">
+            <div class="col-xs-12 col-md-12 col-sm-12 mx-2" style="display: flex;">
+                <img src="assets/images/icons/contact-preference-header-icon.svg" class="dash-icon" />
+                <label class="dashboard-p1 mx-2 mt-1"><b>{{title}}</b></label>
+            </div>
+            <div class="col-xs-12 col-md-12 col-sm-12 mt-1" style="display: flex;">
+                <form autocomplete="off" [formGroup]="contactPreferencesForm" #myform="ngForm"
+                    class="col-xs-12 col-md-12 col-sm-12 row g-3" [ngClass]="{disabledDiv: !isEditAllowed}">
+                    <input autocomplete="false" name="hidden" type="text" style="display:none;">
+                    <!-- line-1 -->
+                    <div class="col-md-4 col-lg-2 pt-1">
+                        <label class="dashboard-p2 pt-2 fl">{{preferredCellLabel}}</label>
+                    </div>
+                    <div class="col-md-6 col-lg-6" include="form-input-select()" style="position: relative;">
+                        <select required id="preferredCell" formControlName="preferredCell"
+                            class="form-select form-select-sm dropdown-select-label" aria-label="form-select-sm example"
+                            [(ngModel)]="this.preferredCell" (change)="onChangeCell($event)"
+                            [ngClass]="contactPreferencesForm.get('preferredCell').errors && myform.submitted?'form-select-invalid': 'form-select'">
+                            <option value="" hidden disabled>Select </option>
+                            <option *ngFor="let data of this.preferredCellVal"
+                                [value]="data.preferredPhoneUniqueId+'-'+data.contactPhoneId">
+                                {{data.displayTitle}}
+
+                            </option>
+                        </select>
+                        <div *ngIf="contactPreferencesForm.get('preferredCell').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{PreferredNumReq}}</div>
+                    </div>
+                    <div *ngIf="this.chooseCell == false" class="col-md-6 offset-md-4 offset-lg-0 col-lg-4"
+                        include="form-input-select()" style="position: relative;">
+                        <select id="preferredTime" formControlName="preferredTime"
+                            class="form-select form-select-sm dropdown-select-label" aria-label="form-select-sm example"
+                            [(ngModel)]="preferredTime" [attr.required]="'this.chooseCell'? false:true"
+                            [ngClass]="contactPreferencesForm.get('preferredTime').errors && myform.submitted?'form-select-invalid': 'form-select'">
+                            <option value="" hidden disabled>{{callingTime}}</option>
+                            <option value="9.00 AM">{{Time1}}</option>
+                            <option value="11.00 AM">{{Time2}}</option>
+                            <option value="4.00 PM">{{Time3}}</option>
+                            <option value="6.00 PM">{{Time4}}</option>
+                        </select>
+                        <div *ngIf="contactPreferencesForm.get('preferredTime').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{TimeReq}}</div>
+                    </div>
+                    <div *ngIf="this.chooseCell == true" class="col-md-2 col-lg-4"></div>
+                    <!-- line-2 -->
+                    <div *ngIf="this.chooseCell == true" class="col-md-4 col-lg-2">
+                    </div>
+                    <div *ngIf="this.chooseCell == true" class="col-md-6 col-lg-6" style="position: relative;">
+                        <div style="position:absolute; padding-left: 8px;" class="d-flex">
+                            <div class="input-group-prepend span-input">
+                                <span class="input-group-text span-input-data">
+                                    <div include="form-input-select()">
+                                        <select class="dropdown-select-label disabled-bg"
+                                            style="border:none; outline:none;width:auto;" id="cellNumberType"
+                                            formControlName="cellNumberType" [(ngModel)]="cellNumberType"
+                                            (change)="onCellPlace($event)">
+                                            <option value="Landline" class="fl">{{landline}}</option>
+                                            <option value="Cell" class="fl">{{cell}}</option>
+                                        </select>
+                                    </div>
+                                </span>
+                            </div>
+                            <div>
+                                <div class="mt-2" style="padding-left: 10px;" include="form-input-select()">
+                                    <select class="dropdown-select-label" style="border:none; outline:none;width:48px;"
+                                        id="countyCode" formControlName="countyCode" [(ngModel)]="countyCode">
+                                        <option value="1">+1</option>
+                                        <option value="91">+91</option>
+                                        <option value="44">+44</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="">
+                            <input type="text" mask="(000) 000-0000" style="padding-left: 170px;"
+                                class="form-control textfield-label2" id="cellno" [placeholder]="cellPlace"
+                                formControlName="cellno" maxlength="15" [(ngModel)]="cellno"
+                                (keydown.enter)="$event.preventDefault()"
+                                [ngClass]="contactPreferencesForm.get('cellno').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                            <div *ngIf="contactPreferencesForm.get('cellno').hasError('required')&& myform.submitted"
+                                class="small text-danger mt-1">{{this.cellPlace}} {{NumReq}}</div>
+                            <div *ngIf="contactPreferencesForm.get('cellno').hasError('minlength')"
+                                class="small text-danger mt-1">{{NumVal1}}{{this.cellPlace}}{{NumVal2}}</div>
+                        </span>
+                    </div>
+                    <div *ngIf="this.chooseCell == true" class="col-md-6 offset-md-4 offset-lg-0 col-lg-4"
+                        include="form-input-select()" style="position: relative;">
+                        <select formControlName="otherCell" id="otherCell" formControlName="otherCell"
+                            class="form-select form-select-sm dropdown-select-label" aria-label="form-select-sm example"
+                            [(ngModel)]="otherCell" [attr.required]="'this.chooseCell'? true:false"
+                            [ngClass]="contactPreferencesForm.get('otherCell').errors && myform.submitted?'form-select-invalid': 'form-select'">
+                            <option value="" hidden disabled>{{callingTime}}</option>
+                            <option value="9.00 AM">{{Time1}}</option>
+                            <option value="11.00 AM">{{Time2}}</option>
+                            <option value="4.00 PM">{{Time3}}</option>
+                            <option value="6.00 PM">{{Time4}}</option>
+                        </select>
+                        <div *ngIf="contactPreferencesForm.get('otherCell').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{TimeReq}}</div>
+                    </div>
+                    <!-- line-3 -->
+                    <div class="col-md-4 col-lg-2 pt-1">
+                        <label class="dashboard-p2 pt-2 fl">{{preferredEmailAddress}}</label>
+                    </div>
+                    <div class="col-md-6 col-lg-6" include="form-input-select()" style="position: relative;">
+                        <select required formControlName="preferredEmail" id="preferredEmail"
+                            formControlName="preferredEmail" class="form-select form-select-sm dropdown-select-label"
+                            aria-label="form-select-sm example" [(ngModel)]="preferredEmail"
+                            [ngClass]="contactPreferencesForm.get('preferredEmail').errors && myform.submitted?'form-select-invalid': 'form-select'">
+                            <option value="" hidden disabled>Select </option>
+                            <option *ngFor="let data of this.preferredEmailDropdownValueList"
+                                [value]="data.preferredEmailUniqueId+'-'+data.contactEmailId">{{data.displayTitle}}
+                            </option>
+                        </select>
+                        <div *ngIf="contactPreferencesForm.get('preferredEmail').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{preferredEmail}}</div>
+                    </div>
+                    <div class="col-md-2 col-lg-4"></div>
+                    <!-- line-4 -->
+                    <div class="col-md-4 col-lg-2 pt-1">
+                        <label class="dashboard-p2 pt-2 fl">{{preferredMailingAddress}}</label>
+                    </div>
+                    <div class="col-md-6 col-lg-6" include="form-input-select()" style="position: relative;">
+                        <select required formControlName="preferredMailAddress" (change)="onChangeMailAddress($event)"
+                            id="preferredMailAddress" formControlName="preferredMailAddress"
+                            class="form-select form-select-sm dropdown-select-label" aria-label="form-select-sm example"
+                            [(ngModel)]="preferredMailAddress"
+                            [ngClass]="contactPreferencesForm.get('preferredMailAddress').errors && myform.submitted?'form-select-invalid': 'form-select'">
+                            <option value="" hidden disabled>{{Select}} </option>
+                            <option *ngFor="let data of this.preferredAddressVal"
+                                [value]="data.preferedAddressUniqueId+'-'+data.contactAddressId">
+                                {{data.displayTitle}}
+                            </option>
+                        </select>
+                        <div *ngIf="contactPreferencesForm.get('preferredMailAddress').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{MailingReq}}!</div>
+                    </div>
+                    <div class="col-md-2 col-lg-4"></div>
+                    <!-- line-5 -->
+                    <div *ngIf="this.chooseMail == true" class="col-md-4 col-lg-2">
+                    </div>
+                    <div *ngIf="this.chooseMail == true" class="col-md-6 col-lg-6">
+                        <div style="position: relative;">
+                            <input type="text" class="form-control textfield-label" id="nicKName"
+                                placeholder="Nick Name" formControlName="nicKName" [(ngModel)]="nicKName" maxlength="51"
+                                (keydown.enter)="$event.preventDefault()"
+                                [ngClass]="contactPreferencesForm.get('nicKName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                        </div>
+                        <div *ngIf="contactPreferencesForm.get('nicKName').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{NickNameReq}}</div>
+                        <div *ngIf="contactPreferencesForm.get('nicKName').hasError('pattern')"
+                            class="small text-danger mt-1">{{NickNameAlp}}</div>
+                        <div *ngIf="contactPreferencesForm.get('nicKName').hasError('maxlength')"
+                            class="small text-danger mt-1">{{NickNameMax}}</div>
+                        <div *ngIf="contactPreferencesForm.get('nicKName').hasError('minlength')"
+                            class="small text-danger mt-1">{{NickNameMin}}</div>
+                    </div>
+                    <div *ngIf="this.chooseMail == true" class="col-md-2 col-lg-4"></div>
+                    <!-- line-6 -->
+                    <div *ngIf="this.chooseMail == true" class="col-md-4 col-lg-2">
+                    </div>
+                    <div *ngIf="this.chooseMail == true" class="col-md-6 col-lg-6">
+                        <div style="position: relative;">
+                            <input type="text" class="form-control textfield-label" id="streetName"
+                                (keydown.enter)="$event.preventDefault()" placeholder="Street Address"
+                                formControlName="streetName" [(ngModel)]="streetName" maxlength="251"
+                                [ngClass]="contactPreferencesForm.get('streetName').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                        </div>
+                        <div *ngIf="contactPreferencesForm.get('streetName').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{StreetAddressReg}}</div>
+                        <div *ngIf="contactPreferencesForm.get('streetName').hasError('maxlength')"
+                            class="small text-danger mt-1">{{StreetAddressMax}}</div>
+                        <div *ngIf="contactPreferencesForm.get('streetName').hasError('minlength')"
+                            class="small text-danger mt-1">{{StreetAddressMinCharacters}}</div>
+                    </div>
+                    <div *ngIf="this.chooseMail == true" class="col-md-2 col-lg-4">
+                    </div>
+                    <!-- line-7 -->
+                    <div *ngIf="this.chooseMail == true" class="col-md-4 col-lg-2">
+                    </div>
+                    <div *ngIf="this.chooseMail == true" class="col-md-3">
+                        <div style="position: relative;">
+                            <input type="text" class="form-control textfield-label" id="suite" placeholder="Suite"
+                                formControlName="suite" [(ngModel)]="suite" maxlength="251"
+                                (keydown.enter)="$event.preventDefault()"
+                                [ngClass]="contactPreferencesForm.get('suite').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                        </div>
+                        <div *ngIf="contactPreferencesForm.get('suite').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{SuiteReq}}</div>
+                        <div *ngIf="contactPreferencesForm.get('suite').hasError('maxlength')"
+                            class="small text-danger mt-1">{{SuiteMax}}</div>
+                    </div>
+                    <div *ngIf="this.chooseMail == true" class="col-lg-7 col-md-4">
+                    </div>
+                    <!-- line-8 -->
+                    <div *ngIf="this.chooseMail == true" class="col-md-4 col-lg-2"></div>
+                    <!-- zipcode -->
+                    <div *ngIf="this.chooseMail == true" class="col-md-3" style="position: relative;">
+                        <input type="text" class="form-control textfield-label" id="zipcode" placeholder="Zip Code"
+                            formControlName="zipcode" [(ngModel)]="zipcode" maxlength="51" (keyup)="getStateAndCity()"
+                            (keydown.enter)="$event.preventDefault()"
+                            [ngClass]="contactPreferencesForm.get('zipcode').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                        <div *ngIf="contactPreferencesForm.get('zipcode').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">
+                            Zip Code is required!</div>
+                        <div *ngIf="contactPreferencesForm.get('zipcode').hasError('pattern')"
+                            class="small text-danger mt-1">{{ZipNum}}</div>
+                        <div *ngIf="contactPreferencesForm.get('zipcode').hasError('invalid')"
+                            class="small text-danger mt-1">{{ZipVal}}</div>
+                        <div *ngIf="contactPreferencesForm.get('zipcode').hasError('minlength')"
+                            class="small text-danger mt-1">{{ZipMin}}</div>
+                        <div *ngIf="contactPreferencesForm.get('zipcode').hasError('maxlength')"
+                            class="small text-danger mt-1">{{ZipMax}}</div>
+                    </div>
+                    <!-- zipcode -->
+                    <div *ngIf="this.chooseMail == true" class="col-md-3" style="position: relative;">
+                        <input type="text" class="form-control textfield-label disabledDiv" id="county"
+                            placeholder="County" formControlName="county" [(ngModel)]="county" maxlength="51"
+                            (keydown.enter)="$event.preventDefault()"
+                            [ngClass]="contactPreferencesForm.get('county').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                        <div *ngIf="contactPreferencesForm.get('county').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{CountyReq}}</div>
+                        <div *ngIf="contactPreferencesForm.get('county').hasError('pattern')"
+                            class="small text-danger mt-1">{{CountyAlp}}</div>
+                        <div *ngIf="contactPreferencesForm.get('county').hasError('maxlength')"
+                            class="small text-danger mt-1">{{CountyMax}}</div>
+                    </div>
+                    <div *ngIf="this.chooseMail == true" class="col-md-2 col-lg-4">
+                    </div>
+                    <!-- line-9 -->
+                    <div *ngIf="this.chooseMail == true" class="col-md-4 col-lg-2"></div>
+                    <!-- city Field start here-->
+                    <div *ngIf="this.chooseMail == true" class="col-md-3">
+                        <div style="position: relative;">
+                            <input type="text" class="form-control textfield-label disabledDiv" id="city"
+                                placeholder="City" formControlName="city" [(ngModel)]="city" maxlength="51"
+                                (keydown.enter)="$event.preventDefault()"
+                                [ngClass]="contactPreferencesForm.get('city').errors && myform.submitted?'form-control-invalid': 'form-control'">
+                        </div>
+                        <div *ngIf="contactPreferencesForm.get('city').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{CityReq}}</div>
+                        <div *ngIf="contactPreferencesForm.get('city').hasError('pattern')"
+                            class="small text-danger mt-1">{{CityAlp}}
+                        </div>
+                        <div *ngIf="contactPreferencesForm.get('city').hasError('maxlength')"
+                            class="small text-danger mt-1">{{CityMax}}</div>
+                    </div>
+                    <!-- city Field ends here--->
+                    <!-- state Field start here-->
+                    <div *ngIf="this.chooseMail == true" class="col-md-3" style="position: relative;">
+
+                        <input type="text" class="form-control textfield-label disabledDiv" id="state"
+                            placeholder="State" formControlName="state" [(ngModel)]="state"
+                            (keydown.enter)="$event.preventDefault()"
+                            [ngClass]="contactPreferencesForm.get('state').errors && myform.submitted?'form-control-invalid': 'form-control'" />
+                        <div *ngIf="contactPreferencesForm.get('state').hasError('required')&& myform.submitted"
+                            class="small text-danger mt-1">{{StateReq}}</div>
+                    </div>
+                    <!-- state Field ends here-->
+                    <div *ngIf="this.chooseMail == true" class="col-md-2 col-lg-4">
+                    </div>
+                    <!-- line-10 -->
+                    <div class="col-md-4 col-lg-2">
+                        <label class="dashboard-p2 mt-3 fl">{{preferredModeofCommunication}}</label>
+                    </div>
+                    <div class="contactIcons"
+                        [ngClass]="(this.virtualAssistPadding != 'virtual-assist-padding-right')? 'col-md-8 col-lg-6' :'col-md-8 col-lg-6' "
+                        [ngClass]="this.showAdvocatePanel == true ? 'col-md-8 col-lg-8 col-xl-6 cstmAdvocatepanel':'col-md-8 col-lg-6 '">
+                        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" id="modeOfContact"
+                            formControlName="modeOfContact" [(ngModel)]="modeOfContact" (click)="toggle()"
+                            class="col-xs-12 col-md-12 col-sm-12 row mt-2">
+                            <div class="col-xs-3 col-md-3 col-sm-3 d-flex">
+                                <mat-button-toggle value="Text" class="c-icons icon-outline">
+                                    <img class="paddingZeroTD" *ngIf="isText==false"
+                                        src="assets/images/icons/comments.svg" alt="mail-msg" />
+                                    <img class="paddingZeroTD" *ngIf="isText==true"
+                                        src="assets/images/icons/text-white-icon.svg" alt="mail-msg" />
+                                </mat-button-toggle>
+                                <p (click)="setMode('Text')" class="login-label ps-4 mt-2 pointer paddingLeftTD">Text
+                                </p>
+                            </div>
+                            <div class="col-xs-3 col-md-3 col-sm-3 d-flex">
+                                <mat-button-toggle value="Call" class="c-icons icon-outline">
+                                    <img class="paddingZeroTD" *ngIf="isCall==false" src="assets/images/icons/phone.svg"
+                                        alt="mail-msg" />
+                                    <img class="paddingZeroTD" *ngIf="isCall==true"
+                                        src="assets/images/icons/call-white-icon.svg" alt="mail-msg" />
+                                </mat-button-toggle>
+                                <p (click)="setMode('Call')" class="login-label ps-4 mt-2 pointer paddingLeftTD">Call
+                                </p>
+                            </div>
+                            <div class="col-xs-3 col-md-3 col-sm-3 d-flex">
+                                <mat-button-toggle value="Email" class="c-icons icon-outline">
+                                    <img class="paddingZeroTD" *ngIf="isEmail==false"
+                                        src="assets/images/icons/envelope.svg" alt="mail-msg" />
+                                    <img class="paddingZeroTD" *ngIf="isEmail==true"
+                                        src="assets/images/icons/mail-white-icon.svg" alt="mail-msg" />
+                                </mat-button-toggle>
+                                <p (click)="setMode('Email')" class="login-label ps-4 mt-2 pointer paddingLeftTD">Email
+                                </p>
+                            </div>
+                            <div class="col-xs-3 col-md-3 col-sm-3 d-flex">
+                                <mat-button-toggle value="Mail" class="c-icons icon-outline">
+                                    <img class="paddingZeroTD" *ngIf="isMail==false"
+                                        src="assets/images/icons/mailbox.svg" alt="mail-msg" />
+                                    <img class="paddingZeroTD" *ngIf="isMail==true"
+                                        src="assets/images/icons/mailbox-white-icon.svg" alt="mail-msg" />
+                                </mat-button-toggle>
+                                <p (click)="setMode('Mail')" class="login-label ps-4 mt-2 pointer paddingLeftTD">Mail
+                                </p>
+                            </div>
+                        </mat-button-toggle-group>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-2"></div>
+                    <div *ngIf="contactPreferencesForm.get('modeOfContact').hasError('required')&& myform.submitted"
+                        class=" col-md-5 small text-danger mt-1">
+                        {{ModeOfCommunication}}
+                    </div>
+                    <div class=" mt-4" style="display: flex;">
+                        <button type="submit" class="btn btn-primary  textfield-label shadow-none mx-2 enabledDiv"
+                            style="width:38px;background-color: transparent;border:none;color: #FFFFFF;" tooltip="Back"
+                            (click)="BackToGuarantor()">
+                            <div class="ellipse ellipse1"
+                                style="box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;display:flex;">
+                                <img class="required" src="assets/images/icons/left-chevron.svg" alt="mail-msg"
+                                    class="next-round-icon" />
+                            </div>
+                        </button>
+                        <button type="submit" class="btn btn-primary  textfield-label shadow-none enabledDiv"
+                            style="width:38px;background-color: transparent;border:none;color: #FFFFFF;"
+                            (click)="contactPreference(contactPreferencesForm.value)" tooltip="Next">
+                            <div class="ellipse ellipse1" style="background-color: #2494ED;display:flex;">
+                                <img src="assets/images/icons/right-chevron.svg" alt="mail-msg"
+                                    class="next-round-icon" />
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

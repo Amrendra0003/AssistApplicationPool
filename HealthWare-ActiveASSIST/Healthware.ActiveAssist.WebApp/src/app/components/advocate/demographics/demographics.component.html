@@ -1,0 +1,351 @@
+<div class="col-10" [ngClass]=this.currentTheme>
+  <p class="dashboard-select-label pt-5">{{info}}</p>
+  <form autocomplete="off" [formGroup]="demographicsForm" #myform="ngForm">
+    <input autocomplete="false" name="hidden" type="text" style="display:none;">
+    <div class="col-md-12 col-xs-12 col-sm-12 row g-3">
+      <div class="col-md-4">
+        <input type="text" class="form-control textfield-label " id="firstName" [(ngModel)]="firstName"
+          placeholder="First Name" formControlName="firstName" tabindex="-1" maxlength="51">
+        <span *ngIf="demographicsForm.get('firstName').errors && myform.submitted"
+          class="text-danger position-absolute translate-middle top-0 start-100">
+          <img src="assets/images/icons/alert-validate.svg"></span>
+        <div *ngIf="demographicsForm.get('firstName').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{NameReq}}</div>
+        <div *ngIf="demographicsForm.get('firstName').hasError('pattern')" class="small text-danger mt-1">{{NameAlp}}
+        </div>
+        <div *ngIf="demographicsForm.get('firstName').hasError('maxlength')" class="small text-danger mt-1">{{NameMax}}
+        </div>
+        <div *ngIf="demographicsForm.get('firstName').hasError('minlength')" class="small text-danger mt-1">{{NameChar}}
+        </div>
+        <label class="dashboard-select-label legal-name pt-2">{{NameLegal}}</label>
+      </div>
+      <div class="col-md-4">
+        <input type="text" class="form-control textfield-label " id="middleName" [(ngModel)]="middleName"
+          placeholder="Middle Name" formControlName="middleName" maxlength="51">
+        <span *ngIf="demographicsForm.get('middleName').errors && myform.submitted"
+          class="text-danger position-absolute translate-middle top-0 start-100">
+          <img src="assets/images/icons/alert-validate.svg"></span>
+        <div *ngIf="demographicsForm.get('middleName').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{MiddleNameReq}}</div>
+        <div *ngIf="demographicsForm.get('middleName').hasError('pattern')" class="small text-danger mt-1">
+          {{MiddleNameAlp}}
+        </div>
+        <div *ngIf="demographicsForm.get('middleName').hasError('maxlength')" class="small text-danger mt-1">
+          {{MiddleNameMax}}
+        </div>
+        <div *ngIf="demographicsForm.get('middleName').hasError('minlength')" class="small text-danger mt-1">
+          {{MiddleNameChar}}
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label " tabindex="-1" id="lastName" [(ngModel)]="lastName"
+            placeholder="Last Name" formControlName="lastName" maxlength="51">
+          <span *ngIf="demographicsForm.get('lastName').errors && myform.submitted"
+            class="text-danger position-absolute translate-middle top-0 start-100">
+            <img src="assets/images/icons/alert-validate.svg"></span>
+        </div>
+        <div *ngIf="demographicsForm.get('lastName').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{LastNamereq}}</div>
+        <div *ngIf="demographicsForm.get('lastName').hasError('pattern')" class="small text-danger mt-1">{{LastNameAlp}}
+        </div>
+        <div *ngIf="demographicsForm.get('lastName').hasError('maxlength')" class="small text-danger mt-1">
+          {{LastNameMax}}</div>
+      </div>
+      <div class="col-md-4 d-flex">
+        <div class="col-12" style="position: relative;">
+          <input type="text" class="form-control textfield-label " tabindex="-1" id="dob" [(ngModel)]="dob"
+            (keyup)="captureDateInDatepicker()" placeholder="Date of Birth" (keypress)='keyPress($event)'
+            (keydown.enter)="closeCalendar()" formControlName="dob" [(bsValue)]="this.bsVal"
+            (keydown.tab)="closeCalendar()" minlength="10" maxlength="10" bsDatepicker>
+          <span *ngIf="demographicsForm.get('dob').errors && myform.submitted"
+            class="text-danger position-absolute translate-middle top-0 start-100">
+            <img src="assets/images/icons/alert-validate.svg"></span>
+          <div *ngIf="demographicsForm.get('dob').hasError('required')&& myform.submitted"
+            class="small text-danger mt-1">{{DateReq}}</div>
+          <div *ngIf="demographicsForm.get('dob').hasError('pattern')" class="small text-danger mt-1 text-align-left">
+            {{DateFormate}} </div>
+          <div *ngIf="demographicsForm.get('dob').hasError('minlength')" class="small text-danger mt-1 text-align-left">
+            {{DateFormate}} </div>
+          <div *ngIf="demographicsForm.get('dob').hasError('validateDateFormat')"
+            class="small text-danger mt-1 text-align-left">{{DateFormate}} </div>
+          <div *ngIf="demographicsForm.get('dob').hasError('futureDateValidation')"
+            class="small text-danger mt-1 text-align-left">{{DateFut}} </div>
+        </div>
+        <div style="float:right;">
+          <i style="position: absolute;"><img style="cursor: pointer;margin-left: -33px;"
+              src="assets/images/icons/cake-candle.svg" /></i>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div style="position: relative;">
+          <select class="form-select form-select-sm dropdown-select-label mdb-select md-form disabledDiv" id="gender"
+            [(ngModel)]="gender" aria-label="form-select-sm example" formControlName="gender" [disabled]="true"
+            tabindex="-1" required>
+            <option value="" hidden disabled>{{Gender}}</option>
+            <option *ngFor="let data of this.genderval | keyvalue" value="{{data.value}}">{{data.value}}</option>
+          </select>
+          <span *ngIf="demographicsForm.get('gender').errors && myform.submitted"
+            class="text-danger position-absolute translate-middle top-0 start-100">
+            <img src="assets/images/icons/alert-validate.svg"></span>
+        </div>
+        <div *ngIf="demographicsForm.get('gender').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{GenderReq}}</div>
+      </div>
+      <div class="col-md-4">
+        <div style="position: relative;">
+          <select class="form-select form-select-sm dropdown-select-label disabledDiv" [disabled]=true
+            id="maritalStatus" aria-label="form-select-sm example" [(ngModel)]="maritalStatus"
+            formControlName="maritalStatus" [disabled]="true" tabindex="-1" required>
+            <option value=" " hidden>{{Marital}}</option>
+            <option *ngFor="let data of this.martialStatusVal | keyvalue" value={{data.value}}>{{data.value}}</option>
+          </select>
+          <span *ngIf="demographicsForm.get('maritalStatus').errors && myform.submitted"
+            class="text-danger position-absolute translate-middle top-0 start-100">
+            <img src="assets/images/icons/alert-validate.svg"></span>
+        </div>
+        <div *ngIf="demographicsForm.get('maritalStatus').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{MartialReq}}</div>
+      </div>
+      <label class="col-md-12 dashboard-p1 ps-2">{{ZipMsg}}</label>
+      <div class="col-xs-4 col-md-4 col-sm-4">
+        <input type="text" class="form-control textfield-label " tabindex="-1"
+          [ngClass]="(demographicsForm.get('zipCode').hasError('required')&& myform.submitted)?'form-control-invalid': 'form-control' "
+          (keyup)="getStateAndCity(zipCode)" id="zipCode" [(ngModel)]="zipCode" placeholder="Zip Code"
+          formControlName="zipCode" maxlength="5" minlength="5">
+        <span *ngIf="demographicsForm.get('zipCode').hasError('required')&& myform.submitted"
+          class="position-absolute translate-middle top-0 start-100">
+          <img src="assets/images/icons/alert-validate.svg"></span>
+        <div *ngIf="demographicsForm.get('zipCode').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{ZipReq}}</div>
+        <div *ngIf="demographicsForm.get('zipCode').hasError('pattern')" class="small text-danger mt-1">{{ZipNum}}</div>
+        <div *ngIf="demographicsForm.get('zipCode').hasError('minlength')" class="small text-danger mt-1">{{ZipMin}}
+        </div>
+        <div *ngIf="demographicsForm.get('zipCode').hasError('maxlength')" class="small text-danger mt-1">{{ZipMax}}
+        </div>
+        <div *ngIf="this.ZipCodeInvalid != '' " class="small text-danger mt-1">{{ZipVal}}</div>
+      </div>
+      <div class="col-xs-4 col-md-4 col-sm-4">
+        <div>
+          <input type="text" class="form-control textfield-label disabledDiv" tabindex="-1" readonly id="city"
+            [(ngModel)]="city" placeholder="City" formControlName="city" maxlength="51"
+            [ngClass]="(demographicsForm.get('city').hasError('required')&& myform.submitted)?'form-control-invalid': 'form-control' ">
+          <span *ngIf="demographicsForm.get('city').hasError('required')&& myform.submitted"
+            class="position-absolute translate-middle top-0 start-100">
+            <img src="assets/images/icons/alert-validate.svg"></span>
+        </div>
+        <div *ngIf="demographicsForm.get('city').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{CityReq}}</div>
+        <div *ngIf="demographicsForm.get('city').hasError('pattern')" class="small text-danger mt-1">{{CityAlp}}</div>
+        <div *ngIf="demographicsForm.get('city').hasError('maxlength')" class="small text-danger mt-1">{{CityMax}}</div>
+      </div>
+      <div class="col-xs-4 col-md-4 col-sm-4">
+        <div>
+          <input type="text" class="form-control textfield-label disabledDiv" tabindex="-1" readonly id="state"
+            [(ngModel)]="state" placeholder="State" formControlName="state" maxlength="51"
+            [ngClass]="(demographicsForm.get('state').hasError('required')&& myform.submitted)?'form-control-invalid': 'form-control' ">
+          <span *ngIf="demographicsForm.get('state').hasError('required')&& myform.submitted"
+            class="position-absolute translate-middle top-0 start-100">
+            <img src="assets/images/icons/alert-validate.svg"></span>
+        </div>
+        <div *ngIf="demographicsForm.get('state').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{StateReq}}</div>
+      </div>
+      <label class="col-md-12 dashboard-p1 ps-2">{{ConfirmCitizenshipStatus}}</label>
+      <div class="col-md-4">
+        <div style="position: relative;">
+          <select class="form-select form-select-sm dropdown-select-label mdb-select md-form disabledDiv"
+            id="citizenshipStatus" [(ngModel)]="citizenshipStatus" (change)="onChangeRelationValue($event)"
+            aria-label="form-select-sm example" formControlName="citizenshipStatus" [disabled]="true" tabindex="-1"
+            required>
+            <option value=" " hidden>{{CitizenshipStatus}}</option>
+            <option *ngFor="let data of this.citizenshipOptions" [value]="data.value">{{data.value}}</option>
+          </select>
+          <span *ngIf="demographicsForm.get('gender').errors && myform.submitted"
+            class="text-danger position-absolute translate-middle top-0 start-100">
+            <img src="assets/images/icons/alert-validate.svg"></span>
+        </div>
+        <div *ngIf="demographicsForm.get('gender').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{GenderReq}}</div>
+      </div>
+      <div class="col-md-4"></div>
+      <div class="col-md-4"></div>
+      <label class="col-md-12 dashboard-p1 ps-2">{{PatientContactDetails}}</label>
+      <div class="col-md-8">
+        <div style="position:absolute; padding-left: 8px;width: 70px;">
+          <div class="input-group-prepend span-input"><span class="input-group-text span-input-data"> Email
+            </span>
+          </div>
+        </div>
+        <input class="form-control textfield-label disabledDiv" tabindex="-1" readonly style="padding-left: 75px;"
+          formControlName="email" [(ngModel)]="email" type="textbox" (keydown)="space($event)" placeholder="Email"
+          id="email"
+          [ngClass]="(demographicsForm.get('email').hasError('pattern') && myform.submitted)?'form-control-invalid': 'form-control' "
+          required />
+        <div *ngIf="demographicsForm.get('email').hasError('pattern') && myform.submitted"
+          class="small text-danger mt-1">{{EmailReq}}</div>
+        <div *ngIf="demographicsForm.get('email').hasError('pattern')" class="small text-danger mt-1">{{EmailVal}}</div>
+        <div *ngIf="demographicsForm.get('email').hasError('maxlength')" class="small text-danger mt-1">{{EmailMax}}
+        </div>
+      </div>
+      <div class="col-md-4" style="position: relative;">
+        <div style="position:absolute; padding-left: 8px;">
+          <div class="input-group-prepend span-input">
+            <span class="input-group-text span-input-data">
+              Cell </span>
+          </div>
+        </div>
+        <div style="position: relative;">
+          <div class="mt-2" style="position:absolute; padding-left: 58px;" include="form-input-select()">
+            <select class="dropdown-select-label disabledDiv" style="border:none; outline:none;width:48px;"
+              id="countyCode" [(ngModel)]="countyCode" formControlName="countyCode" [disabled]="true" tabindex="-1"
+              required>
+              <option value="" hidden disabled>+1</option>
+              <option *ngFor="let data of this.phoneCode | keyvalue" value="{{data.value}}">
+                +{{data.value}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <span>
+          <input type="text" mask="(000) 000-0000" style="padding-left: 110px;"
+            class="form-control textfield-label disabledDiv" tabindex="-1" readonly id="cellNumber"
+            [(ngModel)]="cellNumber" placeholder="Cell Number" formControlName="cellNumber">
+          <div *ngIf="demographicsForm.get('cellNumber').hasError('required')&& myform.submitted"
+            class="small text-danger mt-1">{{CellNumReq}}</div>
+          <div *ngIf="demographicsForm.get('cellNumber').hasError('minlength')" class="small text-danger mt-1">
+            {{CellVal}}</div>
+        </span>
+      </div>
+      <div class="col-12 d-flex">
+        <div>
+          <label class="dashboard-p1">{{BestContact}}</label>
+        </div>
+        <div class="d-flex px-3 pt-0">
+          <div class="form-check">
+            <input class="form-check-input textfield-label pointer-events checkbox-icon" #patientCheckBox
+              id="patientCheckBox" type="checkbox" (change)="OnClickPatient(patientCheckBox.checked)"
+              formControlName="patient" [checked]="patientContactPerson" [(ngModel)]="patientContactPerson" />
+            <label class="login-label mx-1 mt-1" style=" cursor: pointer;">{{Patient}}</label>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" include="form-input-select()">
+        <select required [(ngModel)]="relation" id="relation" formControlName="relation"
+          [ngClass]="(demographicsForm.get('relation').hasError('required') && myform.submitted)?'form-select-invalid': 'form-select'"
+          class="form-select dropdown-select-label" aria-label="form-select-sm example" required
+          (onChange)="onChangeRelationValue($event)">
+          <option value="" hidden disabled>{{RelationshipWithPatient}}</option>
+          <option *ngFor="let data of this.relationval | keyvalue" [value]="data.value">{{data.value}}</option>
+        </select>
+        <div *ngIf="demographicsForm.get('relation').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{RelationReq}}</div>
+      </div>
+      <div class="col-md-4">
+        <input type="text" class="form-control textfield-label" id="relationFirstName"
+          [ngClass]="(demographicsForm.get('relationFirstName').hasError('required') && myform.submitted)?'form-control-invalid': 'form-control' "
+          [(ngModel)]="relationFirstName" (keyup)="getRelationFirstName()" placeholder="First Name"
+          formControlName="relationFirstName" maxlength="51">
+        <div *ngIf="demographicsForm.get('relationFirstName').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{NameReq}}</div>
+        <div *ngIf="demographicsForm.get('relationFirstName').hasError('pattern')" class="small text-danger mt-1">
+          {{NameAlp}}</div>
+        <div *ngIf="demographicsForm.get('relationFirstName').hasError('maxlength')" class="small text-danger mt-1">
+          {{NameMax}}</div>
+        <div *ngIf="demographicsForm.get('relationFirstName').hasError('minlength')" class="small text-danger mt-1">
+          {{NameChar}}</div>
+      </div>
+      <div class="col-md-4">
+        <input type="text" class="form-control textfield-label " id="relationMiddleName"
+          [(ngModel)]="relationMiddleName" placeholder="Middle Name" formControlName="relationMiddleName"
+          maxlength="51">
+        <span *ngIf="demographicsForm.get('relationMiddleName').errors && myform.submitted"
+          class="text-danger position-absolute translate-middle top-0 start-100">
+          <img src="assets/images/icons/alert-validate.svg"></span>
+        <div *ngIf="demographicsForm.get('relationMiddleName').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{MiddleNameReq}}</div>
+        <div *ngIf="demographicsForm.get('relationMiddleName').hasError('pattern')" class="small text-danger mt-1">
+          {{MiddleNameAlp}}
+        </div>
+        <div *ngIf="demographicsForm.get('relationMiddleName').hasError('maxlength')" class="small text-danger mt-1">
+          {{MiddleNameMax}}
+        </div>
+        <div *ngIf="demographicsForm.get('relationMiddleName').hasError('minlength')" class="small text-danger mt-1">
+          {{MiddleNameChar}}
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div style="position: relative;">
+          <input type="text" class="form-control textfield-label" id="relationLastName" (keyup)="getRelationFirstName()"
+            [ngClass]="(demographicsForm.get('relationLastName').hasError('required') && myform.submitted)?'form-control-invalid': 'form-control' "
+            [(ngModel)]="relationLastName" placeholder="Last Name" formControlName="relationLastName" maxlength="51">
+        </div>
+        <div *ngIf="demographicsForm.get('relationLastName').hasError('required')&& myform.submitted"
+          class="small text-danger mt-1">{{LastNamereq}}</div>
+        <div *ngIf="demographicsForm.get('relationLastName').hasError('pattern')" class="small text-danger mt-1">
+          {{LastNameAlp}}</div>
+        <div *ngIf="demographicsForm.get('relationLastName').hasError('maxlength')" class="small text-danger mt-1">
+          {{LastNameMax}}</div>
+      </div>
+      <div class="col-md-8">
+        <div style="position:absolute; padding-left: 8px;width: 70px;">
+          <div class="input-group-prepend span-input"><span class="input-group-text span-input-data"> Email
+            </span>
+          </div>
+        </div>
+        <input class="form-control textfield-label" style="padding-left: 75px;" formControlName="relationEmail"
+          [(ngModel)]="relationEmail" type="textbox" (keyup)="getRelationFirstName()" placeholder="Email"
+          id="relationEmail"
+          [ngClass]="(demographicsForm.get('relationEmail').hasError('required') && myform.submitted)?'form-control-invalid': 'form-control' "
+          required />
+        <div *ngIf="demographicsForm.get('relationEmail').hasError('required') && myform.submitted"
+          class="small text-danger mt-1">{{EmailReq}}</div>
+        <div *ngIf="demographicsForm.get('relationEmail').hasError('pattern')" class="small text-danger mt-1">
+          {{EmailVal}}</div>
+        <div *ngIf="demographicsForm.get('relationEmail').hasError('maxlength')" class="small text-danger mt-1">
+          {{EmailMax}}</div>
+      </div>
+      <div class="col-md-4" style="position: relative;">
+        <div style="position:absolute; padding-left: 8px;">
+          <div class="input-group-prepend span-input">
+            <span class="input-group-text span-input-data">
+              Cell </span>
+          </div>
+        </div>
+        <div style="position: relative;">
+          <div class="mt-2" style="position:absolute; padding-left: 58px;" include="form-input-select()">
+            <select class="dropdown-select-label" style="border:none; outline:none;width:48px;" id="relationCountyCode"
+              [(ngModel)]="relationCountyCode" formControlName="relationCountyCode" required tabindex="-1">
+              <option value="" hidden disabled>+1</option>
+              <option *ngFor="let data of this.phoneCode | keyvalue" value="{{data.value}}">
+                +{{data.value}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <span>
+          <input type="text" mask="(000) 000-0000" style="padding-left: 110px;" class="form-control textfield-label"
+            id="relationCellNumber"
+            [ngClass]="(demographicsForm.get('relationCellNumber').hasError('required') && myform.submitted)?'form-control-invalid': 'form-control'"
+            [(ngModel)]="relationCellNumber" placeholder="Cell Number" formControlName="relationCellNumber"
+            (keyup)="getRelationFirstName()">
+          <div *ngIf="demographicsForm.get('relationCellNumber').hasError('required')&& myform.submitted"
+            class="small text-danger mt-1">{{CellNumReq}}</div>
+          <div *ngIf="demographicsForm.get('relationCellNumber').hasError('minlength')" class="small text-danger mt-1">
+            {{CellVal}}</div>
+        </span>
+      </div>
+      <div class="d-flex mt-4  pt-0">
+        <button type="submit" class="btn btn-primary  login-text-field shadow-none pointer next-button"
+          (click)="saveDemographicsDetails(demographicsForm.value)">
+          <div class="ellipse d-flex ellipse1 next-button-ellipse">
+            <img src="assets/images/icons/qucikassessment-left-chevron.svg" alt="mail-msg"
+              class="next-round-icon pointer" />
+          </div>
+        </button>
+        <fieldset class="dashboard-p2  mx-2 pt-2 pointer" (click)="saveDemographicsDetails(demographicsForm.value)">Next
+        </fieldset>
+      </div>
+    </div>
+  </form>
+</div>

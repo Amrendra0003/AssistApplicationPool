@@ -1,0 +1,12 @@
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: #e9ecef;
+    opacity: 1;
+}
+.form-select:disabled {
+    background-color: #e9ecef;
+}
+.bottom {
+    bottom: 50px;
+    position: absolute;
+}

@@ -1,0 +1,555 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Services\\HealthWare.ActiveASSIST.Services.csproj": {}
+  },
+  "projects": {
+    "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.DTOs\\HealthWare.ActiveASSIST.DTOs.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.DTOs\\HealthWare.ActiveASSIST.DTOs.csproj",
+        "projectName": "HealthWare.ActiveASSIST.DTOs",
+        "projectPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.DTOs\\HealthWare.ActiveASSIST.DTOs.csproj",
+        "packagesPath": "D:\\Users\\pratapsingh_amrendra\\.nuget\\packages\\",
+        "outputPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.DTOs\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "D:\\Users\\pratapsingh_amrendra\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\ActivaAssist\\SourceCode\\HealthWare-ActiveASSIST_ZIP_V1\\HealthWare-ActiveASSIST_Release": {},
+          "D:\\ActivaAssist\\SourceCode\\healthware_activeASSISTRollBack\\HANugetPackages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "FoolProof.Core": {
+              "target": "Package",
+              "version": "[1.1.10, )"
+            },
+            "HealthwareCoreLib": {
+              "target": "Package",
+              "version": "[1.0.36, )"
+            },
+            "HealthwareCoreMultiTenancyEntitiesLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreMultiTenancyLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreMultiTenancyServicesLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreWebLib": {
+              "target": "Package",
+              "version": "[1.0.35, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.10, 3.1.10]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.419\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Entities\\HealthWare.ActiveASSIST.Entities.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Entities\\HealthWare.ActiveASSIST.Entities.csproj",
+        "projectName": "HealthWare.ActiveASSIST.Entities",
+        "projectPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Entities\\HealthWare.ActiveASSIST.Entities.csproj",
+        "packagesPath": "D:\\Users\\pratapsingh_amrendra\\.nuget\\packages\\",
+        "outputPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Entities\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "D:\\Users\\pratapsingh_amrendra\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\ActivaAssist\\SourceCode\\HealthWare-ActiveASSIST_ZIP_V1\\HealthWare-ActiveASSIST_Release": {},
+          "D:\\ActivaAssist\\SourceCode\\healthware_activeASSISTRollBack\\HANugetPackages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.DTOs\\HealthWare.ActiveASSIST.DTOs.csproj": {
+                "projectPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.DTOs\\HealthWare.ActiveASSIST.DTOs.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "HealthwareCoreLib": {
+              "target": "Package",
+              "version": "[1.0.36, )"
+            },
+            "HealthwareCoreMultiTenancyEntitiesLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreMultiTenancyLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreMultiTenancyServicesLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreWebLib": {
+              "target": "Package",
+              "version": "[1.0.35, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.10, 3.1.10]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.419\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Repositories\\HealthWare.ActiveASSIST.Repositories.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Repositories\\HealthWare.ActiveASSIST.Repositories.csproj",
+        "projectName": "HealthWare.ActiveASSIST.Repositories",
+        "projectPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Repositories\\HealthWare.ActiveASSIST.Repositories.csproj",
+        "packagesPath": "D:\\Users\\pratapsingh_amrendra\\.nuget\\packages\\",
+        "outputPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Repositories\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "D:\\Users\\pratapsingh_amrendra\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\ActivaAssist\\SourceCode\\HealthWare-ActiveASSIST_ZIP_V1\\HealthWare-ActiveASSIST_Release": {},
+          "D:\\ActivaAssist\\SourceCode\\healthware_activeASSISTRollBack\\HANugetPackages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Entities\\HealthWare.ActiveASSIST.Entities.csproj": {
+                "projectPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Entities\\HealthWare.ActiveASSIST.Entities.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "HealthwareCoreLib": {
+              "target": "Package",
+              "version": "[1.0.36, )"
+            },
+            "HealthwareCoreMultiTenancyEntitiesLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreMultiTenancyLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreMultiTenancyServicesLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreWebLib": {
+              "target": "Package",
+              "version": "[1.0.35, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.10, 3.1.10]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.419\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Services\\HealthWare.ActiveASSIST.Services.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Services\\HealthWare.ActiveASSIST.Services.csproj",
+        "projectName": "HealthWare.ActiveASSIST.Services",
+        "projectPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Services\\HealthWare.ActiveASSIST.Services.csproj",
+        "packagesPath": "D:\\Users\\pratapsingh_amrendra\\.nuget\\packages\\",
+        "outputPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Services\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "D:\\Users\\pratapsingh_amrendra\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\ActivaAssist\\SourceCode\\HealthWare-ActiveASSIST_ZIP_V1\\HealthWare-ActiveASSIST_Release": {},
+          "D:\\ActivaAssist\\SourceCode\\healthware_activeASSISTRollBack\\HANugetPackages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Web\\HealthWare.ActiveASSIST.Web.csproj": {
+                "projectPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Web\\HealthWare.ActiveASSIST.Web.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "HealthwareCoreLib": {
+              "target": "Package",
+              "version": "[1.0.36, )"
+            },
+            "HealthwareCoreMultiTenancyEntitiesLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreMultiTenancyLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreMultiTenancyServicesLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreWebLib": {
+              "target": "Package",
+              "version": "[1.0.35, )"
+            },
+            "NETCore.MailKit": {
+              "target": "Package",
+              "version": "[2.0.3, )"
+            },
+            "iTextSharp.LGPLv2.Core": {
+              "target": "Package",
+              "version": "[1.7.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.10, 3.1.10]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.419\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Web\\HealthWare.ActiveASSIST.Web.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Web\\HealthWare.ActiveASSIST.Web.csproj",
+        "projectName": "HealthWare.ActiveASSIST.Web",
+        "projectPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Web\\HealthWare.ActiveASSIST.Web.csproj",
+        "packagesPath": "D:\\Users\\pratapsingh_amrendra\\.nuget\\packages\\",
+        "outputPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Web\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "D:\\Users\\pratapsingh_amrendra\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "D:\\ActivaAssist\\SourceCode\\HealthWare-ActiveASSIST_ZIP_V1\\HealthWare-ActiveASSIST_Release": {},
+          "D:\\ActivaAssist\\SourceCode\\healthware_activeASSISTRollBack\\HANugetPackages": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Repositories\\HealthWare.ActiveASSIST.Repositories.csproj": {
+                "projectPath": "D:\\ActivaAssist\\SourceCode\\AssistApplicationPool\\HealthWare-ActiveASSIST\\HealthWare.ActiveASSIST.Repositories\\HealthWare.ActiveASSIST.Repositories.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Castle.Facilities.AspNetCore": {
+              "target": "Package",
+              "version": "[5.1.1, )"
+            },
+            "HealthwareCoreLib": {
+              "target": "Package",
+              "version": "[1.0.36, )"
+            },
+            "HealthwareCoreMultiTenancyEntitiesLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreMultiTenancyLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreMultiTenancyServicesLib": {
+              "target": "Package",
+              "version": "[1.0.37, )"
+            },
+            "HealthwareCoreWebLib": {
+              "target": "Package",
+              "version": "[1.0.35, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[3.1.10, )"
+            },
+            "Microsoft.AspNetCore.Hosting": {
+              "target": "Package",
+              "version": "[2.2.7, )"
+            },
+            "Microsoft.AspNetCore.Hosting.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Hosting.Server.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Mvc.Core": {
+              "target": "Package",
+              "version": "[2.2.5, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[3.1.10, )"
+            },
+            "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
+              "target": "Package",
+              "version": "[3.1.10, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[3.1.10, )"
+            },
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[3.1.10, )"
+            },
+            "RestSharp": {
+              "target": "Package",
+              "version": "[106.13.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.6.3, )"
+            },
+            "System.Net.Http": {
+              "target": "Package",
+              "version": "[4.3.4, )"
+            },
+            "ncrontab": {
+              "target": "Package",
+              "version": "[3.3.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.10, 3.1.10]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.419\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

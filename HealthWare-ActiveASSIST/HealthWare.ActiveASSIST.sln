@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthWare.ActiveASSIST.DTOs", "HealthWare.ActiveASSIST.DTOs\HealthWare.ActiveASSIST.DTOs.csproj", "{75AE88AB-88C4-4CBA-B1D4-98380439A4CB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthWare.ActiveASSIST.Entities", "HealthWare.ActiveASSIST.Entities\HealthWare.ActiveASSIST.Entities.csproj", "{9D78EA4B-BE2D-45B5-81DA-A295F44A295F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthWare.ActiveASSIST.Repositories", "HealthWare.ActiveASSIST.Repositories\HealthWare.ActiveASSIST.Repositories.csproj", "{6C341949-A439-4BE4-913A-2BFAFE26ACA1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthWare.ActiveASSIST.Web", "HealthWare.ActiveASSIST.Web\HealthWare.ActiveASSIST.Web.csproj", "{21203507-1AD6-4FEF-9B42-26C85D201D57}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthWare.ActiveASSIST.Services", "HealthWare.ActiveASSIST.Services\HealthWare.ActiveASSIST.Services.csproj", "{895F0FEC-249E-4894-AFE3-087DD996239C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthWare.ActiveASSIST.WebAPI", "HealthWare.ActiveASSIST.WebAPI\HealthWare.ActiveASSIST.WebAPI.csproj", "{C6CDF402-763C-4CEB-90A1-6EC62171EA41}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{75AE88AB-88C4-4CBA-B1D4-98380439A4CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75AE88AB-88C4-4CBA-B1D4-98380439A4CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75AE88AB-88C4-4CBA-B1D4-98380439A4CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75AE88AB-88C4-4CBA-B1D4-98380439A4CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D78EA4B-BE2D-45B5-81DA-A295F44A295F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D78EA4B-BE2D-45B5-81DA-A295F44A295F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D78EA4B-BE2D-45B5-81DA-A295F44A295F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D78EA4B-BE2D-45B5-81DA-A295F44A295F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C341949-A439-4BE4-913A-2BFAFE26ACA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C341949-A439-4BE4-913A-2BFAFE26ACA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C341949-A439-4BE4-913A-2BFAFE26ACA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C341949-A439-4BE4-913A-2BFAFE26ACA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21203507-1AD6-4FEF-9B42-26C85D201D57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21203507-1AD6-4FEF-9B42-26C85D201D57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21203507-1AD6-4FEF-9B42-26C85D201D57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21203507-1AD6-4FEF-9B42-26C85D201D57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{895F0FEC-249E-4894-AFE3-087DD996239C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{895F0FEC-249E-4894-AFE3-087DD996239C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{895F0FEC-249E-4894-AFE3-087DD996239C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{895F0FEC-249E-4894-AFE3-087DD996239C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6CDF402-763C-4CEB-90A1-6EC62171EA41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6CDF402-763C-4CEB-90A1-6EC62171EA41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6CDF402-763C-4CEB-90A1-6EC62171EA41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6CDF402-763C-4CEB-90A1-6EC62171EA41}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7567AD58-BF2A-412E-BAA3-D849A1B3729A}
+	EndGlobalSection
+EndGlobal

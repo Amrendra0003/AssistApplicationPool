@@ -36,6 +36,10 @@ namespace HealthWare.ActiveASSIST.Web.Common.HttpClient
             addressDetails.ClientName = Constants.ClientName;
 
             var token = await RequestClientCredentialsTokenAsync();
+            if(token == null)
+            {
+                return null;
+            }
 
             _client.BaseUrl = new Uri(Constants.HealthWareBaseApiUrl + Constants.CassApiPath);
 
@@ -84,8 +88,9 @@ namespace HealthWare.ActiveASSIST.Web.Common.HttpClient
                     return _tokenRequest.Token;
                 var response = await _client.ExecuteAsync(_tokenRequest.GetHealthWareServiceTokenRequest());
                 if (!response.IsSuccessful)
-                    throw new TimeoutException(string.Format(Constants.ServiceCallError, Constants.RequestClientCredentialsTokenAsync),
-                        response.ErrorException);
+                {
+                    return null;
+                }
 
                 var content = JsonConvert.DeserializeObject<TokenResponse>(response.Content);
 

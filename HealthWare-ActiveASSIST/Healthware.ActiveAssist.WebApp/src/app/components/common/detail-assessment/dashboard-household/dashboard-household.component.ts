@@ -194,13 +194,13 @@ export class DashboardHouseholdComponent implements OnInit {
   groupNumberRequiredMessage: string = "";
   policyNumberRequiredMessage: string = "";
   override: any;
-  allPrograms: any;
+  allPrograms: any = [];
   tempArray: any = [];
   addMore: any = [];
-  allProgramsForm: any;
+  allProgramsForm: any = [];
   display: string = "";
   programList: any
-  programsOpted: any;
+  programsOpted: any = [];
   totalCount: any;
   tempIncome: any;
   tempPeriod: any;

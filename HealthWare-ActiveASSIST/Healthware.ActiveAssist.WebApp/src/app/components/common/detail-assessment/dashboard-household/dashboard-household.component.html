@@ -93,7 +93,7 @@
                         </svg></mat-icon>
                     </button>
                     <button *ngIf="data.relation!='Self' && data.canDeleteHousehold != false" ngbDropdownItem
-                      mat-mini-fab class="btnList mx-1" tooltip="Delete" 
+                      mat-mini-fab class="btnList mx-1" tooltip="Delete" data-bs-toggle="modal"
                       data-bs-target="#deletehouseholdMember" style="opacity: 1 !important"
                       (click)="openModel(data.houseHoldMemberId)">
                       <mat-icon><svg xmlns="http://www.w3.org/2000/svg" width="14.625" height="18"
@@ -167,7 +167,7 @@
           <button *ngIf=" this.showAdvocatePanel == false" type="submit"
             class="btn btn-primary mb-3 button-white-label shadow-none"
             style="background-color: 1px solid #2494ED;color: #FFFFFF;" (click)="nextToApplicationForms()"
-             data-bs-target="#openAllPrograms">{{Evaluate}}</button>
+            data-bs-toggle="modal" data-bs-target="#openAllPrograms">{{Evaluate}}</button>
         </div>
         <div *ngIf="this.isDetailsDone == true" class="modal fade modal-overlay" id="openAllPrograms"
           aria-labelledby="programModalLabel" role="dialog" data-bs-backdrop="false" [ngStyle]="{'display':display}">

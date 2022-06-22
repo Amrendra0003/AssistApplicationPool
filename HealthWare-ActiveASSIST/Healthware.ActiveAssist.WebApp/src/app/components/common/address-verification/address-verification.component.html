@@ -1,59 +1,60 @@
 
-    <div class="modal-header">
-        <h4 class="modal-title pull-left">Kindly select any address</h4>
-      </div>
-      <div class="modal-body">
-        <div class="form-container">
-          <div class="form-row mb-3">
-                <div class="row">
-                    <div class="col">
-                        <strong><label>Actual Address:</label></strong> 
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="radioAddress" value="radioActualAddress" (change)="addressValChange($event)">
-                            
-                                StreetAddress: {{addressData.streetAddress}}
-                                <br>
-                                Suite No.:{{addressData.suite}}
-                                <br>
-                                City: {{addressData.city}}
-                                <br>
-                                State: {{addressData.state}}
-                                <br>
-                                Zipe Code: {{addressData.zipCode}}
-                                <br>
-                                Country: {{addressData.county}}
-                          </div>
-                    </div>
-                    <div class="col">
-                    <strong><label>Suggested Address:</label></strong>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="radioAddress" value="radioSuggestedAddress" (change)="addressValChange($event)">
-                           
-                                StreetAddress: {{addressSuggested.address1}}
-                                <br>
-                                Suite No.:{{addressSuggested.address2}}
-                                <br>
-                                City: {{addressSuggested.city}}
-                                <br>
-                                State: {{addressSuggested.state}}
-                                <br>
-                                Zipe Code: {{addressSuggested.zip}}
-                                <br>
-                                Country: {{addressSuggested.county}}
-                          </div>
-                    </div>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Kindly select any address</h4>
+  </div>
+  <div class="modal-body">
+    <div class="form-container">
+      <div class="form-row mb-3">
+            <div class="row">
+                <div class="col">
+                    <strong><label>Actual Address:</label></strong> 
+                    <div class="form-check">
+                        <input class="form-check-input" style="height: 20px;width: 20px;" type="radio" name="radioAddress" value="radioActualAddress" (change)="addressValChange($event)">
+                        
+                            StreetAddress: {{addressData.streetAddress}}
+                            <br>
+                            Suite No.:{{addressData.suite}}
+                            <br>
+                            City: {{addressData.city}}
+                            <br>
+                            State: {{addressData.state}}
+                            <br>
+                            Zipcode: {{addressData.zipCode}}
+                            <br>
+                            County: {{addressData.county}}
+                      </div>
                 </div>
+                <div class="col">
+                <strong><label>Suggested Address:</label></strong>
+                    <div class="form-check">
+                        <input class="form-check-input" style="height: 20px;width: 20px;" type="radio" name="radioAddress" value="radioSuggestedAddress" (change)="addressValChange($event)">
+                       
+                            StreetAddress: {{addressSuggested.address1}}
+                            <br>
+                            Suite No.:{{addressSuggested.address2}}
+                            <br>
+                            City: {{addressSuggested.city}}
+                            <br>
+                            State: {{addressSuggested.state}}
+                            <br>
+                            Zipcode: {{addressSuggested.zip}}
+                            <br>
+                            County: {{addressSuggested.county}}
+                      </div>
+                </div>
+            </div>
 
 
-              </div>
-            </div>
-            </div>
-      
-      <div class="modal-footer">
-        <div class="float-right">
-          <button type="button" (click)="successPopup()" class="btn btn-success ml-2">OK</button>
-          <button type="button" (click)="cancelPopup()" class="btn btn-light ml-2">Cancel</button>
+          </div>
         </div>
-      </div>  
+        </div>
+  
+  <div class="modal-footer">
+    <div class="float-right">
+      <button type="button" (click)="successPopup()" class="btn btn-success ml-2">OK</button>
+      <button type="button" (click)="cancelPopup()" class="btn btn-light ml-2">Cancel</button>
+    </div>
+  </div>
+      
     
   

@@ -41,6 +41,7 @@ export class StringConstants {
     empty: '',
     //Warning!
     selectRadio: 'Kindly select any address.',
+    MissCommunicationWithAddressApi: 'This time, the process cannot be completed due to a lack of network communication. Report this to the site administrator and try again later.',
     AddressNotFound: 'Address not found.',
     enterEmail: 'Kindly enter your email.',
     emailRequired: 'Email is required.',

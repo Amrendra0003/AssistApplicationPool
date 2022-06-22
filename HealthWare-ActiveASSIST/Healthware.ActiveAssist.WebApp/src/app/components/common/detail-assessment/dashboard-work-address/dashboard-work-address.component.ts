@@ -56,13 +56,18 @@ export class DashboardWorkAddressComponent implements OnInit {
   currentTheme: any;
   isEditAllowed: any;
   GuarantorData: any;
+  StateReq = StringConstants.demographics.StateReq;
+  StreetAddressReg = StringConstants.profileSetting.StreetAddressReg;
+  ZipReq = StringConstants.demographics.ZipReq;
   EmployerNameReq = StringConstants.DashboardWorkAddress.EmployerNameReq;
   EmployeMax = StringConstants.DashboardWorkAddress.EmployeMax;
   EmployeMin = StringConstants.DashboardWorkAddress.EmployeMin;
   StreetAddressMax = StringConstants.profileSetting.StreetAddressMax;
+  CountyReq = StringConstants.profileSetting.CountyReq;
   ZipNum = StringConstants.demographics.ZipNum;
   ZipVal = StringConstants.demographics.ZipVal;
   ZipMin = StringConstants.demographics.ZipMin;
+  CityReq = StringConstants.demographics.CityReq;
   ZipMax = StringConstants.DashboardHousehold.ZipMax;
   CountyAlp = StringConstants.profileSetting.CountyAlp;
   CountyMax = StringConstants.profileSetting.CountyMax;
@@ -90,6 +95,7 @@ export class DashboardWorkAddressComponent implements OnInit {
     })
   }
   ngOnInit() {
+    
     this.initForm();
     this.patientId = sessionStorage.getItem('patientId');
     this.assessmentId = sessionStorage.getItem('assessmentId');
@@ -133,14 +139,15 @@ export class DashboardWorkAddressComponent implements OnInit {
     }
   }
   private initForm() {
+    
     this.workAddressForm = new FormGroup({
       'employeer': new FormControl('', [Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(250), Validators.minLength(3)]),
-      'streetName': new FormControl('', [Validators.maxLength(250)]),
+      'streetName': new FormControl('', [Validators.required, Validators.maxLength(250)]),
       'suite': new FormControl('', [Validators.maxLength(250)]),
-      'country': new FormControl('', [Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(50)]),
-      'city': new FormControl('', [Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(50)]),
-      'state': new FormControl('', [Validators.pattern('^[a-zA-Z ]*$')]),
-      'zipcode': new FormControl('', [Validators.pattern('^[0-9]*$'), Validators.minLength(5), Validators.maxLength(50)]),
+      'country': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(50)]),
+      'city': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(50)]),
+      'state': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]),
+      'zipcode': new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(5), Validators.maxLength(50)]),
       'homeNo': new FormControl('', [Validators.minLength(10)]),
       'data': new FormControl(''),
       'countyCode': new FormControl(''),
@@ -154,15 +161,13 @@ export class DashboardWorkAddressComponent implements OnInit {
         console.log(this.result.data, "work akuran da");
         if (this.result.data != null) {
           this.city = this.result.data.city;
-          this.state = this.result.data.state;
-          this.country = this.result.data.county;
+          this.state = this.result.data.stateCode;
           this.stateCode = this.result.data.stateCode;
           this.workAddressForm.controls['zipcode'].setErrors(null);
         }
         else {
           this.city = "";
           this.state = "";
-          this.country = "";
           this.workAddressForm.controls['zipcode'].setErrors({ 'invalid': true });
         }
       }
@@ -235,6 +240,7 @@ export class DashboardWorkAddressComponent implements OnInit {
     }
   }
   workAddressNext(workAddressInfo: any) { //Save work address
+    
     if (this.workAddressForm.dirty) {
       if (this.relation == StringConstants.var.self && this.workEntityType === StringConstants.var.guarantor) {
         this.dataSharing.showHouseholdTab.next("3");
@@ -287,57 +293,64 @@ export class DashboardWorkAddressComponent implements OnInit {
               countyCode: workAddressInfo.countyCode
             }
             this.dashboardService.verifyAddressDetails(addressData.streetAddress,addressData.suite,addressData.city,addressData.state,addressData.zipCode).subscribe(async (result: any) =>{
-              const addressSuggested = result.data.cassResult;
-              if(addressSuggested.status.type == 0){
-              if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
-                this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
-                  if (result.wasSuccessful) {
-                    this.insertAddress();
-                  }
-                }, (error) => {
-                  console.log(error)
-                });
+              if(result.data == null){
+                this.toastService.showWarning(StringConstants.toast.MissCommunicationWithAddressApi, StringConstants.toast.empty);
               }
               else{
-                this.modalRef = this.modalService.show(AddressVerificationComponent, {
-                  initialState: { addressData, addressSuggested  },
-                  animated: true,
-                  keyboard: false,
-                  backdrop : 'static'
-                });
-                
-                this.modalRef.content.action.subscribe((value:any) => {
+                const addressSuggested = result.data.cassResult;
+                if(addressSuggested.status.type == 0){
+                if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
+                  this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
+                    if (result.wasSuccessful) {
+                      this.insertAddress();
+                    }
+                  }, (error) => {
+                    console.log(error)
+                  });
+                }
+                else{
+                  this.modalRef = this.modalService.show(AddressVerificationComponent, {
+                    initialState: { addressData, addressSuggested  },
+                    animated: true,
+                    keyboard: false,
+                    backdrop : 'static',
+                    class: 'modal-lg'
+                  });
                   
-                  if(value == "radioActualAddress"){
-                    this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
-                      if (result.wasSuccessful) {
-                        this.insertAddress();
-                      }
-                    }, (error) => {
-                      console.log(error)
-                    });
-                  }
-                  else{
-                    addressData.streetAddress = addressSuggested.address1;
-                    addressData.city = addressSuggested.city;
-                    addressData.county = addressSuggested.county;
-                    addressData.state = addressSuggested.state;
-                    addressData.zipCode = addressSuggested.zip;
-                    addressData.suite = addressSuggested.address2;
-                    this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
-                      if (result.wasSuccessful) {
-                        this.insertAddress();
-                      }
-                    }, (error) => {
-                      console.log(error)
-                    });
-                  }
-              })
-            }
+                  this.modalRef.content.action.subscribe((value:any) => {
+                    
+                    if(value == "radioActualAddress"){
+                      this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
+                        if (result.wasSuccessful) {
+                          this.insertAddress();
+                        }
+                      }, (error) => {
+                        console.log(error)
+                      });
+                    }
+                    else{
+                      addressData.streetAddress = addressSuggested.address1;
+                      addressData.city = addressSuggested.city;
+                      addressData.county = addressSuggested.county;
+                      addressData.state = addressSuggested.state;
+                      addressData.zipCode = addressSuggested.zip;
+                      addressData.suite = addressSuggested.address2;
+                      this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
+                        if (result.wasSuccessful) {
+                          this.insertAddress();
+                        }
+                      }, (error) => {
+                        console.log(error)
+                      });
+                    }
+                })
               }
-              else{
-                this.toastService.showWarning(StringConstants.toast.AddressNotFound, StringConstants.toast.empty);
-              }}, (error) => {
+                }
+                else{
+                  this.toastService.showWarning(StringConstants.toast.AddressNotFound, StringConstants.toast.empty);
+                }
+              }
+            }, (error) => {
           console.log(error)
         });
           }
@@ -387,56 +400,62 @@ export class DashboardWorkAddressComponent implements OnInit {
                 countyCode: workAddressInfo.countyCode
               }
               this.dashboardService.verifyAddressDetails(addressData.streetAddress,addressData.suite,addressData.city,addressData.state,addressData.zipCode).subscribe(async (result: any) =>{
-                const addressSuggested = result.data.cassResult;
-                if(addressSuggested.status.type == 0){ 
-                if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
-                  this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
-                    if (result.wasSuccessful) {
-                      this.updateAddress();
-                    }
-                  }, (error) => {
-                    console.log(error)
-                  });
+                if(result.data == null){
+                  this.toastService.showWarning(StringConstants.toast.MissCommunicationWithAddressApi, StringConstants.toast.empty);
                 }
                 else{
-                  this.modalRef = this.modalService.show(AddressVerificationComponent, {
-                    initialState: { addressData, addressSuggested  },
-                    animated: true,
-                    keyboard: false,
-                    backdrop : 'static'
-                  });
-                  
-                  this.modalRef.content.action.subscribe((value:any) => {
+                  const addressSuggested = result.data.cassResult;
+                  if(addressSuggested.status.type == 0){ 
+                  if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
+                    this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
+                      if (result.wasSuccessful) {
+                        this.updateAddress();
+                      }
+                    }, (error) => {
+                      console.log(error)
+                    });
+                  }
+                  else{
+                    this.modalRef = this.modalService.show(AddressVerificationComponent, {
+                      initialState: { addressData, addressSuggested  },
+                      animated: true,
+                      keyboard: false,
+                      backdrop : 'static',
+                      class: 'modal-lg'
+                    });
                     
-                    if(value == "radioActualAddress"){
-                      this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
-                        if (result.wasSuccessful) {
-                          this.updateAddress();
-                        }
-                      }, (error) => {
-                        console.log(error)
-                      });
-                    }
-                    else{
-                      addressData.streetAddress = addressSuggested.address1;
-                      addressData.city = addressSuggested.city;
-                      addressData.county = addressSuggested.county;
-                      addressData.state = addressSuggested.state;
-                      addressData.zipCode = addressSuggested.zip;
-                      addressData.suite = addressSuggested.address2;
-                      this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
-                        if (result.wasSuccessful) {
-                          this.updateAddress();
-                        }
-                      }, (error) => {
-                        console.log(error)
-                      });
-                    }
-                  })
-                }
-                }
-                else{
-                  this.toastService.showWarning(StringConstants.toast.AddressNotFound, StringConstants.toast.empty);
+                    this.modalRef.content.action.subscribe((value:any) => {
+                      
+                      if(value == "radioActualAddress"){
+                        this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
+                          if (result.wasSuccessful) {
+                            this.updateAddress();
+                          }
+                        }, (error) => {
+                          console.log(error)
+                        });
+                      }
+                      else{
+                        addressData.streetAddress = addressSuggested.address1;
+                        addressData.city = addressSuggested.city;
+                        addressData.county = addressSuggested.county;
+                        addressData.state = addressSuggested.state;
+                        addressData.zipCode = addressSuggested.zip;
+                        addressData.suite = addressSuggested.address2;
+                        this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
+                          if (result.wasSuccessful) {
+                            this.updateAddress();
+                          }
+                        }, (error) => {
+                          console.log(error)
+                        });
+                      }
+                    })
+                  }
+                  }
+                  else{
+                    this.toastService.showWarning(StringConstants.toast.AddressNotFound, StringConstants.toast.empty);
+                  }
                 }
           }, (error) => {
             console.log(error)

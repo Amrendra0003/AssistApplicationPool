@@ -33,7 +33,7 @@ export class DashboardQuickAssessmentComponent implements OnInit {
   showLoader: boolean = false;
   isAdvocate: boolean = false;
   addMoreProgramsDetails: any = [];
-  morePrograms: any;
+  morePrograms: any = [];
   enableAddProgram: boolean = false;
   applicationSubmissionStatus = StringConstants.var.ApplicationSubmitted;
   formsEnabled: boolean = false;

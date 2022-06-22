@@ -24,6 +24,8 @@
             placeholder="Street Address" formControlName="streetName"
             [ngClass]="workAddressForm.get('streetName').errors && myform.submitted?'form-control-invalid': 'form-control'">
         </div>
+        <div *ngIf="workAddressForm.get('streetName').hasError('required')&& myform.submitted"
+        class="small text-danger mt-1">{{StreetAddressReg}}</div>
         <div *ngIf="workAddressForm.get('streetName').hasError('maxlength')" class="small text-danger mt-1">
           {{StreetAddressMax}}</div>
       </div>
@@ -46,6 +48,8 @@
             placeholder="Zip Code" formControlName="zipcode" maxlength="51" (keyup)="getStateAndCity()"
             [ngClass]="workAddressForm.get('zipcode').errors && myform.submitted?'form-control-invalid': 'form-control'">
         </div>
+        <div *ngIf="workAddressForm.get('zipcode').hasError('required')&& myform.submitted"
+        class="small text-danger mt-1">{{ZipReq}}</div>
         <div *ngIf="workAddressForm.get('zipcode').hasError('pattern')" class="small text-danger mt-1">{{ZipNum}}</div>
         <div *ngIf="workAddressForm.get('zipcode').hasError('invalid')" class="small text-danger mt-1">{{ZipVal}}</div>
         <div *ngIf="workAddressForm.get('zipcode').hasError('minlength')" class="small text-danger mt-1">{{ZipMin}}
@@ -56,10 +60,12 @@
       </div>
       <div class="col-md-6">
         <div style="position: relative;">
-          <input type="text" class="form-control textfield-label disabledDiv" id="country" [(ngModel)]="country"
+          <input type="text" class="form-control textfield-label" id="country" [(ngModel)]="country"
             placeholder="County" formControlName="country" maxlength="51"
             [ngClass]="workAddressForm.get('country').errors && myform.submitted?'form-control-invalid': 'form-control'">
         </div>
+        <div *ngIf="workAddressForm.get('country').hasError('required')&& myform.submitted"
+        class="small text-danger mt-1">{{CountyReq}}</div>
         <div *ngIf="workAddressForm.get('country').hasError('pattern')" class="small text-danger mt-1">{{CountyAlp}}
         </div>
         <div *ngIf="workAddressForm.get('country').hasError('maxlength')" class="small text-danger mt-1">{{CountyMax}}
@@ -72,6 +78,8 @@
             placeholder="City" formControlName="city" maxlength="51"
             [ngClass]="workAddressForm.get('city').errors && myform.submitted?'form-control-invalid': 'form-control'">
         </div>
+        <div *ngIf="workAddressForm.get('city').hasError('required')&& myform.submitted"
+        class="small text-danger mt-1">{{CityReq}}</div>
         <div *ngIf="workAddressForm.get('city').hasError('pattern')" class="small text-danger mt-1">{{CityAlp}}</div>
         <div *ngIf="workAddressForm.get('city').hasError('maxlength')" class="small text-danger mt-1">{{CityMax}}</div>
         <!-- city -->
@@ -83,6 +91,8 @@
             placeholder="State" formControlName="state" maxlength="51"
             [ngClass]="workAddressForm.get('state').errors && myform.submitted?'form-control-invalid': 'form-control'">
         </div>
+        <div *ngIf="workAddressForm.get('state').hasError('required')&& myform.submitted"
+        class="small text-danger mt-1">{{StateReq}}</div>
         <div *ngIf="workAddressForm.get('state').hasError('pattern')" class="small text-danger mt-1">{{StateAlp}}</div>
         <!-- state -->
       </div>

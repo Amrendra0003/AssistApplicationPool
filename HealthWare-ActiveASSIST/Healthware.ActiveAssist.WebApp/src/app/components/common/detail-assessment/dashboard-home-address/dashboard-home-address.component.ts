@@ -157,21 +157,20 @@ export class DashboardHomeAddressComponent implements OnInit {
     });
   }
   async getStateAndCity() { // To get state and city details from api
+    
     const val = this.homeAddressForm.get('homePincode').value;
     if (val.length >= 5) {
       this.result = await this.common.getStateAndCity(val);
       if (this.result.wasSuccessful == true) {
         if (this.result.data != null) {
           this.homeCity = this.result.data.city;
-          this.homeState = this.result.data.state;
-          this.hometown = this.result.data.county;
+          this.homeState = this.result.data.stateCode;
           this.homeStateCode = this.result.data.stateCode;
           this.homeAddressForm.controls['homePincode'].setErrors(null);
         }
         else {
           this.homeCity = "";
           this.homeState = "";
-          this.hometown = "";
           this.homeStateCode = "";
           this.homeAddressForm.controls['homePincode'].setErrors({ 'invalid': true });
         }
@@ -287,62 +286,68 @@ export class DashboardHomeAddressComponent implements OnInit {
               countyCode: homeAddressInfo.countyCode
             }
             this.dashboardService.verifyAddressDetails(addressData.streetAddress,addressData.suite,addressData.city,addressData.state,addressData.zipCode).subscribe(async (result: any) =>{
-              const addressSuggested = result.data.cassResult;
-              if(addressSuggested.status.type == 0){
-                if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
-                  this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
-                    this.nextButtonClicked.emit(true);
-                    if (result.wasSuccessful) {
-                    this.insertAddress();
-                    }
-                  }, (error) => {
-                    console.log(error)
-                  });
-                }
-                else{
-                  this.modalRef = this.modalService.show(AddressVerificationComponent, {
-                    initialState: { addressData, addressSuggested  },
-                    animated: true,
-                    keyboard: false,
-                    backdrop : 'static'
-                  });
-                  
-                  this.modalRef.content.action.subscribe((value:any) => {
-                    
-                    if(value == "radioActualAddress"){
-                      this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
-                        this.nextButtonClicked.emit(true);
-                        if (result.wasSuccessful) {
-                        this.insertAddress();
-                        }
-                      }, (error) => {
-                        console.log(error)
-                      });
-                    }
-                    else{
-                      addressData.streetAddress = addressSuggested.address1;
-                      addressData.city = addressSuggested.city;
-                      addressData.county = addressSuggested.county;
-                      addressData.state = addressSuggested.state;
-                      addressData.zipCode = addressSuggested.zip;
-                      addressData.suite = addressSuggested.address2;
-                      this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
-                        this.nextButtonClicked.emit(true);
-                        if (result.wasSuccessful) {
-                        this.insertAddress();
-                        }
-                      }, (error) => {
-                        console.log(error)
-                      });
-                    }
-                })
-              }
+              if(result.data == null){
+                this.toastService.showWarning(StringConstants.toast.MissCommunicationWithAddressApi, StringConstants.toast.empty);
               }
               else{
-                this.toastService.showWarning(StringConstants.toast.AddressNotFound, StringConstants.toast.empty);
+                const addressSuggested = result.data.cassResult;
+                if(addressSuggested.status.type == 0){
+                  if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
+                    this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
+                      this.nextButtonClicked.emit(true);
+                      if (result.wasSuccessful) {
+                      this.insertAddress();
+                      }
+                    }, (error) => {
+                      console.log(error)
+                    });
+                  }
+                  else{
+                    this.modalRef = this.modalService.show(AddressVerificationComponent, {
+                      initialState: { addressData, addressSuggested  },
+                      animated: true,
+                      keyboard: false,
+                      backdrop : 'static',
+                      class: 'modal-lg'
+                    });
+                    
+                    this.modalRef.content.action.subscribe((value:any) => {
+                      
+                      if(value == "radioActualAddress"){
+                        this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
+                          this.nextButtonClicked.emit(true);
+                          if (result.wasSuccessful) {
+                          this.insertAddress();
+                          }
+                        }, (error) => {
+                          console.log(error)
+                        });
+                      }
+                      else{
+                        addressData.streetAddress = addressSuggested.address1;
+                        addressData.city = addressSuggested.city;
+                        addressData.county = addressSuggested.county;
+                        addressData.state = addressSuggested.state;
+                        addressData.zipCode = addressSuggested.zip;
+                        addressData.suite = addressSuggested.address2;
+                        this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
+                          this.nextButtonClicked.emit(true);
+                          if (result.wasSuccessful) {
+                          this.insertAddress();
+                          }
+                        }, (error) => {
+                          console.log(error)
+                        });
+                      }
+                  })
+                }
+                }
+                else{
+                  this.toastService.showWarning(StringConstants.toast.AddressNotFound, StringConstants.toast.empty);
+                }
               }
-
         }, (error) => {
+          
           console.log(error)
         });
           }
@@ -362,59 +367,70 @@ export class DashboardHomeAddressComponent implements OnInit {
               assessmentId: assessmentId,
               countyCode: homeAddressInfo.countyCode
             }
+            
             this.dashboardService.verifyAddressDetails(addressData.streetAddress,addressData.suite,addressData.city,addressData.state,addressData.zipCode).subscribe(async (result: any) =>{
-              const addressSuggested = result.data.cassResult;
-              if(addressSuggested.status.type == 0){
-                if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
-                  this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
-                    if (result.wasSuccessful) {
-                      this.updateAddress();
-                    }
-                  }, (error) => {
-                    console.log(error)
-                  });
-                }
-                else{
-                  this.modalRef = this.modalService.show(AddressVerificationComponent, {
-                    initialState: { addressData, addressSuggested  },
-                    animated: true,
-                    keyboard: false,
-                    backdrop : 'static'
-                  });
-                  
-                  this.modalRef.content.action.subscribe((value:any) => {
-                    
-                    if(value == "radioActualAddress"){
-                      this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
-                        if (result.wasSuccessful) {
-                          this.updateAddress();
-                        }
-                      }, (error) => {
-                        console.log(error)
-                      });
-                    }
-                    else{
-                      addressData.streetAddress = addressSuggested.address1;
-                      addressData.city = addressSuggested.city;
-                      addressData.county = addressSuggested.county;
-                      addressData.state = addressSuggested.state;
-                      addressData.zipCode = addressSuggested.zip;
-                      addressData.suite = addressSuggested.address2;
-                      this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
-                        if (result.wasSuccessful) {
-                          this.updateAddress(); 
-                        }
-                      }, (error) => {
-                        console.log(error)
-                      });
-                    }
-                    });
-                }
+              
+              if(result.data == null){
+                this.toastService.showWarning(StringConstants.toast.MissCommunicationWithAddressApi, StringConstants.toast.empty);
               }
               else{
-                this.toastService.showWarning(StringConstants.toast.AddressNotFound, StringConstants.toast.empty);
+                const addressSuggested = result.data.cassResult;
+                if(addressSuggested.status.type == 0){
+                  if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
+                    this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
+                      if (result.wasSuccessful) {
+                        this.updateAddress();
+                      }
+                    }, (error) => {
+                      console.log(error)
+                    });
+                  }
+                  else{
+                    this.modalRef = this.modalService.show(AddressVerificationComponent, {
+                      initialState: { addressData, addressSuggested  },
+                      animated: true,
+                      keyboard: false,
+                      backdrop : 'static',
+                      class: 'modal-lg'
+                    });
+                    
+                    this.modalRef.content.action.subscribe((value:any) => {
+                      
+                      if(value == "radioActualAddress"){
+                        this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
+                          if (result.wasSuccessful) {
+                            this.updateAddress();
+                          }
+                        }, (error) => {
+                          console.log(error)
+                        });
+                      }
+                      else{
+                        addressData.streetAddress = addressSuggested.address1;
+                        addressData.city = addressSuggested.city;
+                        addressData.county = addressSuggested.county;
+                        addressData.state = addressSuggested.state;
+                        addressData.zipCode = addressSuggested.zip;
+                        addressData.suite = addressSuggested.address2;
+                        this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
+                          if (result.wasSuccessful) {
+                            this.updateAddress(); 
+                          }
+                        }, (error) => {
+                          
+                          console.log(error)
+                        });
+                      }
+                      });
+                  }
+                }
+                else{
+                  this.toastService.showWarning(StringConstants.toast.AddressNotFound, StringConstants.toast.empty);
+                }
+              
               }
             }, (error) => {
+              
               console.log(error)
             });
 

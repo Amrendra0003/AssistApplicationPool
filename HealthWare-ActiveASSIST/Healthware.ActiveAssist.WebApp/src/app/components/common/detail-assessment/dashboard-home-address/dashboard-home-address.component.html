@@ -51,7 +51,7 @@
       </div>
       <div class="col-md-6">
         <div style="position: relative;">
-          <input type="text" class="form-control textfield-label disabledDiv" id="hometown" [(ngModel)]="hometown"
+          <input type="text" class="form-control textfield-label" id="hometown" [(ngModel)]="hometown"
             placeholder="County" formControlName="hometown" maxlength="51"
             [ngClass]="homeAddressForm.get('hometown').errors && myform.submitted?'form-control-invalid': 'form-control'">
         </div>

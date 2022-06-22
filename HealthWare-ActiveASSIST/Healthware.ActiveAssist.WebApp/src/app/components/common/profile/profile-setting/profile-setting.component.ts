@@ -272,15 +272,13 @@ export class ProfileSettingComponent implements OnInit {
       if (this.result.wasSuccessful == true) {
         if (this.result.data != null) {
           this.city = this.result.data.city;
-          this.state = this.result.data.state;
-          this.county = this.result.data.county;
+          this.state = this.result.data.stateCode;
           this.stateCode = this.result.data.stateCode;
           this.profileSettingForm.controls['zipcode'].setErrors(null);
         }
         else {
           this.city = "";
           this.state = "";
-          this.county = "";
           this.profileSettingForm.controls['zipcode'].setErrors({ 'invalid': true });
         }
       }
@@ -358,78 +356,84 @@ export class ProfileSettingComponent implements OnInit {
         isDynamic: 'true',
       }
       this.dashboardService.verifyAddressDetails(profileRequest.streetAddress,profileRequest.suite,profileRequest.city,profileRequest.state,profileRequest.zipCode).subscribe(async (result: any) =>{
-        const addressSuggested = result.data.cassResult;
-        if(addressSuggested.status.type == 0){ 
-          
-        if(addressSuggested.address1.toLowerCase() == profileRequest.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == profileRequest.city.toLowerCase() && addressSuggested.county.toLowerCase() == profileRequest.county.toLowerCase() && addressSuggested.state.toLowerCase() == profileRequest.state.toLowerCase() && addressSuggested.zip.toLowerCase() == profileRequest.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == profileRequest.suite.toLowerCase()){
-         
-          this.quickAssessmentService.updateProfileDetails(profileRequest).subscribe(async (result: any) => {
-            if (result.wasSuccessful) {
-              this.updateProfile();
-            }
-          }, (error) => {
-            console.log(error)
-          });
+        if(result.data == null){
+          this.toastService.showWarning(StringConstants.toast.MissCommunicationWithAddressApi, StringConstants.toast.empty);
         }
         else{
-          const addressData: any = {
-            streetAddress: '',
-            suite: '',
-            city: '',
-            state: '',
-            zipCode: '',
-            county: ''
-          }
-          addressData.streetAddress = profileRequest.streetAddress;
-          addressData.city = profileRequest.city;
-          addressData.county = profileRequest.county;
-          addressData.state = profileRequest.state;
-          addressData.zipCode = profileRequest.zipCode;
-          addressData.suite = profileRequest.suite;
-          this.modalRef = this.modalService.show(AddressVerificationComponent, {
-            initialState: { addressData, addressSuggested  },
-            animated: true,
-            keyboard: false,
-            backdrop : 'static'
-          });
-          
-          this.modalRef.content.action.subscribe((value:any) => {
+          const addressSuggested = result.data.cassResult;
+          if(addressSuggested.status.type == 0){ 
             
-            if(value == "radioActualAddress"){
-              this.quickAssessmentService.updateProfileDetails(profileRequest).subscribe(async (result: any) => {
-                if (result.wasSuccessful) {
-                  this.updateProfile();
-                }
-              }, (error) => {
-                console.log(error)
-              });
+          if(addressSuggested.address1.toLowerCase() == profileRequest.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == profileRequest.city.toLowerCase() && addressSuggested.county.toLowerCase() == profileRequest.county.toLowerCase() && addressSuggested.state.toLowerCase() == profileRequest.state.toLowerCase() && addressSuggested.zip.toLowerCase() == profileRequest.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == profileRequest.suite.toLowerCase()){
+           
+            this.quickAssessmentService.updateProfileDetails(profileRequest).subscribe(async (result: any) => {
+              if (result.wasSuccessful) {
+                this.updateProfile();
+              }
+            }, (error) => {
+              console.log(error)
+            });
+          }
+          else{
+            const addressData: any = {
+              streetAddress: '',
+              suite: '',
+              city: '',
+              state: '',
+              zipCode: '',
+              county: ''
             }
-            else{
-              profileRequest.streetAddress = addressSuggested.address1;
-              profileRequest.city = addressSuggested.city;
-              profileRequest.county = addressSuggested.county;
-              profileRequest.state = addressSuggested.state;
-              profileRequest.zipCode = addressSuggested.zip;
-              profileRequest.suite = addressSuggested.address2;
-              this.quickAssessmentService.updateProfileDetails(profileRequest).subscribe(async (result: any) => {
-                if (result.wasSuccessful) {
-                  this.updateProfile();
-                  this.streetName = addressSuggested.address1;
-                  this.suite = addressSuggested.address2;
-                  this.city = addressSuggested.city;
-                  this.state = addressSuggested.state;
-                  this.county = addressSuggested.county;
-                  this.zipcode = addressSuggested.zip;
-                }
-              }, (error) => {
-                console.log(error)
-              });
-            }
-          })
-        }
-        }
-        else{
-          this.toastService.showWarning(StringConstants.toast.AddressNotFound, StringConstants.toast.empty);
+            addressData.streetAddress = profileRequest.streetAddress;
+            addressData.city = profileRequest.city;
+            addressData.county = profileRequest.county;
+            addressData.state = profileRequest.state;
+            addressData.zipCode = profileRequest.zipCode;
+            addressData.suite = profileRequest.suite;
+            this.modalRef = this.modalService.show(AddressVerificationComponent, {
+              initialState: { addressData, addressSuggested  },
+              animated: true,
+              keyboard: false,
+              backdrop : 'static',
+              class: 'modal-lg'
+            });
+            
+            this.modalRef.content.action.subscribe((value:any) => {
+              
+              if(value == "radioActualAddress"){
+                this.quickAssessmentService.updateProfileDetails(profileRequest).subscribe(async (result: any) => {
+                  if (result.wasSuccessful) {
+                    this.updateProfile();
+                  }
+                }, (error) => {
+                  console.log(error)
+                });
+              }
+              else{
+                profileRequest.streetAddress = addressSuggested.address1;
+                profileRequest.city = addressSuggested.city;
+                profileRequest.county = addressSuggested.county;
+                profileRequest.state = addressSuggested.state;
+                profileRequest.zipCode = addressSuggested.zip;
+                profileRequest.suite = addressSuggested.address2;
+                this.quickAssessmentService.updateProfileDetails(profileRequest).subscribe(async (result: any) => {
+                  if (result.wasSuccessful) {
+                    this.updateProfile();
+                    this.streetName = addressSuggested.address1;
+                    this.suite = addressSuggested.address2;
+                    this.city = addressSuggested.city;
+                    this.state = addressSuggested.state;
+                    this.county = addressSuggested.county;
+                    this.zipcode = addressSuggested.zip;
+                  }
+                }, (error) => {
+                  console.log(error)
+                });
+              }
+            })
+          }
+          }
+          else{
+            this.toastService.showWarning(StringConstants.toast.AddressNotFound, StringConstants.toast.empty);
+          }
         }
   }, (error) => {
     console.log(error)

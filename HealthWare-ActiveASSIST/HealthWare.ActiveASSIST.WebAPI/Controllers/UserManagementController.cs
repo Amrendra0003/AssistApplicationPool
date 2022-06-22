@@ -79,10 +79,11 @@ namespace HealthWare.ActiveASSIST.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> VerifyAddressDetails([FromQuery] string addressLine1, string addressLine2, string city, string state, string zip)
         {
+            var address2 = addressLine2 == null ? "" : addressLine2;
             var addressDetails = new AddressVerificationRequest
             {
                 Address1 = Convert.ToString(addressLine1),
-                Address2 = Convert.ToString(addressLine2),
+                Address2 = Convert.ToString(address2),
                 City = Convert.ToString(city),
                 State = Convert.ToString(state),
                 Zip = Convert.ToString(zip),

@@ -49,7 +49,7 @@ const routes: Routes = [
   { path: "create-user", component: SetPasswordComponent },
   { path: "external-auth", component: ExternalAuthComponent },
   { path: "activate-user", component: ActivateUserComponent },
-  { path: "support", component: SupportComponent },
+  { path: "support", component: SupportComponent }
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' })],

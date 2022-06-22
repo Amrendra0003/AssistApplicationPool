@@ -98,6 +98,7 @@ export class DashboardHomeAddressComponent implements OnInit {
     })
   }
   ngOnInit() {
+    
     var countyCodeData = ""
     if (this.homeCountyCode == null) countyCodeData = "1";
     else countyCodeData = this.homeCountyCode;
@@ -109,13 +110,13 @@ export class DashboardHomeAddressComponent implements OnInit {
     this.homeStreetName = this.homeStreetAddress;
     this.homeSuite = this.suite;
     this.homeCity = this.city;
-    this.homeState = this.state;
+    this.homeState = sessionStorage.getItem('AssessmentStateCode')!;
     this.homeStateCode = this.stateCode;
     this.homePincode = this.pincode;
     this.homeCellNumber = this.homeNo;
     this.data = this.homedata;
     this.entityType = this.homeEntityType;
-    this.hometown = this.homeTown;
+    this.hometown = "";
     this.addressId = this.homeAddressId;
     this.isGuarantor = this.homeGuarantor;
     this.countyCode = countyCodeData;
@@ -141,6 +142,7 @@ export class DashboardHomeAddressComponent implements OnInit {
       this.homeAddressForm.get('homeCellNumber').enable();
       this.homeAddressForm.get('countyCode').enable();
     }
+    this.getStateCode();
   }
   private initForm() {
     this.homeAddressForm = new FormGroup({
@@ -155,6 +157,14 @@ export class DashboardHomeAddressComponent implements OnInit {
       'homeStateCode': new FormControl('',),
       'data': new FormControl(''),
     });
+  }
+  async getStateCode(){
+    this.result = await this.common.getStateAndCity(this.homePincode);
+    if (this.result.wasSuccessful == true) {
+      if (this.result.data != null) {
+        this.homeState = this.result.data.stateCode;
+      }
+    }
   }
   async getStateAndCity() { // To get state and city details from api
     

@@ -154,6 +154,7 @@ export class DashboardWorkAddressComponent implements OnInit {
     });
   }
   async getStateAndCity() { //Get state and city
+    
     const val = this.workAddressForm.get('zipcode').value;
     if (val.length >= 5) {
       this.result = await this.common.getStateAndCity(val);
@@ -178,7 +179,6 @@ export class DashboardWorkAddressComponent implements OnInit {
     else {
       this.city = "";
       this.state = "";
-      this.country = "";
     }
   }
   async getPhoneCode(){ //To get country codes
@@ -299,7 +299,10 @@ export class DashboardWorkAddressComponent implements OnInit {
               else{
                 const addressSuggested = result.data.cassResult;
                 if(addressSuggested.status.type == 0){
-                if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
+                  if(addressData.suite == null){
+                    addressData.suite = ''
+                  }
+                  if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase().trim() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase().trim() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase().trim() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase().trim() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase().trim() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase().trim()){
                   this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
                     if (result.wasSuccessful) {
                       this.insertAddress();
@@ -406,7 +409,10 @@ export class DashboardWorkAddressComponent implements OnInit {
                 else{
                   const addressSuggested = result.data.cassResult;
                   if(addressSuggested.status.type == 0){ 
-                  if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
+                    if(addressData.suite == null){
+                      addressData.suite = ''
+                    }
+                    if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase().trim() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase().trim() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase().trim() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase().trim() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase().trim() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase().trim()){
                     this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
                       if (result.wasSuccessful) {
                         this.updateAddress();

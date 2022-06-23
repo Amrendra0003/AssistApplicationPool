@@ -110,13 +110,17 @@ export class DashboardHomeAddressComponent implements OnInit {
     this.homeStreetName = this.homeStreetAddress;
     this.homeSuite = this.suite;
     this.homeCity = this.city;
-    this.homeState = sessionStorage.getItem('AssessmentStateCode')!;
     this.homeStateCode = this.stateCode;
     this.homePincode = this.pincode;
     this.homeCellNumber = this.homeNo;
     this.data = this.homedata;
     this.entityType = this.homeEntityType;
-    this.hometown = "";
+    if(this.homeStreetAddress == null){
+      this.hometown = "";
+    }
+    else{
+      this.hometown = this.homeTown;
+    }
     this.addressId = this.homeAddressId;
     this.isGuarantor = this.homeGuarantor;
     this.countyCode = countyCodeData;
@@ -191,7 +195,6 @@ export class DashboardHomeAddressComponent implements OnInit {
     else {
       this.homeCity = "";
       this.homeState = "";
-      this.hometown = "";
       this.homeStateCode = "";
     }
   }
@@ -302,7 +305,11 @@ export class DashboardHomeAddressComponent implements OnInit {
               else{
                 const addressSuggested = result.data.cassResult;
                 if(addressSuggested.status.type == 0){
-                  if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
+                  
+                  if(addressData.suite == null){
+                    addressData.suite = ''
+                  }
+                  if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase().trim() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase().trim() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase().trim() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase().trim() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase().trim() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase().trim()){
                     this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
                       this.nextButtonClicked.emit(true);
                       if (result.wasSuccessful) {
@@ -386,7 +393,11 @@ export class DashboardHomeAddressComponent implements OnInit {
               else{
                 const addressSuggested = result.data.cassResult;
                 if(addressSuggested.status.type == 0){
-                  if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase()){
+                  
+                  if(addressData.suite == null){
+                    addressData.suite = ''
+                  }
+                  if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase().trim() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase().trim() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase().trim() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase().trim() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase().trim() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase().trim()){
                     this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {
                       if (result.wasSuccessful) {
                         this.updateAddress();

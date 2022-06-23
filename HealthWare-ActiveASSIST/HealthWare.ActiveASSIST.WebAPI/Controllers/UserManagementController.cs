@@ -90,7 +90,16 @@ namespace HealthWare.ActiveASSIST.WebAPI.Controllers
                 ObjectId = new Random().Next()
             };
             var messageDto = await _userManagementService.VerifyAddressDetails(addressDetails);
-
+            messageDto.Data.CassResult.Address2 = messageDto.Data.CassResult.Address2.Trim();
+            if (messageDto.Data.CassResult.Address2.ToUpper() == "NULL")
+            {
+                messageDto.Data.CassResult.Address2 = "";
+            }
+            messageDto.Data.CassResult.Address1 = messageDto.Data.CassResult.Address1.Trim();
+            messageDto.Data.CassResult.City = messageDto.Data.CassResult.City.Trim();
+            messageDto.Data.CassResult.State = messageDto.Data.CassResult.State.Trim();
+            messageDto.Data.CassResult.County = messageDto.Data.CassResult.County.Trim();
+            messageDto.Data.CassResult.Zip = messageDto.Data.CassResult.Zip.Trim();
             if (messageDto.Errors.Count > 0)
             {
                 return BadRequest(messageDto);

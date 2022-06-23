@@ -288,7 +288,6 @@ export class ProfileSettingComponent implements OnInit {
     else {
       this.city = "";
       this.state = "";
-      this.county = "";
     }
   }
   getProfileDetails() {
@@ -362,8 +361,10 @@ export class ProfileSettingComponent implements OnInit {
         else{
           const addressSuggested = result.data.cassResult;
           if(addressSuggested.status.type == 0){ 
-            
-          if(addressSuggested.address1.toLowerCase() == profileRequest.streetAddress.toLowerCase() && addressSuggested.city.toLowerCase() == profileRequest.city.toLowerCase() && addressSuggested.county.toLowerCase() == profileRequest.county.toLowerCase() && addressSuggested.state.toLowerCase() == profileRequest.state.toLowerCase() && addressSuggested.zip.toLowerCase() == profileRequest.zipCode.toLowerCase() && addressSuggested.address2.toLowerCase() == profileRequest.suite.toLowerCase()){
+            if(profileRequest.suite == null){
+              profileRequest.suite = ''
+            }
+          if(addressSuggested.address1.toLowerCase() == profileRequest.streetAddress.toLowerCase().trim() && addressSuggested.city.toLowerCase() == profileRequest.city.toLowerCase().trim() && addressSuggested.county.toLowerCase() == profileRequest.county.toLowerCase().trim() && addressSuggested.state.toLowerCase() == profileRequest.state.toLowerCase().trim() && addressSuggested.zip.toLowerCase() == profileRequest.zipCode.toLowerCase().trim() && addressSuggested.address2.toLowerCase() == profileRequest.suite.toLowerCase().trim()){
            
             this.quickAssessmentService.updateProfileDetails(profileRequest).subscribe(async (result: any) => {
               if (result.wasSuccessful) {

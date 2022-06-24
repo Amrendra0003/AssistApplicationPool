@@ -17,9 +17,11 @@ export class AddressVerificationComponent implements OnInit {
   constructor( private modalService: BsModalService, private toastService: ToastServiceService) { }
   ngOnInit(): void {
     this.isDisable = true;
+
   }
   addressValChange(event:any){
     this.isDisable = false;
+    document.getElementById('success')?.classList.add('btn-success');
     this.addressSelected = event.target.value;
   }
   successPopup(){

@@ -603,7 +603,7 @@ export class DynamicQuestionsComponent implements OnInit {
           });
         });
         
-        this.bindCurrentScreenAnswerJson.forEach(controlAns => {
+        this.bindCurrentScreenAnswerJson.forEach(controlAns => {          
           if (controlAns[control.uniqueKey] == 'Yes' || controlAns[control.uniqueKey] == 'No') {
             if (this.myForm.controls['isEmployed']) {
               this.toggleOnChange('Yes/No', control.uniqueKey, controlAns[control.uniqueKey])
@@ -625,7 +625,9 @@ export class DynamicQuestionsComponent implements OnInit {
             }
           }
           else {
-              this.myForm.controls[control.uniqueKey].setValue(controlAns[control.uniqueKey]); 
+            
+              if(controlAns[control.uniqueKey]?.length == 1)
+                this.myForm.controls[control.uniqueKey].setValue(controlAns[control.uniqueKey]); 
           }
           for (let i = 0; i < this.filterScreenDetails[0].controls?.length; i++) {
             if (controlAns[this.filterScreenDetails[0].controls[i]?.uniqueKey]) {//bind values to question of all the types

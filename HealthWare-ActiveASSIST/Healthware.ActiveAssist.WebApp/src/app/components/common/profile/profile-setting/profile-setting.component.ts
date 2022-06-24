@@ -94,7 +94,6 @@ export class ProfileSettingComponent implements OnInit {
   ZipNum = StringConstants.demographics.ZipNum;
   ZipMin = StringConstants.demographics.ZipMin;
   ZipMax = StringConstants.demographics.ZipMax;
-  CountyReq = StringConstants.profileSetting.CountyReq;
   CountyAlp = StringConstants.profileSetting.CountyAlp;
   CountyMax = StringConstants.profileSetting.CountyMax;
   CityReq = StringConstants.demographics.CityReq;
@@ -169,7 +168,7 @@ export class ProfileSettingComponent implements OnInit {
       'email': new FormControl(''), // Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.com$')]),
       'contactCountyCode': new FormControl('1', [Validators.required]),
       'suite': new FormControl('', [Validators.maxLength(250)]),
-      'county': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(50)]),
+      'county': new FormControl('', [Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(50)]),
       'city': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(50)]),
       'state': new FormControl('', [Validators.required]),
       'zipcode': new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(5), Validators.maxLength(50)]),
@@ -362,7 +361,10 @@ export class ProfileSettingComponent implements OnInit {
           const addressSuggested = result.data.cassResult;
           if(addressSuggested.status.type == 0){ 
             if(profileRequest.suite == null){
-              profileRequest.suite = ''
+              profileRequest.suite = '';
+            }
+            if(profileRequest.county == null){
+              profileRequest.county = '';
             }
           if(addressSuggested.address1.toLowerCase() == profileRequest.streetAddress.toLowerCase().trim() && addressSuggested.city.toLowerCase() == profileRequest.city.toLowerCase().trim() && addressSuggested.county.toLowerCase() == profileRequest.county.toLowerCase().trim() && addressSuggested.state.toLowerCase() == profileRequest.state.toLowerCase().trim() && addressSuggested.zip.toLowerCase() == profileRequest.zipCode.toLowerCase().trim() && addressSuggested.address2.toLowerCase() == profileRequest.suite.toLowerCase().trim()){
            

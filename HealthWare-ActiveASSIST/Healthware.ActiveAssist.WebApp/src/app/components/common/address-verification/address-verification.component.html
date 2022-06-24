@@ -8,8 +8,9 @@
             <div class="row">
                 <div class="col">
                     <strong><label>Actual Address:</label></strong> 
-                    <div class="form-check">
-                        <input class="form-check-input" style="height: 20px;width: 20px;" type="radio" name="radioAddress" value="radioActualAddress" (change)="addressValChange($event)">
+                    <div class="form-check" style="margin-top: 10px;">
+                      
+                        <input class="form-check-input" style="height: 14px;width: 14px;" type="radio" name="radioAddress" value="radioActualAddress" (change)="addressValChange($event)">
                         
                             StreetAddress: {{addressData.streetAddress}}
                             <br>
@@ -26,8 +27,9 @@
                 </div>
                 <div class="col">
                 <strong><label>Suggested Address:</label></strong>
-                    <div class="form-check">
-                        <input class="form-check-input" style="height: 20px;width: 20px;" type="radio" name="radioAddress" value="radioSuggestedAddress" (change)="addressValChange($event)">
+                    <div class="form-check" style="margin-top: 10px;">
+                      
+                        <input class="form-check-input" style="height: 14px;width: 14px;" type="radio" name="radioAddress" value="radioSuggestedAddress" (change)="addressValChange($event)">
                        
                             StreetAddress: {{addressSuggested.address1}}
                             <br>
@@ -43,15 +45,13 @@
                       </div>
                 </div>
             </div>
-
-
           </div>
         </div>
         </div>
   
   <div class="modal-footer">
     <div class="float-right">
-      <button type="button" (click)="successPopup()" class="btn btn-success ml-2">OK</button>
+      <button type="button" [disabled]="isDisable" (click)="successPopup()" class="btn btn-success ml-2">OK</button>
       <button type="button" (click)="cancelPopup()" class="btn btn-light ml-2">Cancel</button>
     </div>
   </div>

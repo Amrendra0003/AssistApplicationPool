@@ -13,10 +13,13 @@ export class AddressVerificationComponent implements OnInit {
   @Output() action = new EventEmitter();
   addressData:any;
   addressSuggested:any;
+  isDisable:any;
   constructor( private modalService: BsModalService, private toastService: ToastServiceService) { }
   ngOnInit(): void {
+    this.isDisable = true;
   }
   addressValChange(event:any){
+    this.isDisable = false;
     this.addressSelected = event.target.value;
   }
   successPopup(){

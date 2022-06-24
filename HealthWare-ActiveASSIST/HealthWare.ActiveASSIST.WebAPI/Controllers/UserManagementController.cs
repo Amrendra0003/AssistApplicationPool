@@ -95,6 +95,10 @@ namespace HealthWare.ActiveASSIST.WebAPI.Controllers
             {
                 messageDto.Data.CassResult.Address2 = "";
             }
+            if (messageDto.Data.CassResult.County.ToUpper() == "NULL")
+            {
+                messageDto.Data.CassResult.County = "";
+            }
             messageDto.Data.CassResult.Address1 = messageDto.Data.CassResult.Address1.Trim();
             messageDto.Data.CassResult.City = messageDto.Data.CassResult.City.Trim();
             messageDto.Data.CassResult.State = messageDto.Data.CassResult.State.Trim();

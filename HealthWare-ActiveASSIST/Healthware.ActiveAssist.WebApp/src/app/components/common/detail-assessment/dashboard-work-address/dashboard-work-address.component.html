@@ -64,8 +64,6 @@
             placeholder="County" formControlName="country" maxlength="51"
             [ngClass]="workAddressForm.get('country').errors && myform.submitted?'form-control-invalid': 'form-control'">
         </div>
-        <div *ngIf="workAddressForm.get('country').hasError('required')&& myform.submitted"
-        class="small text-danger mt-1">{{CountyReq}}</div>
         <div *ngIf="workAddressForm.get('country').hasError('pattern')" class="small text-danger mt-1">{{CountyAlp}}
         </div>
         <div *ngIf="workAddressForm.get('country').hasError('maxlength')" class="small text-danger mt-1">{{CountyMax}}

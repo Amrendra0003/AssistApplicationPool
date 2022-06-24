@@ -351,23 +351,14 @@ export class DashboardGuarantorComponent implements OnInit {
       this.guarantorInfoForm.get('reasonNoSSN').updateValueAndValidity();
     }
     else {
+      
       this.disableSelf = false;
       this.guarantorInfoForm.get('reasonNoSSN').setValidators([Validators.required]);
       this.guarantorInfoForm.get('reasonNoSSN').updateValueAndValidity();
       this.guarantorInfoForm.get('ssn').clearValidators();
       this.guarantorInfoForm.get('ssn').updateValueAndValidity();
       this.countyCode = "1";
-      this.firstName = "";
-      this.middleName = "";
-      this.lastName = "";
-      this.suffix = "";
-      this.cellno = "";
-      this.ssn = null;
-      this.sssn = null;
-      this.email = "";
-      this.dob = "";
       this.bsVal = "";
-      this.reasonNoSSN = null;
     }
   }
   GetPersonalInfo() { // To get personal details

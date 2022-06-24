@@ -52,7 +52,6 @@ export class DashboardHomeAddressComponent implements OnInit {
   ZipVal = StringConstants.demographics.ZipVal;
   ZipMin = StringConstants.demographics.ZipMin;
   ZipMax = StringConstants.demographics.ZipMax;
-  CountyReq = StringConstants.profileSetting.CountyReq;
   CountyAlp = StringConstants.profileSetting.CountyAlp;
   CountyMax = StringConstants.profileSetting.CountyMax;
   CityReq = StringConstants.demographics.CityReq;
@@ -151,7 +150,7 @@ export class DashboardHomeAddressComponent implements OnInit {
   private initForm() {
     this.homeAddressForm = new FormGroup({
       'homeSuite': new FormControl('', [Validators.maxLength(250)]),
-      'hometown': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(50)]),
+      'hometown': new FormControl('', [Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(50)]),
       'homeCity': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.maxLength(50)]),
       'homeState': new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]),
       'homePincode': new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(5), Validators.maxLength(50)]),
@@ -307,7 +306,10 @@ export class DashboardHomeAddressComponent implements OnInit {
                 if(addressSuggested.status.type == 0){
                   
                   if(addressData.suite == null){
-                    addressData.suite = ''
+                    addressData.suite = '';
+                  }
+                  if(addressData.county == null){
+                    addressData.county = '';
                   }
                   if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase().trim() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase().trim() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase().trim() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase().trim() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase().trim() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase().trim()){
                     this.dashboardService.addAddressInfo(addressData).subscribe(async (result: any) => {
@@ -395,7 +397,10 @@ export class DashboardHomeAddressComponent implements OnInit {
                 if(addressSuggested.status.type == 0){
                   
                   if(addressData.suite == null){
-                    addressData.suite = ''
+                    addressData.suite = '';
+                  }
+                  if(addressData.county == null){
+                    addressData.county = '';
                   }
                   if(addressSuggested.address1.toLowerCase() == addressData.streetAddress.toLowerCase().trim() && addressSuggested.city.toLowerCase() == addressData.city.toLowerCase().trim() && addressSuggested.county.toLowerCase() == addressData.county.toLowerCase().trim() && addressSuggested.state.toLowerCase() == addressData.state.toLowerCase().trim() && addressSuggested.zip.toLowerCase() == addressData.zipCode.toLowerCase().trim() && addressSuggested.address2.toLowerCase() == addressData.suite.toLowerCase().trim()){
                     this.dashboardService.updateAddressInfo(addressData).subscribe(async (result: any) => {

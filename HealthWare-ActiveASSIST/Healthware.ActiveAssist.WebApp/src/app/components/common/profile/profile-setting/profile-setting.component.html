@@ -218,8 +218,6 @@
                             placeholder="County" formControlName="county" [(ngModel)]="county" maxlength="51"
                             [ngClass]="profileSettingForm.get('county').errors && myform.submitted?'form-control-invalid': 'form-control'">
                     </div>
-                    <div *ngIf="profileSettingForm.get('county').hasError('required')&& myform.submitted"
-                        class="small text-danger mt-1">{{CountyReq}}</div>
                     <div *ngIf="profileSettingForm.get('county').hasError('pattern')" class="small text-danger mt-1">
                         {{CountyAlp}}</div>
                     <div *ngIf="profileSettingForm.get('county').hasError('maxlength')" class="small text-danger mt-1">

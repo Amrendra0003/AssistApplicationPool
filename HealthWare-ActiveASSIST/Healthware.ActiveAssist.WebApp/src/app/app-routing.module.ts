@@ -25,6 +25,7 @@ import { ExternalAuthComponent } from './components/common/external-Auth/externa
 import { ActivateUserComponent } from './components/common/activate-user/activate-user.component';
 import { SupportComponent } from './components/common/support/support.component';
 import { SinglePostResolver } from './components/patient/dynamic-questions/single.post.resolver';
+import { EmailVerificationComponent } from './components/common/email-verification/email-verification.component';
 const routes: Routes = [
   { path: '', component: AppLandingComponent, pathMatch: 'full' },
   { path: "create-account", component: CreateAccountComponent, canActivate: [AuthGuard], data: { permissions: { only: ['CreatePatientAccount'] } } },
@@ -49,7 +50,8 @@ const routes: Routes = [
   { path: "create-user", component: SetPasswordComponent },
   { path: "external-auth", component: ExternalAuthComponent },
   { path: "activate-user", component: ActivateUserComponent },
-  { path: "support", component: SupportComponent }
+  { path: "support", component: SupportComponent },
+  { path: "email-verification", component: EmailVerificationComponent}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' })],

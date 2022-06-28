@@ -28,6 +28,9 @@ export class LoginService {
     
     return this.http.post(environment.apiBaseUrl + ApiConstants.url.Login, loginDetails, { headers: this.headers });
   }
+  EmailTokenConfirm(token: any){
+    return this.http.get(environment.apiBaseUrl + ApiConstants.url.EmailToken + "?token=" + token , { headers: this.headers });
+  }
   LoginWithoutOtp(loginDetails: LoginRequest) { // login without otp
     
     return this.http.post(environment.apiBaseUrl + ApiConstants.url.LoginWithoutOtp, loginDetails, this.httpOptions);

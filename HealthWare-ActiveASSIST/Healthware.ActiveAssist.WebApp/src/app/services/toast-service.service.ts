@@ -8,6 +8,9 @@ export class ToastServiceService {
   showSuccess(message: string | undefined, title: string | undefined) {
     this.toastr.success(message, title)
   }
+  showSuccessWithTime(message: string | undefined, title: string | undefined){
+    this.toastr.success(message, title, { timeOut: 3000 })
+  }
   showError(message: string | undefined, title: string | undefined) {
     this.toastr.error(message, title, { timeOut: 3000 })
   }

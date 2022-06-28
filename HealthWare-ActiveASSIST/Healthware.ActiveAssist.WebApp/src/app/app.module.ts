@@ -85,6 +85,7 @@ import { SupportComponent } from './components/common/support/support.component'
 import { UserIdleModule } from 'angular-user-idle';
 import { AddressVerificationComponent } from './components/common/address-verification/address-verification.component';
 import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
+import { EmailVerificationComponent } from './components/common/email-verification/email-verification.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -137,6 +138,7 @@ import { ModalModule, BsModalRef } from 'ngx-bootstrap/modal';
     ActivateUserComponent,
     SupportComponent,
     AddressVerificationComponent,
+    EmailVerificationComponent,
   ],
   entryComponents: [
     FormDialogComponent

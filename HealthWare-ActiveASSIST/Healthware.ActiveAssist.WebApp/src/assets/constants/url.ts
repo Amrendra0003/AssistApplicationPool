@@ -6,6 +6,7 @@ export class ApiConstants {
 
         BaseUrl: environment.apiBaseUrl,
         /*auth*/
+        EmailToken: "api/Verification/ValidateEmailConfirmationToken/",
         Login: "api/Login",
         Otp: "api/Login/SendOTP",
         ValidateOtp: "api/Login/ValidateOTP",

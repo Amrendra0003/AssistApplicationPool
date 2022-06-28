@@ -42,14 +42,13 @@ namespace HealthWare.ActiveASSIST.Web.Common.Email
             string finalURL;
             var fullName = basicInfo.FirstName + " " + basicInfo.MiddleName + " " + basicInfo.LastName;
             var bodyBuilder = new BodyBuilder();
-            finalURL = _context.HttpContext.Request.Scheme + "://" + _context.HttpContext.Request.Host + "/ActiveAssistAPI/api/Verification/ValidateEmailConfirmationToken/?token=";
+            finalURL = "http://localhost/ActiveAssistClient/email-verification/?token=";
             var path = Application.EmailTemplatePath;
             var pathToFile = _env.WebRootPath + path + mailType + Application.HtmlExtension;
             using (StreamReader sourceReader = File.OpenText(pathToFile))
             {
                 bodyBuilder.HtmlBody = sourceReader.ReadToEnd();
             }
-
             var messageBody = string.Format(bodyBuilder.HtmlBody,
                 fullName,
                 finalURL,

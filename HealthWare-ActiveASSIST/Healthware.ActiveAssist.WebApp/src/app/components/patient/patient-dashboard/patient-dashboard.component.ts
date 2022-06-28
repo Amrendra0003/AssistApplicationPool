@@ -66,6 +66,7 @@ export class DashboardDetailsComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    
     window.scroll(0, 0);
     this.dataSharingService.showUserNameInHeader.next(true);
     this.token = sessionStorage.getItem("token");
@@ -75,8 +76,10 @@ export class DashboardDetailsComponent implements OnInit {
     });
     let partialName = "";
     this.getDashboardDetails(partialName);
+    
   }
   getDashboardDetails(searchWord: any) { // Get dashboard details
+    
     if (typeof searchWord == "undefined")
       searchWord = "";
     if (searchWord.target)
@@ -95,6 +98,7 @@ export class DashboardDetailsComponent implements OnInit {
           this.canCreateAssessment = true;
         }
         else {
+          
           this.showEmptyMessage = false;
           this.result = result.data.dashboardDetailResponse;
           this.partial = result.data.partialAssessment;
@@ -106,6 +110,10 @@ export class DashboardDetailsComponent implements OnInit {
             this.dataSharingService.changeFullName.next(loggedInPatientFullName);
           this.assessmentVerificationStatus = result.data.assessmentStatus;
           sessionStorage.setItem('resultID', this.partial?.partialAssessmentId);
+          if(sessionStorage.getItem("tokenForEmail") != null){
+            const index = this.result.length - 1;
+          this.dashboardInfo(this.result[index].assessmentId , this.result[index].gender, this.result[index].age , this.result[index].fullName , this.result[index].submittedBy.submittedOn , this.result[index].assessmentStatus , this.result[index].patientId , this.result[index].userId, '0');
+          }
         }
       }
     }, (error) => {
@@ -113,6 +121,7 @@ export class DashboardDetailsComponent implements OnInit {
     });
   }
   editPartialAssessment(quickAssessmentResultId: any) { // Edit partial assessement
+    
     console.log(quickAssessmentResultId);
     sessionStorage.setItem('resultID', quickAssessmentResultId);
     this.router.navigate(['dynamic-questions']);
@@ -151,6 +160,7 @@ export class DashboardDetailsComponent implements OnInit {
     this.dataSharing.SaveVerification.next("");
   }
   dashboardInfo(assessmentId: any, gender: any, age: any, fullName: any, submittedOn: any, assessmentStatus: any, patientId: any, userId: any, navigateTab: string) { // Get dashboard personal info
+    
     const formValidate = {
       patientId: patientId,
       assessmentId: assessmentId

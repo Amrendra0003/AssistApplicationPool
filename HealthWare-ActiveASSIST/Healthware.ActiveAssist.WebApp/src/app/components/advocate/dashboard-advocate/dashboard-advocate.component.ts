@@ -124,6 +124,10 @@ export class DashboardAdvocateComponent implements OnInit {
           this.result = result.data;
           this.advocateResult = result.data[0].dashboardAssessments;
           sessionStorage.setItem('patientEmail', result.data[0].dashboardAssessments[0].email);
+          if(sessionStorage.getItem("tokenForEmail") != null){
+          const index = this.advocateResult.length - 1;
+          this.dashboardInfo(this.advocateResult[index].assessmentId,this.advocateResult[index].gender,this.advocateResult[index].age,this.advocateResult[index].patientName,this.advocateResult[index].assessmentStatus,this.advocateResult[index].assessmentPatientId,this.advocateResult[index].userId,this.advocateResult[index].submittedOn,'0');
+          }
         }
       }
     }, (error) => {

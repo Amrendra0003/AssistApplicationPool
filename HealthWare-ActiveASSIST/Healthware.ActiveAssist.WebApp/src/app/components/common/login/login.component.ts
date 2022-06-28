@@ -8,6 +8,7 @@ import { ToastServiceService } from 'src/app/services/toast-service.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataSharingService } from 'src/app/services/datasharing.service';
 import { FileUpload } from 'src/app/services/fileupload.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -37,6 +38,7 @@ export class LoginComponent implements OnInit {
   isBeginClicked: boolean = false;
   currentTheme: any;
   userImageUrl: any;
+  tokenForEmail: any;
   email: any
   tenantId: any;
   showLoader: any;
@@ -49,7 +51,7 @@ export class LoginComponent implements OnInit {
   ForgotPassword = StringConstants.login.ForgotPassword;
   Next = StringConstants.login.Next;
   NewUserInfo = StringConstants.login.NewUserInfo;
-  constructor(private dataSharingService: DataSharingService, private authService: AuthService, private loginService: LoginService,
+  constructor(private _route: ActivatedRoute, private dataSharingService: DataSharingService, private authService: AuthService, private loginService: LoginService,
     private router: Router, private activatedRoute: ActivatedRoute, private formbuilder: FormBuilder, private toastService: ToastServiceService, private fileUpload: FileUpload) {
     this.dataSharingService.alterPaddingForVA.subscribe(value => { //Virtual assist
       this.virtualAssistPadding = value;
@@ -65,11 +67,23 @@ export class LoginComponent implements OnInit {
     });
   }
   async ngOnInit() {
+    
+    this.tokenForEmail = sessionStorage.getItem("tokenForLogin");
     this.dataSharingService.hideVaForProfile.next(false);
     this.loginService.getTenantBySubDomain(window.location.host).subscribe(async (result: any) => {
       if (result.wasSuccessful) {
         this.tenantId = result.data;
         sessionStorage.setItem('tenant', this.tenantId);
+        if(this.tokenForEmail != null){
+          this.loginService.EmailTokenConfirm(this.tokenForEmail).subscribe(async (result: any) => { 
+            this.toastService.showSuccessWithTime("Your email is verified, please login to continue","Email Verified");
+            sessionStorage.removeItem("tokenForLogin");
+          },
+          (error) => {
+              console.log(error);
+              sessionStorage.removeItem("tokenForLogin");
+          });
+        }
       }
     });
     if (this.authService.isLoggedIn) {
@@ -177,7 +191,8 @@ export class LoginComponent implements OnInit {
     this.password = localStorage.getItem('loginPassword');
     this.isRememberMe = localStorage.getItem('loginRememberMe');
   }
-  loginUser(loginDetails: any) { //Login user
+  loginMethod(loginDetails: any, tokenForEmail:any){
+    
     const loginData: any = {
       emailAddress: loginDetails.emailAddress,
       password: loginDetails.password,
@@ -210,16 +225,24 @@ export class LoginComponent implements OnInit {
             this.storeUserData();
             this.viewUserImage();
             this.dataSharingService.showUserNameInHeader.next(true);
-
+            
             if (result.data.role == StringConstants.var.ADVOCATE) {
-              if (this.isBeginClicked == false)
+              if (tokenForEmail != null){
+                sessionStorage.setItem('tokenForEmail',tokenForEmail);
+                this.router.navigate(['dashboard-advocate']);
+              }
+              else if (this.isBeginClicked == false)
                 this.router.navigate(['dashboard-advocate']);
               else
                 this.router.navigate(['create-assessment']);
             }
             else {
               this.showLoader = false;
-              if (this.isBeginClicked == false)
+              if (tokenForEmail != null){
+                sessionStorage.setItem('tokenForEmail',tokenForEmail);
+                this.router.navigate(['dashboard']);
+              }
+              else if (this.isBeginClicked == false)
                 this.router.navigate(['dashboard']);
               else
                 this.router.navigate(['patient']);
@@ -239,6 +262,11 @@ export class LoginComponent implements OnInit {
         this.toastService.showError(error.error.errors[0], '');
       });
     }
+  }
+  loginUser(loginDetails: any) { //Login user
+    
+    const tokenForEmail = this.tokenForEmail;
+    this.loginMethod(loginDetails,tokenForEmail);
   }
   viewUserImage() { // View user image
     var userId = (sessionStorage.getItem('userId')!);

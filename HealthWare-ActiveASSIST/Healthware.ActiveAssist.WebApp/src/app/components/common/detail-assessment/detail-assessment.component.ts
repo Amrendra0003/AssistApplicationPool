@@ -91,6 +91,7 @@ export class DetailAssessmentComponent implements OnInit {
   constructor(private route: ActivatedRoute, private dashboardService: DashboardService, private dataSharingService: DataSharingService,
     private router: Router, private fileUpload: FileUpload, private formbuilder: FormBuilder, private location: Location,
     private dataSharing: DataSharingService, private authService: AuthService) {
+      
     this.dataSharingService.changeTheme.subscribe(value => { // Theme setting
       if (value == "")
         this.currentTheme = sessionStorage.getItem("themeSettings");
@@ -214,10 +215,21 @@ export class DetailAssessmentComponent implements OnInit {
       this.router.navigate(['']);
   }
   ngOnInit() {
+    
     this.dataSharingService.hideVaForProfile.next(false);
     this.dataNull();
     window.scroll(0, 0);
-    this.navigateTab = this.route.snapshot.queryParams.tab;
+    if(sessionStorage.getItem("tokenForEmail") != null){
+      this.showAdvocatePanel = this.authService.checkIfUserHasPermission(StringConstants.permissionsConstants.viewComponentAssessmentSummary);
+      if(this.showAdvocatePanel == true)
+        this.navigateTab = "7";
+      else
+        this.navigateTab = "6";
+      sessionStorage.removeItem('tokenForEmail');
+    }
+    else{
+      this.navigateTab = this.route.snapshot.queryParams.tab;
+    }
     this.initForm();
     this.viewProfileImage();
     this.getTabStatus();
@@ -260,6 +272,7 @@ export class DetailAssessmentComponent implements OnInit {
     return sessionStorage.getItem(control)!;
   }
   ngAfterViewInit() {
+    
     if (this.showAdvocatePanel == true) {
       switch (this.navigateTab) {
         case "0": {

@@ -58,12 +58,12 @@ namespace HealthWare.ActiveASSIST.WebAPI.Controllers
         public async Task<ActionResult<Result<MessageDto>>> ValidateEmailConfirmationToken([FromQuery] string token)
         {
             var result = await _verificationService.ValidateEmailConfirmationToken(token);
-            if (result.Errors[0] == "Email confirmation already done. ")
-            {
-                return Ok(result);
-            }
             if (result.Errors.Count > 0)
             {
+                if (result.Errors[0] == "Email confirmation already done. ")
+                {
+                    return Ok(result);
+                }
                 return BadRequest(result);
             }
 

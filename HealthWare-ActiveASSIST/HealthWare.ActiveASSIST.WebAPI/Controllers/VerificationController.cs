@@ -55,7 +55,7 @@ namespace HealthWare.ActiveASSIST.WebAPI.Controllers
         [HttpGet(Constants.ValidateEmailConfirmationToken)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Result<MessageDto>>> ValidateEmailConfirmationToken([FromQuery] string token)
+        public async Task<ActionResult<Result<MessageDto>>> ValidateEmailConfirmationToken([FromQuery] string token, [FromQuery] string assessmentId)
         {
             var result = await _verificationService.ValidateEmailConfirmationToken(token);
             if (result.Errors.Count > 0)

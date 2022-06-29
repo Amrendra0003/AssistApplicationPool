@@ -13,6 +13,7 @@ export class EmailVerificationComponent implements OnInit {
   ngOnInit(){
     const token = this._route.snapshot.queryParams['token'];
     sessionStorage.setItem('tokenForLogin',token);
+    sessionStorage.setItem('assessmentIdFromUrl',this._route.snapshot.queryParams['assessmentid']);
     this.router.navigate(['login']);
   }
 }

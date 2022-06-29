@@ -111,8 +111,11 @@ export class DashboardDetailsComponent implements OnInit {
           this.assessmentVerificationStatus = result.data.assessmentStatus;
           sessionStorage.setItem('resultID', this.partial?.partialAssessmentId);
           if(sessionStorage.getItem("tokenForEmail") != null){
-            const index = this.result.length - 1;
-          this.dashboardInfo(this.result[index].assessmentId , this.result[index].gender, this.result[index].age , this.result[index].fullName , this.result[index].submittedBy.submittedOn , this.result[index].assessmentStatus , this.result[index].patientId , this.result[index].userId, '0');
+            
+            const assessmentId = sessionStorage.getItem("assessmentIdFromUrl");
+            const result = this.result.filter((e:any) => e.assessmentId == assessmentId);
+            const index = result.length - 1;
+            this.dashboardInfo(result[index].assessmentId , result[index].gender, result[index].age , result[index].fullName , result[index].submittedBy.submittedOn , result[index].assessmentStatus , result[index].patientId , result[index].userId, '0');
           }
         }
       }

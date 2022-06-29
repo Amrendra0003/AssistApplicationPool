@@ -226,6 +226,7 @@ export class DetailAssessmentComponent implements OnInit {
       else
         this.navigateTab = "6";
       sessionStorage.removeItem('tokenForEmail');
+      sessionStorage.removeItem('assessmentIdFromUrl');
     }
     else{
       this.navigateTab = this.route.snapshot.queryParams.tab;

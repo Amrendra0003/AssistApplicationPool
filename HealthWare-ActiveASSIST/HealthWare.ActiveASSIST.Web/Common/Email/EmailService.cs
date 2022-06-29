@@ -42,7 +42,7 @@ namespace HealthWare.ActiveASSIST.Web.Common.Email
             string finalURL;
             var fullName = basicInfo.FirstName + " " + basicInfo.MiddleName + " " + basicInfo.LastName;
             var bodyBuilder = new BodyBuilder();
-            finalURL = "http://localhost/ActiveAssistClient/email-verification/?token=";
+            finalURL = "http://localhost/ActiveAssistClient/email-verification/?assessmentid=" + assessmentId + "&token=";
             var path = Application.EmailTemplatePath;
             var pathToFile = _env.WebRootPath + path + mailType + Application.HtmlExtension;
             using (StreamReader sourceReader = File.OpenText(pathToFile))

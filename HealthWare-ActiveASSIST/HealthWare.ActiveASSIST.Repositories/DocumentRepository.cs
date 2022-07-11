@@ -19,7 +19,7 @@ namespace HealthWare.ActiveASSIST.Repositories
         IEnumerable<IncomeVerificationDocument> GetIncomeVerificationDocumentDetailsByAssessmentId(long assessmentId);
         Task<bool> IsIncomeDocumentUploaded(long memberId);
         Task<bool> DeleteDocument(long id);
-        Task<Document> GetDocumentByAssessmentIdTypeId(long documentId, long documentTypeId);
+        Task<Document> GetDocumentByAssessmentIdTypeId(long documentId, long documentTypeId, long programDocumentId);
         Task<long> UpdateDocument(Document document);
         Task<bool> IsProgramDocumentEsigned(long assessmentId, long id, bool isEvaluated);
         Task<long> GetProgramDocumentEsigned(long assessmentId, long id, bool isEvaluated);
@@ -110,9 +110,12 @@ namespace HealthWare.ActiveASSIST.Repositories
             return await _unitOfWork.CommitAsync();
         }
 
-        public async Task<Document> GetDocumentByAssessmentIdTypeId(long assessmentId, long documentTypeId)
+        public async Task<Document> GetDocumentByAssessmentIdTypeId(long assessmentId, long documentTypeId, long programDocumentId)
         {
-            return await _unitOfWork.GetEntityAsync<Document>(x => x.Assessment.Id == assessmentId && x.DocumentTypeMaster.Id == documentTypeId);
+            if (programDocumentId == 0)
+                return await _unitOfWork.GetEntityAsync<Document>(x => x.Assessment.Id == assessmentId && x.DocumentTypeMaster.Id == documentTypeId);
+            else
+                return await _unitOfWork.GetEntityAsync<Document>(x => x.Assessment.Id == assessmentId && x.DocumentTypeMaster.Id == documentTypeId && x.ProgramDocumentId == programDocumentId);
         }
 
         public async Task<long> UpdateDocument(Document document)

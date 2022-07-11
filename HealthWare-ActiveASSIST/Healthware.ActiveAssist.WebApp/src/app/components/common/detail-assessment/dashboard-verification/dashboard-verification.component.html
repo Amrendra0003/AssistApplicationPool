@@ -274,7 +274,7 @@
                                     </span>
                                 </p>
                             </form>
-                            <div class="d-flex bottom">
+                            <div class="d-flex" style="bottom: 215px; position: absolute;">
                                 <button type="button"
                                     class="btn btn-primary login-text-field me-2 shadow-none round-icon enabledDiv"
                                     tooltip="Back" (click)="emailVerification()">
@@ -471,7 +471,7 @@
                                         style="text-decoration: underline;">{{this.addressVerificationFilename}}</span>
                                 </div>
                             </form>
-                            <div class="d-flex bottom ">
+                            <div class="d-flex" style="bottom: 283px; position: absolute;">
                                 <button type="button"
                                     class="btn btn-primary login-text-field me-2 shadow-none round-icon enabledDiv"
                                     tooltip="Back" (click)="idVerification()">
@@ -661,7 +661,7 @@
                                 <label *ngIf="this.notSubmit == true" class="textfield-label p-1 mt-3"
                                     style="font-weight: bold; color: #E66767">{{CompleteIncomeNerification}}</label>
                             </form>
-                            <div class="d-flex bottom ">
+                            <div class="d-flex" [ngStyle]="{'bottom.px':getBottomSize(),'position':'absolute'}">
                                 <button type="button"
                                     class="btn btn-primary login-text-field me-2 shadow-none round-icon enabledDiv"
                                     tooltip="Back" (click)="addressVerification()">

@@ -88,6 +88,7 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
   benefitsLabel: any = StringConstants.applicationForms.benefitsTitle;
   formsTitleLabel: any = StringConstants.common.formsTitle;
   esignLabel: any = StringConstants.applicationForms.eSign;
+  esignLabelCompleted: any = StringConstants.applicationForms.eSignComplete;
   shareLabel: any = StringConstants.applicationForms.share;
   downloadLabel: any = StringConstants.applicationForms.download;
   uploadFormsLabel: any = StringConstants.applicationForms.uploadForms;
@@ -203,7 +204,9 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
     this.CurrentProgramDocumentId = programDocumentId;
     var data: string;
     var currentDocumentId;
+    var DocumentId = parseInt(documentId);
     const fileDetails: FileDetails = {
+      DocumentId:DocumentId,
       AssessmentId: +(this.assessmentId),
       UserId: +(sessionStorage.getItem("patientId")!),
       HouseHoldMemberId: 0,
@@ -215,24 +218,26 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
       DocumentName: documentName
     };
     this.showLoader = true;
-    var result = await this.http.post<any>(environment.apiBaseUrl + ApiConstants.url.GetAssessmentProgramDocument, fileDetails).toPromise();
-    if (result) {
-      this.formattedDocumentId = result.data;
-      this.previousFile = result.nextAction;
-      if (documentId == "0") {
-        data = this.fileUpload.GetProgramDocumentDownloadURL(programDocumentId);
-        currentDocumentId = programDocumentId;
-      }
-      else {
-        data = this.fileUpload.getDocumentDownloadURL(documentId);
-        currentDocumentId = documentId;
-      }
-      this.router.navigate(['esign-document'], { queryParams: { documentId: this.formattedDocumentId, documentName: documentName, programId: programId } });
+    
+    //var result = await this.http.post<any>(environment.apiBaseUrl + ApiConstants.url.GetAssessmentProgramDocument, fileDetails).toPromise();
+    //if (result) {
+    //  this.formattedDocumentId = result.data;
+     // this.previousFile = result.nextAction;
+     // if (documentId == "0") {
+     //   data = this.fileUpload.GetProgramDocumentDownloadURL(programDocumentId);
+     //   currentDocumentId = programDocumentId;
+     // }
+     // else {
+      //  data = this.fileUpload.getDocumentDownloadURL(documentId);
+      //  currentDocumentId = documentId;
+      //}
+      this.router.navigate(['esign-document'], { queryParams: { documentId: documentId, documentName: documentName, programId: programId } });
       this.showLoader = false;
-    }
+    //}
   }
   async getProgramDocument(assessmentId: string, programId: string, programDocumentId: string, documentName: string) {// Get programs document
     const fileDetails: FileDetails = {
+      DocumentId: 0,
       AssessmentId: +(assessmentId),
       UserId: +(sessionStorage.getItem("patientId")!),
       HouseHoldMemberId: 0,
@@ -457,7 +462,7 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
             this.programstatusMap.set(data.programId, data.isActive)
           }
           this.toShowActivePrograms = true;
-          this.saveAllProgramIds(this.activeReviewProgramDetails);
+          this.saveAllProgramIds(this.activeReviewProgramDetails); 
           if (this.fromVerification == true) {
             this.ProgramsOnChange(this.activeReviewProgramDetails[this.activeReviewProgramDetails.length - 1].programId);
             this.dataSharingService.MoveToForms.next(false);
@@ -483,8 +488,10 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
     var IsEvaluated = (/true/i).test(this.disableFlag[programId]);
     this.fileUpload.GetProgramDocumentDetails(programId, this.assessmentId, IsEvaluated)
       .subscribe(async (result: any) => {
+        
         this.programDocumentDetails = result.data;
         for (let data of this.programDocumentDetails) {
+          
           this.EsignStatus[data.programDocumentId] = data.isProgramDocumentEsigned;
         }
         console.log(this.EsignStatus);
@@ -557,6 +564,7 @@ export interface ProgramsUpdateDto {
   isEvaluated: boolean;
 }
 export interface FileDetails {
+  DocumentId: any
   AssessmentId: any
   UserId: any
   HouseHoldMemberId: any

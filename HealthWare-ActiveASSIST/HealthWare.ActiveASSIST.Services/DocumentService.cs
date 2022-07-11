@@ -41,6 +41,7 @@ namespace HealthWare.ActiveASSIST.Services
         Task<Result<string>> UpdateVerificationDocument(long assessmentId, string documentTypeName, string category);
         Task<Result<long>> LoadProgramDocument(FileDetails fileDetailsDto);
         Task<Result<bool>> UpdateFilePath(long docId, string filePath);
+        Task<Result<bool>> UpdateFileAgreementId(long docId, string fileAgreementId);
         byte[] FetchDocumentFromUrlAsync(string documentPath, string name);
         Task<byte[]> UploadSignature(IFormFile originalFile, IFormFile signatureCanvas, StringValues signatureText, StringValues docId);
         Task<Result<MessageDto>> CompleteUploadedDocument(long documentId);
@@ -140,6 +141,7 @@ namespace HealthWare.ActiveASSIST.Services
             try
             {
                 var detail = await _programDocumentRepository.GetProgramDocumentDetails(programDocumentId);
+                //string contentRootPath = await _httpClientService.ContentRootPathForProgramFiles(detail.FormLocation);
                 if (detail == null) return new Result<ProgramDocumentDetail>().AddError(Constants.NoDocumentFound);
                 return new Result<ProgramDocumentDetail>()
                 {
@@ -285,7 +287,7 @@ namespace HealthWare.ActiveASSIST.Services
                 };
                 if (documentTypeId != null)
                 {
-                    document = await _documentRepository.GetDocumentByAssessmentIdTypeId(assessmentId, (long)documentTypeId);
+                    document = await _documentRepository.GetDocumentByAssessmentIdTypeId(assessmentId, (long)documentTypeId, 0);
                     if (document == null) return new Result<VerificationDocument>();
                 }
                 else
@@ -336,7 +338,7 @@ namespace HealthWare.ActiveASSIST.Services
                         var documentTypeId =
                             await _documentTypeMasterRepository.GetDocumentTypeMaster(fileDetailsDto.DocumentType);
                         var documentNew = _fileUploadMapper.MapFrom(documentTypeId, fileDetailsDto);
-                        var document = await _documentRepository.GetDocumentByAssessmentIdTypeId(fileDetailsDto.AssessmentId, documentTypeId);
+                        var document = await _documentRepository.GetDocumentByAssessmentIdTypeId(fileDetailsDto.AssessmentId, documentTypeId, (long)fileDetailsDto.ProgramDocumentId);
                         long documentId = Constants.ZeroAsNumber;
                         if (document.IsNull())
                         {
@@ -551,7 +553,7 @@ namespace HealthWare.ActiveASSIST.Services
             try
             {
                 var details = await _programDocumentRepository.GetProgramDocumentDetailsByProgramId(programId);
-                var programDocumentDetails = _fileUploadMapper.MapProgramDocumentFrom(details, null, assessmentId, isEvaluated);
+                var programDocumentDetails = await _fileUploadMapper.MapProgramDocumentFrom(details, null, assessmentId, isEvaluated);
                 return new Result<List<ProgramFiles>> { Data = programDocumentDetails };
             }
             catch (Exception ex)
@@ -582,8 +584,9 @@ namespace HealthWare.ActiveASSIST.Services
             var programDocumentId = (long)fileDetailsDto.ProgramDocumentId;
             var programDocumentPath = GetProgramDocumentPath(programDocumentId).Result.Data.DocumentPath;
             var filePath = _documentLocationMapper.GetFileLocation(fileDetailsDto);
+            var path = await GetDocumentPath(fileDetailsDto.DocumentId);
             var isProgramDocumentCreated =
-                CreateProgramDocument(programDocumentPath, filePath.FilePath, fileDetailsDto.DocumentName, formDataElements);
+                CreateProgramDocument(path, filePath.FilePath, fileDetailsDto.DocumentName, formDataElements);
             long documentId = 0;
             if (!isProgramDocumentCreated) return new Result<long> { Data = documentId };
 
@@ -619,6 +622,13 @@ namespace HealthWare.ActiveASSIST.Services
             document.Path = filePath;
             var updatedDoc = await _documentRepository.UpdateDocument(document);
             return new Result<bool> { Data = updatedDoc>0};
+        }
+        public async Task<Result<bool>> UpdateFileAgreementId(long docId, string fileAgreementId)
+        {
+            var document = await _documentRepository.GetDocumentById(docId);
+            document.AgreementId = fileAgreementId;
+            var updatedDoc = await _documentRepository.UpdateDocument(document);
+            return new Result<bool> { Data = updatedDoc > 0 };
         }
 
         public byte[] FetchDocumentFromUrlAsync(string documentPath, string name)
@@ -733,7 +743,7 @@ namespace HealthWare.ActiveASSIST.Services
         public async Task<Result<VerificationDocument>> GetDocumentByAssessmentIdTypeName(long assessmentId, string documentTypeName)
         {
             var documentTypeId = await _documentTypeMasterRepository.GetDocumentTypeMaster(documentTypeName);
-            return new Result<VerificationDocument>() { Data = await _documentRepository.GetDocumentByAssessmentIdTypeId(assessmentId, documentTypeId) };
+            return new Result<VerificationDocument>() { Data = await _documentRepository.GetDocumentByAssessmentIdTypeId(assessmentId, documentTypeId, 0) };
 
         }
 

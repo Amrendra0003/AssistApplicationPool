@@ -2136,7 +2136,7 @@ namespace HealthWare.ActiveASSIST.Services
 
             }
             //Delete Document and Document program mapping records.
-            var document = await _documentRepository.GetDocumentByAssessmentIdTypeId(basePatientAssessment.AssessmentId, 12);
+            var document = await _documentRepository.GetDocumentByAssessmentIdTypeId(basePatientAssessment.AssessmentId, 12, 0);
             if (document.IsNotNull())
             {
                 //Delete DocumentProgramMapping

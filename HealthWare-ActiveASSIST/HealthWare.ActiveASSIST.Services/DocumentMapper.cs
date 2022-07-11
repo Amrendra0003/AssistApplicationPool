@@ -5,19 +5,24 @@ using HealthWare.ActiveASSIST.DTOs;
 using HealthWare.ActiveASSIST.Entities;
 using HealthWare.ActiveASSIST.Repositories;
 using Healthware.Core.Extensions;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using System.Text;
+using System.IO;
 
 namespace HealthWare.ActiveASSIST.Services
 {
     public interface IFileUploadMapper
     {
         IncomeDocument MapIncomeDocumentFrom(IEnumerable<IncomeVerificationDocument> incomeDocumentDetails);
-        List<ProgramFiles> MapProgramDocumentFrom(IEnumerable<ProgramDocument> programDetailsResult, IEnumerable<ProgramDocumentMappingDetail> programDocumentMappingDetail, long assessmentId, bool isEvaluated);
+        Task<List<ProgramFiles>> MapProgramDocumentFrom(IEnumerable<ProgramDocument> programDetailsResult, IEnumerable<ProgramDocumentMappingDetail> programDocumentMappingDetail, long assessmentId, bool isEvaluated);
         Document MapFrom(long documentMappingId, FileDetails fileDetailsDto);
         HouseholdMemberDocument MapFrom(long? houseHoldMemberId, long documentId);
         DocumentProgramMapping MapDocumentProgramMappingFrom(long documentId, long programDocumentId);
     }
     public class DocumentMapper : IFileUploadMapper
     {
+        private static string TokenKey = "Bearer 3AAABLblqZhBM3SBjRfXEymJcB8NBtKCrg7BI_wgo2YG6bdKnyhDgbWZ-QUjidhCV8xRCmDO2tTVaaZS7HXcACpHopv0am74_";
         private readonly IFileUploadServiceHelper _fileHelper;
         private readonly IDocumentRepository _documentRepository;
         public DocumentMapper(IFileUploadServiceHelper fileHelper, IDocumentRepository documentRepository)
@@ -81,16 +86,40 @@ namespace HealthWare.ActiveASSIST.Services
             };
         }
 
-        public List<ProgramFiles> MapProgramDocumentFrom(IEnumerable<ProgramDocument> programDetailsResult, IEnumerable<ProgramDocumentMappingDetail> programDocumentMappingDetail, long assessmentId, bool isEvaluated)
+        public async Task<List<ProgramFiles>> MapProgramDocumentFrom(IEnumerable<ProgramDocument> programDetailsResult, IEnumerable<ProgramDocumentMappingDetail> programDocumentMappingDetail, long assessmentId, bool isEvaluated)
         {
             var programFileDetail = new List<ProgramFiles>();
             var programDocumentIds = new List<long>();
-
-
             foreach (var detail in programDetailsResult)
             {
                 var isProgramEsgined = _documentRepository.IsProgramDocumentEsigned(assessmentId, detail.Id, isEvaluated).GetAwaiter().GetResult();
                 var document = _documentRepository.GetProgramDocumentEsigned(assessmentId, detail.Id, isEvaluated).GetAwaiter().GetResult();
+                var isSigned = false;
+                if (document != 0)
+                {
+                    var doc = await _documentRepository.GetDocumentById(document);
+                    if (doc.isDocumentSigned == null)
+                    {
+                        doc.isDocumentSigned = false;
+                    }
+                    if(doc.isDocumentSigned == true)
+                    {
+                        isSigned = true;
+                    }
+                    else
+                    {
+                        if (doc.AgreementId != null)
+                        {
+                            int success = GetAgreementData(doc.AgreementId, doc.Path);
+                            if (success == 1)
+                            {
+                                doc.isDocumentSigned = true;
+                                isSigned = true;
+                                await _documentRepository.UpdateDocument(doc);
+                            }
+                        }
+                    }
+                }
                 programFileDetail.Add(new ProgramFiles
                 {
                     ProgramDocumentId = detail.Id,
@@ -99,9 +128,8 @@ namespace HealthWare.ActiveASSIST.Services
                     ProgramId = detail.Program.Id,
                     DocumentId = programDocumentMappingDetail.IsNull() ? document.ToString() : GetDocumentId(programDocumentMappingDetail, detail.Id).ToString(),
                     IsProgramDocumentEsigned = isProgramEsgined,
-                    EsignFlag = detail.ESignFlag
+                    EsignFlag = isSigned
                 });
-
                 programDocumentIds.Add(detail.Id);
             }
 
@@ -109,6 +137,136 @@ namespace HealthWare.ActiveASSIST.Services
             //If its true then leave as it is. user may uploaded or not uploaded. Assign IsProgramDocumentEsigned value from db.
             if (!isEvaluated) programFileDetail.ForEach(x=>x.IsProgramDocumentEsigned = false);
             return programFileDetail;
+        }
+        private static int GetAgreementData(string AgreementId, string path)
+        {
+
+            string GetAgreementById = "https://api.in1.adobesign.com/api/rest/v6/agreements/" + AgreementId;
+            try
+            {
+                var webRequest = System.Net.WebRequest.Create(GetAgreementById);
+                if (webRequest != null)
+                {
+                    webRequest.Method = "GET";
+                    webRequest.Timeout = 12000;
+                    webRequest.ContentType = "application/json";
+                    webRequest.Headers.Add("Authorization", TokenKey);
+
+                    using (System.IO.Stream s = webRequest.GetResponse().GetResponseStream())
+                    {
+                        using (System.IO.StreamReader sr = new System.IO.StreamReader(s))
+                        {
+                            var jsonResponse = sr.ReadToEnd();
+                            Console.WriteLine(String.Format("Response: {0}", jsonResponse));
+                            string getData = jsonResponse;
+                            dynamic data = JObject.Parse(getData);
+                            return UpdateFileData(data,path);
+                        }
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return 0;
+            }
+        }
+        private static int UpdateFileData(dynamic FileStatus, string path)
+        {
+            try
+            {
+                if (FileStatus.status.ToString() == "SIGNED")
+                {
+                    return DownloadFiles(FileStatus.id.ToString(),path);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+        public static int DownloadFiles(string AgreementId, string path)
+        {
+            string DownloadWEBSERVICE_URL = "https://api.in1.adobesign.com:443/api/rest/v6/agreements/" + AgreementId + "/documents";
+            try
+            {
+                var webRequest = System.Net.WebRequest.Create(DownloadWEBSERVICE_URL);
+                if (webRequest != null)
+                {
+                    webRequest.Method = "GET";
+                    webRequest.Timeout = 12000;
+                    webRequest.ContentType = "application/json";
+
+                    webRequest.Headers.Add("Authorization", TokenKey);
+                    using (System.IO.Stream s = webRequest.GetResponse().GetResponseStream())
+                    {
+                        using (System.IO.StreamReader sr = new System.IO.StreamReader(s))
+                        {
+
+                            var jsonResponse = sr.ReadToEnd();
+                            string getData = jsonResponse;
+                            dynamic data = JObject.Parse(getData);
+                            var id = data.documents[0].id;
+                            string DownloadWEBSERVICE_URL1 = "https://api.in1.adobesign.com:443/api/rest/v6/agreements/" + AgreementId + "/documents/" + id;
+                            try
+                            {
+                                var webRequest1 = System.Net.WebRequest.Create(DownloadWEBSERVICE_URL1);
+                                if (webRequest1 != null)
+                                {
+                                    webRequest1.Method = "GET";
+                                    webRequest1.Timeout = 12000;
+                                    webRequest1.ContentType = "application/json";
+
+                                    webRequest1.Headers.Add("Authorization", TokenKey);
+                                    File.Delete(path);
+                                    using (System.IO.Stream s1 = webRequest1.GetResponse().GetResponseStream())
+                                    {
+                                        using (System.IO.StreamReader sr1 = new System.IO.StreamReader(s1))
+                                        {
+
+                                            var jsonResponse1 = sr1.ReadToEnd();
+                                            byte[] byteArray = Encoding.UTF8.GetBytes(jsonResponse1);
+                                            MemoryStream ms = new MemoryStream(byteArray);
+                                            FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write);
+                                            ms.WriteTo(file);
+                                            file.Close();
+                                            ms.Close();
+                                            return 1;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    return 0;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.ToString());
+                                return 0;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return 0;
+            }
         }
 
         public Document MapFrom(long documentMappingId, FileDetails fileDetailsDto)
@@ -120,7 +278,9 @@ namespace HealthWare.ActiveASSIST.Services
                 Assessment = new Assessment { Id = fileDetailsDto.AssessmentId },
                 DocumentTypeMaster = new DocumentTypeMaster { Id = documentMappingId },
                 CreatedDate = DateTime.UtcNow,
-            };
+                ProgramDocumentId = (long)fileDetailsDto.ProgramDocumentId 
+        };
+                
             return document;
         }
 

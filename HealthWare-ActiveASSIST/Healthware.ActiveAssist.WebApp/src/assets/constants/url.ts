@@ -74,10 +74,12 @@ export class ApiConstants {
         GetProgramDocumentDownloadUrl: "api/FileUpload/PreviewProgramDocument?PgrmdocId=",
         GetProgramDocumentDetails: "api/FileUpload/GetProgramDocumentDetails",
         PreviewDocument: "api/FileUpload/PreviewDocument?DocId=",
+        PreviewDocumentPath: "api/FileUpload/PreviewDocumentPath?DocId=",
         GetDocumentByAssessmentIdTypeName: "api/FileUpload/GetDocumentByAssessmentIdTypeName",
         UpdateVerificationDocument: "api/FileUpload/UpdateVerificationDocument",
         GetAssessmentProgramDocument : "api/FileUpload/GetAssessmentProgramDocument",
         UpdateDocumentPathByID : "api/FileUpload/UpdateFilePath",
+        UpdateDocumentAgreementIdById: "api/FileUpload/UpdateFileAgreementId",
 
         /*Verification*/
         EmailVerification: "api/Verification/SendEmailVerification",

@@ -12,6 +12,9 @@ namespace HealthWare.ActiveASSIST.Entities
         public string Name { get; set; }
         public string Path { get; set; }
         public string Checksum { get; set; }
+        public long? ProgramDocumentId { get; set; }
+        public bool? isDocumentSigned { get; set; }
+        public string? AgreementId { get; set; }
 
         public static implicit operator DTOs.VerificationDocument(Document document)
         {

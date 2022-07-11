@@ -5,6 +5,9 @@ import { ViewSDKClient } from 'src/app/services/view-sdk.service';
 import { ToastServiceService } from 'src/app/services/toast-service.service';
 import { StringConstants } from 'src/assets/constants/string.constants';
 import { DataSharingService } from 'src/app/services/datasharing.service';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { EsignserviceService } from 'src/app/_services/esignservice.service';
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   selector: 'app-esign-document',
@@ -12,12 +15,20 @@ import { DataSharingService } from 'src/app/services/datasharing.service';
   styleUrls: ['./esign-document.component.css']
 })
 export class EsignDocumentComponent implements OnInit {
-  showLoader: boolean = false;
+  response:any;
+	transientres:any;
+	apiAccessPoint:any;
+	filename='';
+  file:any;
+	transientDocumentId='';
+	Agreements:any;
+	AgreementId='';
+	Document:any;
+  isOpen=0
   documentId: number = 0;
   programId: string = '';
   documentName?: string;
   currentTheme: any;
-  currentblob:any;
   assessmentId: any;
   @ViewChild('closeSignModal') 
   closeModal: ElementRef | any;
@@ -37,7 +48,10 @@ export class EsignDocumentComponent implements OnInit {
   public canvasapp: any;
   public canvas!: ElementRef;
   log = (value: any) => console.log(value.value);
-  constructor(private viewSDKClient: ViewSDKClient, private fileUpload: FileUpload, private route: ActivatedRoute, private toastService: ToastServiceService, private dataSharingService: DataSharingService, private router: Router) { 
+  constructor(private sanitizer: DomSanitizer, private viewSDKClient: ViewSDKClient, private fileUpload: FileUpload, private route: ActivatedRoute, private toastService: ToastServiceService, private dataSharingService: DataSharingService, private _route:ActivatedRoute,
+    private esignserviceObj : EsignserviceService,
+    private _http:HttpClient,
+    private router:Router) { 
     this.dataSharingService.changeTheme.subscribe(value => {
       if (value == "")
         this.currentTheme = sessionStorage.getItem("themeSettings");
@@ -46,7 +60,6 @@ export class EsignDocumentComponent implements OnInit {
     });
     this.fileUpload.uploadedDocumentId$.subscribe(response => {
           //this.toastService.showWarning(StringConstants.toast.submitEform, StringConstants.toast.empty);
-          this.showLoader = false;
           this.toastService.showSuccess(StringConstants.toast.formUpload, StringConstants.toast.empty);
           window.location.reload();
           //this.router.navigate(['esign-document'], { queryParams: { documentId: this.documentId, documentName: this.documentName, programId: this.programId }});
@@ -55,7 +68,7 @@ export class EsignDocumentComponent implements OnInit {
     this.dataSharingService.esignFileUpload.subscribe(async e =>{
       if(e !== null && e[0].size > 0 && this.programId !== ""){
         var saveResponse = await this.fileUpload.UploadProgramDocument(this.assessmentId, e[1], this.programId, e[0], true);
-        this.showLoader = true;
+        
         this.dataSharingService.esignFileUpload.next([(new File([],"")),""]);
       }
       else{
@@ -65,6 +78,7 @@ export class EsignDocumentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.GetBaseUri();
     this.route.queryParams.subscribe(params => {
       this.documentId = params['documentId'];
       this.documentName = params['documentName'];
@@ -73,10 +87,27 @@ export class EsignDocumentComponent implements OnInit {
   });
     this.viewSDKClient.ready().then(() => {
       if(this.documentId){
-          var url = this.fileUpload.getDocumentDownloadURL(this.documentId.toString());
-          this.currentblob = url;
-          if(url && this.programId)
-          this.viewSDKClient.previewFile('pdf-div', url, this.documentName ?? "Pdfdocument", this.programId);
+        
+          this.fileUpload.getFileDownloadURL(this.documentId.toString()).subscribe(async (filePath: any) => {
+            
+            if (filePath.data!=null) {
+        
+        var sampleArr = this.base64ToArrayBuffer(filePath.data);
+        var blob = new Blob([sampleArr], {type: "application/pdf"});
+        var file = new File([blob], "myfile.pdf", {type:"application/pdf", lastModified:new Date().getTime()});
+         const formData = new FormData();
+         formData.append("File-Name","myfile");
+         formData.append("File", file);
+         setTimeout(()=>{
+           this.getTransitdocument(formData)
+            },5000)
+
+         console.log(file);
+          }
+          }, (error) => {
+            console.log(error)
+          }); 
+
       }
       else{
         this.toastService.showWarning(StringConstants.toast.notFoundDocument, StringConstants.toast.empty);
@@ -84,139 +115,107 @@ export class EsignDocumentComponent implements OnInit {
       
     });
   }
+  base64ToArrayBuffer(base64:any) {
+    var binaryString = window.atob(base64);
+    var binaryLen = binaryString.length;
+    var bytes = new Uint8Array(binaryLen);
+    for (var i = 0; i < binaryLen; i++) {
+       var ascii = binaryString.charCodeAt(i);
+       bytes[i] = ascii;
+    }
+    return bytes;
+ }
   async cancelDocument() {
     this.router.navigate(['detail-assessment'], { queryParams: { tab: 5 } });
-
   }
   async closeDocument() {
     this.router.navigate(['detail-assessment'], { queryParams: { tab: 5 } });
 
   }
-  async closeSign(){
-    this.closeModal.nativeElement.click()
-  }
   async finishDocument(){
-    // var saveResponse = await this.fileUpload.CompleteUploadedDocument(this.documentId.toString());
-    // if(saveResponse)
-      this.router.navigate(['detail-assessment'], { queryParams: { tab: 5 } });
     
+    this.router.navigate(['detail-assessment'], { queryParams: { tab: 5 } });
   }
-  async clearCanvas(){
-    this.canvas = this.canvasapp.canvas;
-    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
-    var context = canvasEl.getContext('2d');
-    context?.clearRect(0, 0, canvasEl.width, canvasEl.height);
+  getTransitdocument(formData:any){
+    this.esignserviceObj.transientDocuments(this.apiAccessPoint,formData).subscribe((response:any) => {
+      this.transientres=response;
+      this.transientDocumentId=this.transientres.transientDocumentId;
+        }
+        )
+        setTimeout(()=>{
+          this.getAgreeMentIdBytransientId()
+           },6000)
   }
-  async AddSign(event:any, inputType:any){
-    var imageBlob: BlobPart='';
-    var signaturetext: string = '';
-    if(inputType=='text')
+  getAgreeMentIdBytransientId(){
+    const Body={
+      "fileInfos": [
+        {
+        "transientDocumentId": this.transientDocumentId
+        }
+         ],
+         "name": "demo.pdf",
+        "participantSetsInfo": [
+        {
+        "memberInfos": [
+          {
+          "email": "softwaretestuser1234@gmail.com"
+          }
+          ],
+          "order": 1,
+          "role": "SIGNER"
+        }
+        ],
+        "signatureType": "ESIGN",
+        "state": "IN_PROCESS",
+        "securityOptions": {  
+          "openPassword": "12test34",
+          "protectOpen": true
+      }
+          }
+
+    this.esignserviceObj.getAgreeMentIdBytransientId(this.apiAccessPoint,Body).subscribe(res => {
+      this.Agreements=res;
+      this.AgreementId=this.Agreements.id;
+      console.log(this.AgreementId);
+
+      });
+      setTimeout(()=>{
+      this.getDocumanetforSign()
+    },6000)
+
+  }
+  displayIframe:any = false;
+  documentfinalUrl:any;
+  getDocumanetforSign()
     {
-      signaturetext= this.sign;
+        
+        this.esignserviceObj.getDocumanetforSign(this.apiAccessPoint,this.AgreementId).toPromise().then(res=>this.Document=res).then(data=>
+          {
+           var DocumentData = this.Document.signingUrlSetInfos
+           let documentfinalUrl = DocumentData[0].signingUrls[0].esignUrl
+           this.isOpen=1
+           
+           this.documentfinalUrl = this.sanitizer.bypassSecurityTrustResourceUrl(documentfinalUrl);
+           //window.open(documentfinalUrl);
+           this.displayIframe = true;
+           this.fileUpload.UpdateDocumentAgreementIdById(this.documentId, this.AgreementId).subscribe(async event => {
+          },
+            (err) => {
+              console.log(StringConstants.toast.uploadError, err);
+            }, () => {
+            }
+          )
+           
+          return data;
+         })
     }
-    else{
-      this.canvas = this.canvasapp.canvas;
-      const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
-      var context = canvasEl.getContext('2d');
-      var image = canvasEl.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
-      imageBlob = this.blobCreationFromURL(image);
-      window.location.href=image;
-    }
-    var docu = await this.fileUpload.uploadSignature(new File([],""), new File([imageBlob], "Signature.png"), this.documentId.toString(), signaturetext)
-    this.closeModal.nativeElement.click();
-
-  }
-  blobCreationFromURL(inputURI: any) {
-  
-    var binaryVal;
-
-    // mime extension extraction
-    var inputMIME = inputURI.split(',')[0].split(':')[1].split(';')[0];
-
-    // Extract remaining part of URL and convert it to binary value
-    if (inputURI.split(',')[0].indexOf('base64') >= 0)
-        binaryVal = atob(inputURI.split(',')[1]);
-
-    // Decoding of base64 encoded string
-    else
-        binaryVal = unescape(inputURI.split(',')[1]);
-
-    // Computation of new string in which hexadecimal
-    // escape sequences are replaced by the character 
-    // it represents
-
-    // Store the bytes of the string to a typed array
-    //var blobArray = [];
-
-     // write the bytes of the string to an ArrayBuffer
-  var ab = new ArrayBuffer(binaryVal.length);
-
-  // create a view into the buffer
-  var ia = new Uint8Array(ab);
-    for (var index = 0; index < binaryVal.length; index++) {
-        //blobArray.push(binaryVal.charCodeAt(index));
-        ia[index] = binaryVal.charCodeAt(index);
-    }
-
-    return new Blob([ab], {
-        type: inputMIME
-    });
-}
-  // async loadDocumentOpen(documentName: string, programDocumentId: string, documentId: string, programId: string) {
-
-  //   this.CurrentProgramDocumentId = programDocumentId;
-  //   var data: string;
-  //   var currentDocumentId;
-
-  //   const fileDetails: FileDetails = {
-  //     AssessmentId: +(this.assessmentId),
-  //     UserId: +(sessionStorage.getItem("patientId")!),
-  //     HouseHoldMemberId: 0,
-  //     ProgramId: programId,
-  //     DocumentTitle: "programdocument",
-  //     DocumentCategory: "Eforms",
-  //     DocumentType: "Eforms",
-  //     ProgramDocumentId: +(programDocumentId),
-  //     DocumentName: documentName
-  //   };
-  //   this.showLoader = true;
-
-  //   //this.getProgramDocument(this.assessmentId, programId, programDocumentId, documentName);
-  //   var result = await this.http.post<any>(environment.apiBaseUrl + ApiConstants.url.GetAssessmentProgramDocument, fileDetails).toPromise();
-  //   if (result) {
-  //     this.formattedDocumentId = result.data;
-  //     this.previousFile = result.nextAction;
-
-  //     if (documentId == "0") {
-  //       data = this.fileUpload.GetProgramDocumentDownloadURL(programDocumentId);
-  //       currentDocumentId = programDocumentId;
-  //       //Get call to fetch the document using ProgramDocumentId
-  //       if (this.documentInstance)
-  //         this.documentInstance.loadDocument('/assets/ProgramDocuments/' + documentName.replace(/\s+/g, '_') + '.pdf');
-  //     }
-  //     else {
-  //       data = this.fileUpload.getDocumentDownloadURL(documentId);
-  //       currentDocumentId = documentId;
-  //       //Get call to fetch the document using documentId
-  //       // if (this.documentInstance)
-  //       //   this.documentInstance.loadDocument(data, { filename: documentName });
-  //     }
-
-  //     this.viewSDKClient.ready().then(() => {
-  //       var url = this.fileUpload.getDocumentDownloadURL(this.formattedDocumentId);
-  //       this.viewSDKClient.previewFile('pdf-div', url, documentName, programId);
-  //       this.showLoader = false;
-  //     });
-
-  //     if (this.annonationInstance && documentId != "0") {
-  //       //this.annonationInstance.enableReadOnlyMode();
-  //       this.annonationInstance.disableFreeTextEditing();
-  //       this.annonationInstance.flatten = true;
-  //       //this.annonationInstance.getFieldManager
-  //     }
-
-  //     this.documentName = documentName;
-  //     this.router.navigate(['esign-document']);
-  //   }
-  // }
+    GetBaseUri(){
+      this.esignserviceObj.getBaseUri().toPromise().then(
+        res=>this.response=res
+       ).then(data=>{
+         this.apiAccessPoint = this.response.apiAccessPoint;
+        console.log(this.apiAccessPoint);
+        return data;
+       })
+      }
 }

@@ -81,7 +81,9 @@ export class FileUpload {
       ProgramDocumentId: ProgramDocumentId,
       Esigned: eSign,
     };
+    
     this.uploadDocument(fileDetails, file, this.Token).subscribe(async (result: any) => {
+      
       if (result.body.wasSuccessful) {
         this.uploadedDocumentId$.next(new ProgramDocumentDetails(ProgramDocumentId, result.body.data));
       }
@@ -134,6 +136,7 @@ export class FileUpload {
       reportProgress: true,
     };
     var url = environment.apiBaseUrl + ApiConstants.url.UploadFile;
+    
     const req = new HttpRequest('POST', url, formData, options);
     return this.http.request(req);
   }
@@ -229,11 +232,19 @@ export class FileUpload {
     const req = new HttpRequest('POST', url, {});
     return this.http.request(req);
   }
+  UpdateDocumentAgreementIdById(DocumentId: number, AgreementId: string): Observable<HttpEvent<any>> { //UPdate document path
+    var url = environment.apiBaseUrl + ApiConstants.url.UpdateDocumentAgreementIdById + "?docId=" + DocumentId + "&AgreementId=" + AgreementId;
+    const req = new HttpRequest('POST', url, {});
+    return this.http.request(req);
+  }
   httpgetRequestimage(url: string) { // Request image
     return this.http.get(url, { responseType: 'text' });
   }
   getDocumentDownloadURL(documentId: string) { // Document download url
     return environment.apiBaseUrl + ApiConstants.url.PreviewDocument + documentId;
+  }
+  getFileDownloadURL(documentId: string) { // Document download url
+    return this.http.get(environment.apiBaseUrl + ApiConstants.url.PreviewDocumentPath + documentId);
   }
   getProgramDocumentURL(programDocumentId: string) { //Program document download
     return environment.apiBaseUrl + ApiConstants.url.GetProgramDocumentDownloadUrl + programDocumentId;

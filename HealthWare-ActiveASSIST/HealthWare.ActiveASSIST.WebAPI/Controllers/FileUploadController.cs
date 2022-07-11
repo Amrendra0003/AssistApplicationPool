@@ -190,6 +190,16 @@ namespace HealthWare.ActiveASSIST.WebAPI.Controllers
             var contentType = _documentService.GetContentType(Path.GetExtension(documentPath).Replace(".", string.Empty));
             return File(fileContents, contentType);
         }
+        [HttpGet(Constants.PreviewDocumentPath)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> PreviewDocumentPath(long DocId)
+        {
+            var filePath = await _documentService.GetDocumentPath(DocId);
+            byte[] fileContents = _documentService.ReadBytes(filePath);
+            var plainTextBytes1 = System.Convert.ToBase64String(fileContents);
+            return Ok(new Result<string> { Data = plainTextBytes1 });
+        }
 
         [HttpGet(Constants.PreviewProgramDocument)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -279,6 +289,26 @@ namespace HealthWare.ActiveASSIST.WebAPI.Controllers
             return BadRequest();
         }
 
+        [HttpPost(Constants.UpdateFileAgreementId)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateFileAgreementId(long docId, string AgreementId)
+        {
+            if (docId <= 0 && AgreementId.isNullOrEmpty())
+                return BadRequest();
+
+            if (docId > 0)
+            {
+                var messageDto = await _documentService.UpdateFileAgreementId(docId, AgreementId);
+                if (messageDto.Errors.Count > 0)
+                {
+                    return BadRequest(messageDto);
+                }
+                return Ok(messageDto);
+            }
+            return BadRequest();
+        }
+
         [HttpPost(Constants.UploadSignature)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -342,7 +372,6 @@ namespace HealthWare.ActiveASSIST.WebAPI.Controllers
             };
             if (details.HouseHoldMemberId == 0) details.HouseHoldMemberId = null;
             if (details.ProgramId == 0) details.ProgramId = null;
-            if (details.ProgramDocumentId == 0) details.ProgramDocumentId = null;
             details.Esigned = form[Constants.Esign].Count > 0 && form[Constants.Esign].ToString() == "true";
             return details;
         }

@@ -22,6 +22,7 @@ namespace HealthWare.ActiveASSIST.Web.Common.HttpClient
         AdvocatePatient GetAdvocatePatients();
         Task<IEnumerable<Entities.Program>> GetPrograms();
         Task<string> ContentRootPath();
+        Task<string> ContentRootPathForProgramFiles(string FileName);
         PatientProgramResponse GetProgramsResponse(bool isEvaluated);
         Task<byte[]> FetchDocumentFromURLAsync(string url, string documentName);
     }
@@ -104,6 +105,12 @@ namespace HealthWare.ActiveASSIST.Web.Common.HttpClient
             var filePath = String.Concat(contentRootPath, Constants.WebRootPath, "/Images/DefaultImage.png");
             return filePath;
         }
+        public async Task<string> ContentRootPathForProgramFiles(string FileName)
+        {
+            string contentRootPath = _hostingEnvironment.ContentRootPath;
+            var filePath = String.Concat(contentRootPath, Constants.WebRootPath, "/ProgramFiles/" + FileName);
+            return filePath;
+        }
         public async Task<IEnumerable<Entities.Program>> GetPrograms()
         {
             var programs = await _programRepository.GetAllPrograms();
@@ -130,7 +137,6 @@ namespace HealthWare.ActiveASSIST.Web.Common.HttpClient
             try
             {
                 var response = await _client.GetAsync(@url);
-
                 using (var stream = await response.Content.ReadAsStreamAsync())
                 {
                     {

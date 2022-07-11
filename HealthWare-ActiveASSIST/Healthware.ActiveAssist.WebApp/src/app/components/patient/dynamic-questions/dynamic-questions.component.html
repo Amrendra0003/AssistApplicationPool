@@ -372,7 +372,7 @@
                         *ngIf="this.patient != 'Myself' && control.uniqueKey !='beenInjured' ">{{
                         subQuestions.othersLabel}}</label>
                       <!--Checkbox subquestion labels-->
-                      <div class="col-6 report-filed-label"
+                      <div class="col-10 report-filed-label"
                         *ngIf="subQuestions.uniqueKey == 'crimeReportFiled' && this.toShowCheckboxCrimeSubQuestions == true">
                         <label class="quick-assessment-title mb-4 pb-2 pt-1"
                           [ngClass]="(subQuestions.patientLabel == null)? 'display-none' :'' "
@@ -382,7 +382,7 @@
                           *ngIf="this.patient != 'Myself' ">{{
                           subQuestions.othersLabel}}</label>
                       </div>
-                      <div class="col-6" style="margin-left:2%;margin-top: -76px;"
+                      <div class="col-10" style="margin-left:42%;margin-top: -76px;"
                         *ngIf="subQuestions.uniqueKey == 'motorReportFiled' && this.toShowCheckboxMotorSubQuestions == true">
                         <label class="quick-assessment-title mb-4 pb-2 pt-1"
                           [ngClass]="(subQuestions.patientLabel == null)? 'display-none' :'' "
@@ -392,7 +392,7 @@
                           *ngIf="this.patient != 'Myself' ">{{
                           subQuestions.othersLabel}}</label>
                       </div>
-                      <div class="col-6" style="margin-left: 105%;
+                      <div class="col-10" style="margin-left: 145%;
                         margin-top: -55px;"
                         *ngIf="subQuestions.uniqueKey == 'jobReportFiled' && this.toShowCheckboxJobSubQuestions == true">
                         <label class="quick-assessment-title mb-4 pb-2 pt-1"
@@ -440,7 +440,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="d-flex " style="margin-top: -76px;"
+                        <div class="d-flex " style="margin-top: -76px; margin-left: -15px;"
                           *ngIf="subQuestions.uniqueKey == 'motorReportFiled' && this.toShowCheckboxMotorSubQuestions == true">
                           <div class="col-md-5 ">
                             <div class="ps-1">
@@ -460,7 +460,7 @@
                             </div>
                           </div>
                         </div>
-                        <div class="d-flex" style=" margin-top: -55px;"
+                        <div class="d-flex" style=" margin-top: -55px; margin-left: -15px;"
                           *ngIf="subQuestions.uniqueKey == 'jobReportFiled' && this.toShowCheckboxJobSubQuestions == true; ">
                           <div class="col-md-5 ">
                             <div class="ps-1">

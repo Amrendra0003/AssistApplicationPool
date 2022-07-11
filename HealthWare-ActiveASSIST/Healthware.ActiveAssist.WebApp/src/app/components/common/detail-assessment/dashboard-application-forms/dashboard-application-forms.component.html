@@ -111,15 +111,7 @@
                                         <label class="dashboard-select-label">{{data.documentDescription}}</label>
                                         <div *ngIf="this.disableFlag[data.programId] == 'true'"
                                             class="col-xs-12 col-md-12 col-sm-12 d-flex justify-content-center  my-1 ps-3 applicationForm-div">
-                                            <div class="py-2 d-flex px-4 disableESign" *ngIf=" data.esignFlag == false">
-                                                <img src="assets/images/icons/esign-icon.svg" class="upload1-icon mt-1 "
-                                                    data-bs-toggle="modal" data-bs-target="#formsModal" />
-                                                <label class="textfield-label p-1"
-                                                    (click)="loadDocumentOpen(data.documentName, data.programDocumentId, data.documentId, data.programId)"
-                                                    data-bs-toggle="modal" data-bs-target="#formsModal">{{esignLabel}}
-                                                </label>
-                                            </div>
-                                            <div class="py-2 d-flex px-4" *ngIf=" data.esignFlag == true">
+                                            <div class="py-2 d-flex px-4" *ngIf="data.esignFlag == false && (data.isProgramDocumentEsigned == true || this.EsignStatus[data.programDocumentId] == true)">
                                                 <img src="assets/images/icons/esign-icon.svg"
                                                     class="enableDnC upload1-icon mt-1 " data-bs-toggle="modal"
                                                     data-bs-target="#formsModal" />
@@ -127,12 +119,19 @@
                                                     (click)="loadDocumentOpen(data.documentName, data.programDocumentId, data.documentId, data.programId)">{{esignLabel}}
                                                 </label>
                                             </div>
+                                            <div class="py-2 d-flex px-4" *ngIf="data.esignFlag == true">
+                                                <img src="assets/images/icons/esign-icon.svg"
+                                                    class="enableDnC upload1-icon mt-1 " data-bs-toggle="modal"
+                                                    data-bs-target="#formsModal" />
+                                                <label class="textfield-label p-1 enableDnC">{{esignLabelCompleted}}
+                                                </label>
+                                            </div>
                                             <div class="py-2 d-flex px-4">
                                                 <img src="assets/images/icons/share-icon.svg"
                                                     class="enableDnC upload-icon mt-1" />
                                                 <label class="textfield-label p-1 enableDnC">{{shareLabel}}</label>
                                             </div>
-                                            <div class=" py-2 d-flex px-4">
+                                            <div class=" py-2 d-flex px-4" *ngIf="data.esignFlag == false">
                                                 <img src="assets/images/icons/download-icon.svg"
                                                     class="enableDnC upload-icon mt-1"
                                                     (click)="downloadApplicationForm(data.programDocumentId)" />
@@ -141,7 +140,7 @@
                                                         class="textfield-label p-1 enableDnC">{{downloadLabel}}</label>
                                                 </a>
                                             </div>
-                                            <div class="py-2 d-flex px-4">
+                                            <div class="py-2 d-flex px-4" *ngIf="data.esignFlag == false">
                                                 <img (click)="Programfile.click()"
                                                     src="assets/images/icons/upload-icon.svg"
                                                     class="enableDnC upload-icon mt-1" />
@@ -154,7 +153,7 @@
                                         </div>
                                         <div *ngIf="this.disableFlag[data.programId] == 'false'"
                                             class="col-xs-12 col-md-12 col-sm-12 d-flex justify-content-center  my-1 ps-3 applicationForm-div">
-                                            <div class="py-2 d-flex px-4 disableESign">
+                                            <div class="py-2 d-flex px-4 disableESign" *ngIf="data.esignFlag == false && (data.isProgramDocumentEsigned == true || this.EsignStatus[data.programDocumentId] == true)">
                                                 <img src="assets/images/icons/esign-icon.svg" class="upload1-icon mt-1 "
                                                     data-bs-toggle="modal" data-bs-target="#formsModal" />
                                                 <label class="textfield-label p-1"
@@ -167,7 +166,7 @@
                                                     class="upload-icon mt-1" />
                                                 <label class="textfield-label p-1">{{shareLabel}}</label>
                                             </div>
-                                            <div class=" py-2 d-flex px-4 disableESign">
+                                            <div class=" py-2 d-flex px-4 disableESign" *ngIf="data.esignFlag == false">
                                                 <img src="assets/images/icons/download-icon.svg"
                                                     class="upload-icon mt-1"
                                                     (click)="downloadApplicationForm(data.programDocumentId)" />
@@ -175,7 +174,7 @@
                                                     <label class="textfield-label p-1">{{downloadLabel}}</label>
                                                 </a>
                                             </div>
-                                            <div class="py-2 d-flex px-4 disableESign">
+                                            <div class="py-2 d-flex px-4 disableESign" *ngIf="data.esignFlag == false">
                                                 <img (click)="Programfile.click()"
                                                     src="assets/images/icons/upload-icon.svg"
                                                     class="upload-icon mt-1" />

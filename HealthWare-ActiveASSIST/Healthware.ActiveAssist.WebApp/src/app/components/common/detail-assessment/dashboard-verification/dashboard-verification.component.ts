@@ -16,6 +16,7 @@ import { CommonService } from 'src/app/services/common.service';
   styleUrls: ['./dashboard-verification.component.css']
 })
 export class DashboardVerificationComponent implements OnInit {
+  bottomDistance:any=false;
   formInput = ['input1', 'input2', 'input3', 'input4'];
   @ViewChildren('formRow') rows: any;
   virtualAssistPadding: string = "virtual-assist-padding";
@@ -350,6 +351,12 @@ export class DashboardVerificationComponent implements OnInit {
     this.currentDocumentIdForDelete = documentId;
     this.currentHouseholdMemberId = householdMemberId;
   }
+  getBottomSize(){
+    if(this.bottomDistance == true)
+      return 283;
+    else
+      return 210;
+  }
   getDashboardAddressInfo() { // Get dashboard address info
     var assessmentId: number = +(this.assessmentId);
     const addressData: any = {
@@ -486,6 +493,7 @@ export class DashboardVerificationComponent implements OnInit {
       )
   }
   showincomeVerificationFields() { //Show verification fields
+    this.bottomDistance = false;
     this.showaddmoredocuments = false;
   }
   async HandleAddressDocument(event: any) { // To handle address document
@@ -818,6 +826,8 @@ export class DashboardVerificationComponent implements OnInit {
     this.incomeVerification();
   }
   incomeVerification() { //INcome verification tab
+    
+    this.bottomDistance = true;
     window.scroll(0, 70);
     this.otpForm.reset();
     this.isTextClicked = false;

@@ -190,6 +190,7 @@ export class StringConstants {
   public static applicationForms = {
     benefitsTitle: 'Benefits',
     eSign: 'e-Sign',
+    eSignComplete: 'e-Sign Completed',
     share: 'Share',
     download: 'Download',
     uploadForms: 'Upload Completed Form',

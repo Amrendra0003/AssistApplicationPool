@@ -103,11 +103,12 @@ html {
 }
 /*checkbox subquestions*/
 .report-filed-label {
-    margin-left: 105%;
+    margin-left: 145%;
     margin-top: -117px;
 }
 .report-filed {
     margin-top: -117px;
+    margin-left: -15px;
 }
 /*household screen*/
 .household-margin-right {

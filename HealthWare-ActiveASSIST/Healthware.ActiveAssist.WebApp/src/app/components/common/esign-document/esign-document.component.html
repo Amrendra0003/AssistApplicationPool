@@ -1,60 +1,11 @@
 <div class="col-xs-12 col-md-12 col-sm-12" style="overflow: hidden;position: absolute;top: 100px;height: 560px;" [ngClass]=this.currentTheme>
   <div class="container-fluid" style="height: 480px;">
-  <div class="modal-header">
-    <h5 class="modal-title"></h5>
-    
     <div class="col-md-7 d-flex justify-content-end float-right">
     <button class="btn btn-primary white-color mx-3 login-button-label" style="width: fit-content" (click)="cancelDocument()" data-bs-dismiss="modal">Cancel</button>
     <button class="btn btn-primary white-color mx-3 login-button-label" style="width: fit-content;" (click)="finishDocument()" data-bs-dismiss="modal">Finish</button>
-    <button class="btn btn-primary white-color mx-3 login-button-label" style="width: fit-content" data-bs-toggle="modal" data-bs-target="#formsModal">Esign</button>
   </div>
-</div>
-<div class="page">
-  <div #viewer class="viewer-class" style="display: none"></div>
-</div>
-<app-spinner-overlay *ngIf="this.showLoader == true"> </app-spinner-overlay>
-<div id="pdf-div" class="pdf-view"></div>
+<div> 
+  <iframe *ngIf="this.displayIframe" id="iframe" [src]="this.documentfinalUrl" width="100%" height="520px"></iframe>
 </div>
 </div>
-<div class="modal" id="formsModal" aria-labelledby="formsModalLabel" role="dialog" data-bs-backdrop="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Signature</h5>
-                <button type="button" #closeSignModal class="close" data-dismiss="modal" aria-label="Close"
-                    (click)="closeSign()" data-bs-dismiss="modal">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body mt-3">
-              <mat-tab-group [@.disabled]="true" mat-stretch-tabs class="sign-mat-tabs" #signMatGroup (selectedIndexChange)="log($event)">
-                <mat-tab label="Enter">
-                  <textarea matInput
-                                [value]="sign"
-                                >
-                      </textarea>
-                      <div>
-                      <button class="btn btn-primary white-color mx-3 login-button-label" style="width: fit-content;" (click)="AddSign($event, 'text')">Add Signature</button>
-                    </div>
-                   </mat-tab>
-                <mat-tab label="Hand free Sign"> 
-                  <app-canvas #canvas></app-canvas>
-                  <div>
-                  <button class="btn btn-primary white-color mx-3 login-button-label" style="width: fit-content;" (click)="clearCanvas()">Clear</button>
-                  <button class="btn btn-primary white-color mx-3 login-button-label" style="width: fit-content;" (click)="AddSign($event, 'Canvas')">Add Signature</button>
-                  </div>
-                 
-                   </mat-tab>
-                <!-- <mat-tab *ngFor="let formVal of formValues; let indexOuter = index;" label="Button {{indexOuter + 1}}">
-                  <textarea matInput
-                                [value]="formVal.value"
-                                >
-                      </textarea>
-                  </mat-tab> -->
-              </mat-tab-group>
-              
-
-            </div>
-        </div>
-    </div>
 </div>

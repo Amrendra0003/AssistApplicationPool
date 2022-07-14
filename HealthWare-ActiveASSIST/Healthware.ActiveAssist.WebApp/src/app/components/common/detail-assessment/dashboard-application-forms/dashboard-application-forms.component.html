@@ -113,7 +113,7 @@
                                             class="col-xs-12 col-md-12 col-sm-12 d-flex justify-content-center  my-1 ps-3 applicationForm-div">
                                             <div class="py-2 d-flex px-4" *ngIf="data.esignFlag == false && (data.isProgramDocumentEsigned == true || this.EsignStatus[data.programDocumentId] == true)">
                                                 <img src="assets/images/icons/esign-icon.svg"
-                                                    class="enableDnC upload1-icon mt-1 " data-bs-toggle="modal"
+                                                    class="upload1-icon mt-1 " data-bs-toggle="modal"
                                                     data-bs-target="#formsModal" />
                                                 <label class="textfield-label p-1 enableDnC"
                                                     (click)="loadDocumentOpen(data.documentName, data.programDocumentId, data.documentId, data.programId)">{{esignLabel}}
@@ -121,9 +121,9 @@
                                             </div>
                                             <div class="py-2 d-flex px-4" *ngIf="data.esignFlag == true">
                                                 <img src="assets/images/icons/esign-icon.svg"
-                                                    class="enableDnC upload1-icon mt-1 " data-bs-toggle="modal"
+                                                    class="upload1-icon mt-1 " data-bs-toggle="modal"
                                                     data-bs-target="#formsModal" />
-                                                <label class="textfield-label p-1 enableDnC">{{esignLabelCompleted}}
+                                                <label class="textfield-label p-1">{{esignLabelCompleted}}
                                                 </label>
                                             </div>
                                             <div class="py-2 d-flex px-4">

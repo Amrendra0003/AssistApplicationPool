@@ -26,8 +26,20 @@ export class EsignserviceService {
     .set('Authorization',this.token);
     return this._http.post(transientUrl,data,{headers:httpheaders})
   }
+  updateDocumanetformfields(uriapipoint:any,data:any,agreementId:any){
+    const transientUrl = uriapipoint+ 'api/rest/v6/agreements/'+agreementId +'/formFields';
+    let httpheaders = new HttpHeaders()
+    .set('Authorization',this.token);
+    return this._http.put(transientUrl,data,{headers:httpheaders})
+  }
   getDocumanetforSign(uriapipoint:any,agreementId:any):Observable<any>{
     const uriUrl = uriapipoint+'api/rest/v6/agreements/'+agreementId +'/signingUrls';
+    let httpHeaders = new HttpHeaders()
+    .set('Authorization',this.token);
+     return this._http.get(uriUrl,{headers:httpHeaders,responseType:'json'});
+  }
+  getDocumanetformfields(uriapipoint:any,agreementId:any):Observable<any>{
+    const uriUrl = uriapipoint+'api/rest/v6/agreements/'+agreementId +'/formFields';
     let httpHeaders = new HttpHeaders()
     .set('Authorization',this.token);
      return this._http.get(uriUrl,{headers:httpHeaders,responseType:'json'});
@@ -37,8 +49,5 @@ export class EsignserviceService {
      let httpHeaders = new HttpHeaders()
     .set('Authorization', this.token);
      return this._http.get(uriUrl,{headers:httpHeaders,responseType:'json'});
-
   }
-
-
 }

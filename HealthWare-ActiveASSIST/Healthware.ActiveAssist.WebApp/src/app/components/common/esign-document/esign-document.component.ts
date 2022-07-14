@@ -78,7 +78,6 @@ export class EsignDocumentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.GetBaseUri();
     this.route.queryParams.subscribe(params => {
       this.documentId = params['documentId'];
       this.documentName = params['documentName'];
@@ -98,9 +97,14 @@ export class EsignDocumentComponent implements OnInit {
          const formData = new FormData();
          formData.append("File-Name","myfile");
          formData.append("File", file);
-         setTimeout(()=>{
-           this.getTransitdocument(formData)
-            },5000)
+         
+         this.esignserviceObj.getBaseUri().toPromise().then(
+          res=>this.response=res
+         ).then(data=>{
+           this.apiAccessPoint = this.response.apiAccessPoint;
+           this.getTransitdocument(formData);
+         })
+
 
          console.log(file);
           }
@@ -140,12 +144,12 @@ export class EsignDocumentComponent implements OnInit {
     this.esignserviceObj.transientDocuments(this.apiAccessPoint,formData).subscribe((response:any) => {
       this.transientres=response;
       this.transientDocumentId=this.transientres.transientDocumentId;
+      this.getAgreeMentIdBytransientId();
         }
         )
-        setTimeout(()=>{
-          this.getAgreeMentIdBytransientId()
-           },6000)
+
   }
+  formfield:any;
   getAgreeMentIdBytransientId(){
     const Body={
       "fileInfos": [
@@ -166,23 +170,116 @@ export class EsignDocumentComponent implements OnInit {
         }
         ],
         "signatureType": "ESIGN",
-        "state": "IN_PROCESS",
-        "securityOptions": {  
-          "openPassword": "12test34",
-          "protectOpen": true
-      }
+        "state": "AUTHORING"
           }
-
     this.esignserviceObj.getAgreeMentIdBytransientId(this.apiAccessPoint,Body).subscribe(res => {
       this.Agreements=res;
-      this.AgreementId=this.Agreements.id;
-      console.log(this.AgreementId);
-
+      this.AgreementId = this.Agreements.id;
+      setTimeout(() => {
+      this.esignserviceObj.getDocumanetformfields(this.apiAccessPoint,this.AgreementId).subscribe(res => {
+        res.fields[50].inputType = "SIGNATURE";
+        res.fields[50].required = "true";
+        delete res.fields[50].conditionalAction;
+        res.fields[52] = 
+          { 
+            "locations": [ 
+                 { 
+                  "height": 22.694992065429688,
+                  "left": 81.47219848632812,
+                  "pageNumber": 2,
+                  "top": 45,
+                  "width": 253.7947998046875 
+                 } 
+               ], 
+               "alignment": "LEFT",
+               "backgroundColor": "",
+               "borderColor": "",
+               "borderStyle": "SOLID",
+               "borderWidth": 1,
+               "calculated": false,
+               "contentType": "DATA",
+               "defaultValue": "",
+               "displayFormat": "",
+               "displayFormatType": "DEFAULT",
+               "displayLabel": "",
+               "fontColor": "#0000ff",
+               "fontName": "Helvetica",
+               "fontSize": -1,
+               "inputType": "SIGNATURE",
+               "masked": false,
+               "maskingText": "*",
+               "maxLength": -1,
+               "maxValue": -1,
+               "minLength": -1,
+               "minValue": -1,
+               "name": "Sign",
+               "origin": "IMPORTED",
+               "radioCheckType": "CIRCLE",
+               "readOnly": false,
+               "required": true,
+               "tooltip": "",
+               "urlOverridable": false,
+               "validation": "NONE",
+               "validationErrMsg": "",
+               "valueExpression": "",
+               "visible": true 
+              
+        }
+        res.fields[53] = 
+          { 
+            "locations": [ 
+                 { 
+                  "height": 22.694992065429688,
+                  "left": 81.47219848632812,
+                  "pageNumber": 1,
+                  "top": 45,
+                  "width": 253.7947998046875 
+                 } 
+               ], 
+               "alignment": "LEFT",
+               "backgroundColor": "",
+               "borderColor": "",
+               "borderStyle": "SOLID",
+               "borderWidth": 1,
+               "calculated": false,
+               "contentType": "DATA",
+               "defaultValue": "",
+               "displayFormat": "",
+               "displayFormatType": "DEFAULT",
+               "displayLabel": "",
+               "fontColor": "#0000ff",
+               "fontName": "Helvetica",
+               "fontSize": -1,
+               "inputType": "SIGNATURE",
+               "masked": false,
+               "maskingText": "*",
+               "maxLength": -1,
+               "maxValue": -1,
+               "minLength": -1,
+               "minValue": -1,
+               "name": "Signature",
+               "origin": "IMPORTED",
+               "radioCheckType": "CIRCLE",
+               "readOnly": false,
+               "required": true,
+               "tooltip": "",
+               "urlOverridable": false,
+               "validation": "NONE",
+               "validationErrMsg": "",
+               "valueExpression": "",
+               "visible": true 
+              
+        }
+        const date = new Date();
+        const month = date.getUTCMonth() + 1;
+        res.fields[51].defaultValue = date.getUTCDate() + '/' + month + '/' + date.getUTCFullYear();
+        this.esignserviceObj.updateDocumanetformfields(this.apiAccessPoint,res,this.AgreementId).subscribe(res => {
+          this.getDocumanetforSign();
+        })
       });
-      setTimeout(()=>{
-      this.getDocumanetforSign()
-    },6000)
 
+      }, 6000)
+      });
   }
   displayIframe:any = false;
   documentfinalUrl:any;
@@ -208,14 +305,7 @@ export class EsignDocumentComponent implements OnInit {
            
           return data;
          })
-    }
-    GetBaseUri(){
-      this.esignserviceObj.getBaseUri().toPromise().then(
-        res=>this.response=res
-       ).then(data=>{
-         this.apiAccessPoint = this.response.apiAccessPoint;
-        console.log(this.apiAccessPoint);
-        return data;
-       })
-      }
+  }
+
+      
 }

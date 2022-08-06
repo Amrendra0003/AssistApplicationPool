@@ -152,14 +152,27 @@ namespace HealthWare.ActiveASSIST.Services
             var dashboardAssessments1 = dashboardAssessmentList.ToList();
             List<DashboardAssessment> dashboardAssessments = new List<DashboardAssessment>();
             var userIDs = _assessmentRepository.GetUserIds(userId);
-            userIDs.Result.RemoveAll(x => x.UserId == userId);
-            dashboardAssessments1.RemoveAll(x => x.CreatedBy != userId);
-            dashboardAssessments.AddRange(dashboardAssessments1);
-            foreach (var item in userIDs.Result)
+            if(userIDs.Result.Count != 0)
             {
-                var dashboardAssessments3 = dashboardAssessmentList.ToList();
-                dashboardAssessments3.RemoveAll(x => x.CreatedBy != item.UserId);
-                dashboardAssessments.AddRange(dashboardAssessments3);
+                if(dashboardAssessments1.Count != 0)
+                {
+                    userIDs.Result.RemoveAll(x => x.UserId == userId);
+                    dashboardAssessments1.RemoveAll(x => x.CreatedBy != userId);
+                    dashboardAssessments.AddRange(dashboardAssessments1);
+                    if(userIDs.Result.Count != 0)
+                    {
+                        foreach (var item in userIDs.Result)
+                        {
+                            var dashboardAssessments3 = dashboardAssessmentList.ToList();
+                            dashboardAssessments3.RemoveAll(x => x.CreatedBy != item.UserId);
+                            dashboardAssessments.AddRange(dashboardAssessments3);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                dashboardAssessments = dashboardAssessments1;
             }
             foreach (var assessment in dashboardAssessments)
             {

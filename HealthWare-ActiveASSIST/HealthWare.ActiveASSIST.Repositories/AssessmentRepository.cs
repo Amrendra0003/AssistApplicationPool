@@ -189,9 +189,44 @@ namespace HealthWare.ActiveASSIST.Repositories
         }
         public async Task<List<FacilityMapping>> GetUserIds(long Id)
         {
-            var document = await _unitOfWork.GetEntityAsync<FacilityMapping>(x => x.UserId == Id);
-            var doc1 = await _unitOfWork.GetAllAsync<FacilityMapping>(x => x.FacilityId == document.FacilityId);
-            return doc1.ToList();
+            var document = await _unitOfWork.GetAllAsync<FacilityMapping>(x => x.UserId == Id);
+            List<FacilityMapping> list1 = new List<FacilityMapping>();
+            if(document.ToList().Count != 0)
+            {
+                foreach (var documentItem in document)
+                {
+                    var doc1 = await _unitOfWork.GetAllAsync<FacilityMapping>(x => x.FacilityId == documentItem.FacilityId);
+                    var doc = doc1.ToList();
+                    if (list1.Count == 0)
+                    {
+                        if (doc.Count != 0)
+                        {
+                            list1.AddRange(doc);
+                            continue;
+                        }
+                    }
+                    if (list1.Count != 0)
+                    {
+                        foreach (var item in list1)
+                        {
+                            if (doc.Count != 0)
+                            {
+                                foreach (var item1 in doc)
+                                {
+                                    if (item.UserId == item1.UserId)
+                                    {
+                                        doc.Remove(item1);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (doc.Count != 0)
+                        list1.AddRange(doc);
+                }
+            }
+            return list1;
         }
         public IEnumerable<AssessmentInPatientDashboard> GetAssessmentListForPatientDashboard(int userId, string searchText, long tenantId)
         {

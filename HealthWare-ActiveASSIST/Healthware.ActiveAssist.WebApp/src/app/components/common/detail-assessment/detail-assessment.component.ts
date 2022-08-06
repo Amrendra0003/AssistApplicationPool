@@ -361,6 +361,7 @@ export class DetailAssessmentComponent implements OnInit {
       )
   }
   currentTabUpdateFn($event: any) { //Get current tab status
+    
     var currentTab = Number([$event.index]);
     if (this.showAdvocatePanel == true) {
       try {

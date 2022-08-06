@@ -564,6 +564,7 @@ export class DashboardVerificationComponent implements OnInit {
         if (result.errors.length == 0 && result.data != null) {
           if (result.data.houseHoldMemberDocument.length > 0) {
             this.showaddmoredocuments = true;
+            
             this.incomeVerificationDocumentDetail = result.data.houseHoldMemberDocument;
             this.documentListFlag = true;
             this.incomeUpdloaded = true;

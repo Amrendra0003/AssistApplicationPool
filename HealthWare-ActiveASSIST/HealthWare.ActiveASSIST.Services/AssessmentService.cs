@@ -2095,8 +2095,16 @@ namespace HealthWare.ActiveASSIST.Services
         {
             //If assessment is created for relative then validate no of household members.
             var quickAssessmentResult = await _answerRepository.GetQuestionAnswerJson(basePatientAssessment.AssessmentId);
-            var values = JsonConvert.DeserializeObject<List<JsonObject>>(quickAssessmentResult.QuestionAnswerJson);
-            var patientType = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.Patient))?[Constants.Patient];
+            string patientType = string.Empty;
+            if(quickAssessmentResult == null && Convert.ToString(basePatientAssessment.AssessmentId) != null)
+            {
+                patientType = "OtherApplicant1";
+            }
+            else
+            {
+                var values = JsonConvert.DeserializeObject<List<JsonObject>>(quickAssessmentResult.QuestionAnswerJson);
+                patientType = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.Patient))?[Constants.Patient];
+            }
             var isGuarantorMemberPresent = true;
             var guarantor = await _guarantorRepository.GetGuarantorByAssessmentId(basePatientAssessment.AssessmentId);
             if (patientType == "Myself")
@@ -2117,7 +2125,7 @@ namespace HealthWare.ActiveASSIST.Services
                 if (isSelfMemberPresent.IsNull()) return new Result<AssessmentEvaluationResponse>().AddError(Constants.SelfHouseholdNotFound);
 
                 var isAccountOwnerPresent = await _houseHoldMemberRepository.IsAccountOwnerAMember(basePatientAssessment.AssessmentId, user.Identity.Name);
-                if (!isAccountOwnerPresent) return new Result<AssessmentEvaluationResponse>().AddError(Constants.AccountOwnerHouseholdNotFound);
+                if (!isAccountOwnerPresent && patientType != "OtherApplicant1") return new Result<AssessmentEvaluationResponse>().AddError(Constants.AccountOwnerHouseholdNotFound);
 
 
                 if (guarantor.RelationShipWithPatient != "Self")

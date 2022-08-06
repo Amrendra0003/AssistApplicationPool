@@ -54,6 +54,7 @@ export class StartAssessmentComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    
     this.dataSharing.hideVaForProfile.next(false);
     window.scroll(0, 0);
     this.initForm();

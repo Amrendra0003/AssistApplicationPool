@@ -14,6 +14,7 @@ namespace HealthWare.ActiveASSIST.Entities
         public string Checksum { get; set; }
         public long? ProgramDocumentId { get; set; }
         public bool? isDocumentSigned { get; set; }
+        public bool? isDeleted { get; set; }
         public string? AgreementId { get; set; }
 
         public static implicit operator DTOs.VerificationDocument(Document document)

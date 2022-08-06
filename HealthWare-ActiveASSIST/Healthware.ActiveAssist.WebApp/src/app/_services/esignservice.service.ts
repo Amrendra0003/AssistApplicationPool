@@ -7,7 +7,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 })
 export class EsignserviceService {
   constructor(private _http:HttpClient) { }
-   token ="Bearer 3AAABLblqZhBM3SBjRfXEymJcB8NBtKCrg7BI_wgo2YG6bdKnyhDgbWZ-QUjidhCV8xRCmDO2tTVaaZS7HXcACpHopv0am74_"
+   token ="Bearer 3AAABLblqZhBQVKfASPxFqDTKPQG40NlIxK1JR81T-GtWKVLgKZWaBzboxoo-wedoGjfejOLDXr9hml1RLcTb0Uxtl_hSYD-k"
   getBaseUri():Observable<any>{
    const uriUrl = "https://api.adobesign.com/api/rest/v6/baseUris";
    let httpHeaders = new HttpHeaders()
@@ -32,6 +32,12 @@ export class EsignserviceService {
     .set('Authorization',this.token);
     return this._http.put(transientUrl,data,{headers:httpheaders})
   }
+  updateDocumanetform(uriapipoint:any,data:any,agreementId:any){
+    const transientUrl = uriapipoint+ 'api/rest/v6/agreements/'+agreementId + '/state';
+    let httpheaders = new HttpHeaders()
+    .set('Authorization',this.token);
+    return this._http.put(transientUrl,data,{headers:httpheaders})
+  }
   getDocumanetforSign(uriapipoint:any,agreementId:any):Observable<any>{
     const uriUrl = uriapipoint+'api/rest/v6/agreements/'+agreementId +'/signingUrls';
     let httpHeaders = new HttpHeaders()
@@ -40,6 +46,12 @@ export class EsignserviceService {
   }
   getDocumanetformfields(uriapipoint:any,agreementId:any):Observable<any>{
     const uriUrl = uriapipoint+'api/rest/v6/agreements/'+agreementId +'/formFields';
+    let httpHeaders = new HttpHeaders()
+    .set('Authorization',this.token);
+     return this._http.get(uriUrl,{headers:httpHeaders,responseType:'json'});
+  }
+  getMembers(uriapipoint:any,agreementId:any):Observable<any>{
+    const uriUrl = uriapipoint+'api/rest/v6/agreements/'+agreementId +'/members';
     let httpHeaders = new HttpHeaders()
     .set('Authorization',this.token);
      return this._http.get(uriUrl,{headers:httpHeaders,responseType:'json'});

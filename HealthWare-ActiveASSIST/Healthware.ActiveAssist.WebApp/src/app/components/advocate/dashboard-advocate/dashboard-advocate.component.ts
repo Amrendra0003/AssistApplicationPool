@@ -202,7 +202,7 @@ export class DashboardAdvocateComponent implements OnInit {
         sessionStorage.setItem('assessmentPatientFullName', fullName);
         sessionStorage.setItem('assessmentUserId', userId);
         this.dataSharingService.isGuarantorData.next("");
-        let e = this.advocateResult.filter((e: any) => e.assessmentId === assessmentId)[0].isEditable;
+        let e = this.advocateResult.filter((e: any) => e.assessmentId === assessmentId)[0]?.isEditable;
         sessionStorage.setItem('isEditable', e);
       }
     });

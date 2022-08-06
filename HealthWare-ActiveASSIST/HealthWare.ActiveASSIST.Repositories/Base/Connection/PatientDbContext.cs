@@ -62,6 +62,9 @@ namespace HealthWare.ActiveASSIST.Repositories.Base.Connection
         public virtual DbSet<ReviewNotes> ReviewNotes { get; set; }
         public virtual DbSet<HouseholdMemberDocument> HouseholdMemberDocument { get; set; }
         public virtual DbSet<Document> Document { get; set; }
+        public virtual DbSet<DownloadDocument> DownloadDocument { get; set; }
+        public virtual DbSet<Facilities> Facilities { get; set; }
+        public virtual DbSet<FacilityMapping> FacilityMapping { get; set; }
         public virtual DbSet<Permission> Permission { get; set; }
         public virtual DbSet<RolesPermission> RolesPermissions { get; set; }
         public virtual DbSet<ScreenQuestionMapping> ScreenQuestionMapping { get; set; }

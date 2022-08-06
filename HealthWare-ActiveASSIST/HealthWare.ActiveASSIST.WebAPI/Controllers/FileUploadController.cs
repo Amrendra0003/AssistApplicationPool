@@ -8,6 +8,7 @@ using HealthWare.ActiveASSIST.Services;
 using Healthware.Core.DTO;
 using HealthWare.ActiveASSIST.Web.Controllers;
 using JetBrains.Annotations;
+using System;
 
 namespace HealthWare.ActiveASSIST.WebAPI.Controllers
 {
@@ -190,26 +191,21 @@ namespace HealthWare.ActiveASSIST.WebAPI.Controllers
             var contentType = _documentService.GetContentType(Path.GetExtension(documentPath).Replace(".", string.Empty));
             return File(fileContents, contentType);
         }
-        [HttpGet(Constants.PreviewDocumentPath)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> PreviewDocumentPath(long DocId)
-        {
-            var filePath = await _documentService.GetDocumentPath(DocId);
-            byte[] fileContents = _documentService.ReadBytes(filePath);
-            var plainTextBytes1 = System.Convert.ToBase64String(fileContents);
-            return Ok(new Result<string> { Data = plainTextBytes1 });
-        }
 
         [HttpGet(Constants.PreviewProgramDocument)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public FileResult PreviewProgramDocument(long PgrmdocId)
+        public FileResult PreviewProgramDocument(long PgrmdocId, long assessmentId, long documentDownloadId)
         {
                 var document = _documentService.GetProgramDocumentPath(PgrmdocId).GetAwaiter().GetResult();
             //byte[] fileContents = _documentService.ReadBytes(document.Data.DocumentPath);
             byte[] fileContents = _documentService.FetchDocumentFromUrlAsync(document.Data.DocumentPath, document.Data.DocumentName);
             var contentType = _documentService.GetContentType(Path.GetExtension(document.Data.DocumentPath)?.Replace(".", string.Empty));
+            if (fileContents != null)
+            {
+                _ = _documentService.UpdateOrInsertDocumentDownloaded(PgrmdocId, assessmentId, documentDownloadId);
+            }
+
             return File(fileContents, contentType);
         }
 
@@ -300,6 +296,28 @@ namespace HealthWare.ActiveASSIST.WebAPI.Controllers
             if (docId > 0)
             {
                 var messageDto = await _documentService.UpdateFileAgreementId(docId, AgreementId);
+                if (messageDto.Errors.Count > 0)
+                {
+                    return BadRequest(messageDto);
+                }
+                return Ok(messageDto);
+            }
+            return BadRequest();
+        }
+
+        [HttpPost(Constants.DeleteeDocumentById)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> DeleteeDocumentById(string docId, string downloadDocId)
+        {
+            var docId1 = Convert.ToInt64(docId);
+            var downloadDocId1 = Convert.ToInt64(downloadDocId);
+            if (docId1 <= 0)
+                return BadRequest();
+
+            if (docId1 > 0)
+            {
+                var messageDto = await _documentService.DeleteeDocumentById(docId1, downloadDocId1);
                 if (messageDto.Errors.Count > 0)
                 {
                     return BadRequest(messageDto);

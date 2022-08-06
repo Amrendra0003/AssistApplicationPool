@@ -191,6 +191,7 @@ export class StringConstants {
     benefitsTitle: 'Benefits',
     eSign: 'e-Sign',
     eSignComplete: 'e-Sign Completed',
+    eSignDelete: 'Delete',
     share: 'Share',
     download: 'Download',
     uploadForms: 'Upload Completed Form',

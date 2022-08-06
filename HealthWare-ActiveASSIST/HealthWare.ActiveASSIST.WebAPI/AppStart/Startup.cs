@@ -140,7 +140,7 @@ namespace HealthWare.ActiveASSIST.WebAPI.AppStart
             services.AddTransient<IQuickAssessmentService, QuickAssessmentService>();
             services.AddSingleton<System.Net.Http.HttpClient>();
             services.AddHttpClient<HealthWareSharedService>();
-            services.AddSingleton<IHttpClientService, HttpClientService>();
+            services.AddTransient<IHttpClientService, HttpClientService>();
             services.AddSingleton<IHealthWareSharedService, HealthWareSharedService>();
             services.AddTransient<ISMSService, SMSService>();
             services.AddTransient<ISubDomainService, SubDomainService>();

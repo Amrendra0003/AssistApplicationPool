@@ -3,6 +3,7 @@ using Healthware.Core.Extensions;
 using Healthware.Core.Logging;
 using Healthware.Core.Utility;
 using HealthWare.ActiveASSIST.DTOs;
+using HealthWare.ActiveASSIST.Entities;
 using HealthWare.ActiveASSIST.Repositories;
 using HealthWare.ActiveASSIST.Web.Common.HttpClient;
 using iTextSharp.text;
@@ -10,10 +11,12 @@ using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using VerificationDocument = HealthWare.ActiveASSIST.DTOs.VerificationDocument;
 
@@ -42,12 +45,15 @@ namespace HealthWare.ActiveASSIST.Services
         Task<Result<long>> LoadProgramDocument(FileDetails fileDetailsDto);
         Task<Result<bool>> UpdateFilePath(long docId, string filePath);
         Task<Result<bool>> UpdateFileAgreementId(long docId, string fileAgreementId);
+        Task<Result<bool>> DeleteeDocumentById(long docId, long downloadDocId);
         byte[] FetchDocumentFromUrlAsync(string documentPath, string name);
         Task<byte[]> UploadSignature(IFormFile originalFile, IFormFile signatureCanvas, StringValues signatureText, StringValues docId);
         Task<Result<MessageDto>> CompleteUploadedDocument(long documentId);
+        Task<long> UpdateOrInsertDocumentDownloaded(long pgrmdocId, long assessmentId, long documentDownloadId);
     }
     public class DocumentService : IDocumentService
     {
+        private static string TokenKey = "Bearer 3AAABLblqZhBQVKfASPxFqDTKPQG40NlIxK1JR81T-GtWKVLgKZWaBzboxoo-wedoGjfejOLDXr9hml1RLcTb0Uxtl_hSYD-k";
         private readonly IFileUploadServiceHelper _fileHelper;
         private readonly DocumentConfiguration _fileUploadConfig;
         private readonly IProgramDocumentRepository _programDocumentRepository;
@@ -133,7 +139,25 @@ namespace HealthWare.ActiveASSIST.Services
             return new Result<MessageDto>()
                 { Data = new MessageDto().AddMessage(Constants.DocumentUploadErrorMessage) };
         }
-        
+        public async Task<long> UpdateOrInsertDocumentDownloaded(long pgrmdocId, long assessmentId, long documentDownloadId)
+        {
+            var documentDownload = await _documentRepository.GetDocumentDownloaded(documentDownloadId);
+            if (documentDownload != null)
+            {
+                documentDownload.isDownloaded = true;
+                return await _documentRepository.UpdateDocumentDownloaded(documentDownload);
+            }
+            else
+            {
+                DownloadDocument doc = new DownloadDocument();
+                doc.isDownloaded = true;
+                doc.AssessmentId = assessmentId;
+                doc.ProgramDocumentId = pgrmdocId;
+                return await _documentRepository.InsertDocumentDownloaded(doc);
+            }
+        }
+
+
 
         public async Task<Result<ProgramDocumentDetail>> GetProgramDocumentPath(long programDocumentId)
         {
@@ -346,6 +370,7 @@ namespace HealthWare.ActiveASSIST.Services
                         }
                         else
                         {
+                            document.isDeleted = false;
                             documentId = document.Id;
                             document.Name = documentNew.Name;
                             document.Path = documentNew.Path;
@@ -625,9 +650,145 @@ namespace HealthWare.ActiveASSIST.Services
         }
         public async Task<Result<bool>> UpdateFileAgreementId(long docId, string fileAgreementId)
         {
+            //bool signed = false;
+            //for(long i=0; i<10000000000; i++)
+            //{
+            //    Thread.Sleep(1000);
+            //    int result = GetAgreementData(fileAgreementId);
+            //    if(result == 1)
+            //    {
+            //        signed = true;
+            //        break;
+            //    }
+            //    else if(result == 2)
+            //    {
+            //        signed =false;
+            //        break;
+            //    }
+            //}
+            //if (signed)
+            //{
+                var document = await _documentRepository.GetDocumentById(docId);
+                document.AgreementId = fileAgreementId;
+                var updatedDoc = await _documentRepository.UpdateDocument(document);
+                return new Result<bool> { Data = updatedDoc > 0 };
+            //}
+            //else
+            //{
+            //    return new Result<bool> { Data = false };
+            //}
+        }
+        private static int GetAgreementData(string AgreementId)
+        {
+
+            string GetAgreementById = "https://api.in1.adobesign.com/api/rest/v6/agreements/" + AgreementId;
+            try
+            {
+                var webRequest = System.Net.WebRequest.Create(GetAgreementById);
+                if (webRequest != null)
+                {
+                    webRequest.Method = "GET";
+                    webRequest.Timeout = 12000;
+                    webRequest.ContentType = "application/json";
+                    webRequest.Headers.Add("Authorization", TokenKey);
+
+                    using (System.IO.Stream s = webRequest.GetResponse().GetResponseStream())
+                    {
+                        using (System.IO.StreamReader sr = new System.IO.StreamReader(s))
+                        {
+                            var jsonResponse = sr.ReadToEnd();
+                            Console.WriteLine(String.Format("Response: {0}", jsonResponse));
+                            string getData = jsonResponse;
+                            dynamic data = JObject.Parse(getData);
+                            return UpdateFileData(data);
+                        }
+                    }
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return 0;
+            }
+        }
+        private static int UpdateFileData(dynamic FileStatus)
+        {
+            try
+            {
+                if (FileStatus.status.ToString() == "SIGNED")
+                {
+                    return 1;
+                }
+                else if(FileStatus.status.ToString() == "CANCELLED")
+                {
+                    return 2;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                throw ex;
+            }
+
+        }
+        public async Task<Result<bool>> DeleteeDocumentById(long docId, long downloadDocId)
+        {
             var document = await _documentRepository.GetDocumentById(docId);
-            document.AgreementId = fileAgreementId;
+            var documentDownload = await _documentRepository.GetDocumentDownloaded(downloadDocId);
+            document.isDocumentSigned = false;
+            document.AgreementId = null;
+            document.isDeleted = true;
+            string[] subs = document.Path.Split('\\');
+            var number = subs.Count();
+            var filePath = string.Empty;
+            var count = 0;
+            var filePathDest = string.Empty;
+            foreach (var sub in subs)
+            {
+                if (number > count + 1)
+                {
+                    filePath = filePath + sub + '\\';
+                    count++;
+                }
+                else
+                {
+                    filePathDest = filePath + "Deleted\\";
+                }
+            }
+            Directory.CreateDirectory(filePathDest);
+            DirectoryInfo directory = new DirectoryInfo(filePathDest);
+            foreach (FileInfo file in directory.GetFiles())
+            {
+                file.Delete();
+            }
+            foreach (DirectoryInfo dir1 in directory.GetDirectories())
+            {
+                dir1.Delete(true);
+            }
+            var dir = new DirectoryInfo(filePath);
+            FileInfo[] files = dir.GetFiles("*.pdf");
+            foreach (var item in files)
+            {
+                File.Copy(item.FullName, Path.Combine(filePath + "Deleted\\", item.Name), true); // overwrite = true 
+            }
+            File.Delete(document.Path);
             var updatedDoc = await _documentRepository.UpdateDocument(document);
+            if(updatedDoc > 0)
+            {
+                if (documentDownload != null)
+                {
+                    documentDownload.isDownloaded = false;
+                    await _documentRepository.UpdateDocumentDownloaded(documentDownload);
+                }
+            }
             return new Result<bool> { Data = updatedDoc > 0 };
         }
 

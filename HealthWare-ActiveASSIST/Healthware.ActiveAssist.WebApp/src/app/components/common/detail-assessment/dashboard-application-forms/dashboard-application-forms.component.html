@@ -89,7 +89,7 @@
                                                 class="col-xs-5 col-md-5 col-sm-5 dashboard-select-label"><b>{{data.documentName}}</b></label>
                                             <div class="">
                                                 <div class="d-flex"
-                                                    *ngIf="data.isProgramDocumentEsigned == true || this.EsignStatus[data.programDocumentId] == true">
+                                                    *ngIf="(data.isProgramDocumentEsigned == true || this.EsignStatus[data.programDocumentId] == true) && data.isDeleted == false">
                                                     <img src="assets/images/icons/valid-icon.svg">
                                                     <label class="textfield-label p-1"
                                                         style="font-weight: bold; color: #4AD295;">{{Uploaded}}!</label>
@@ -100,8 +100,8 @@
                                                         style="text-decoration: underline ;">{{data.documentName}}</span>
                                                 </div>
                                                 <div class="d-flex"
-                                                    *ngIf="data.isProgramDocumentEsigned == false && this.notSigned == true && 
-                                                            this.EsignStatus[data.programDocumentId] != true && this.disableFlag[data.programId] == 'true'">
+                                                    *ngIf="(data.isProgramDocumentEsigned == false && this.notSigned == true && 
+                                                            this.EsignStatus[data.programDocumentId] != true && this.disableFlag[data.programId] == 'true') || data.isDeleted == true">
                                                     <img src="assets/images/icons/invalid-icon.svg">
                                                     <label class="textfield-label p-1"
                                                         style="font-weight: bold; color: #E66767">{{NotUploaded}}</label>
@@ -111,12 +111,16 @@
                                         <label class="dashboard-select-label">{{data.documentDescription}}</label>
                                         <div *ngIf="this.disableFlag[data.programId] == 'true'"
                                             class="col-xs-12 col-md-12 col-sm-12 d-flex justify-content-center  my-1 ps-3 applicationForm-div">
-                                            <div class="py-2 d-flex px-4" *ngIf="data.esignFlag == false && (data.isProgramDocumentEsigned == true || this.EsignStatus[data.programDocumentId] == true)">
+                                            <div class="py-2 d-flex px-4" *ngIf="data.esignFlag == false && (data.isProgramDocumentEsigned == true || this.EsignStatus[data.programDocumentId] == true) && data.isDeleted == false">
                                                 <img src="assets/images/icons/esign-icon.svg"
                                                     class="upload1-icon mt-1 " data-bs-toggle="modal"
                                                     data-bs-target="#formsModal" />
                                                 <label class="textfield-label p-1 enableDnC"
-                                                    (click)="loadDocumentOpen(data.documentName, data.programDocumentId, data.documentId, data.programId)">{{esignLabel}}
+                                                    (click)="loadDocumentOpen(data.documentId)">{{esignLabel}}
+                                                </label>
+                                            </div>
+                                            <div class="py-2 d-flex px-4" *ngIf="data.esignFlag == true">
+                                                <label class="textfield-label p-1 enableDnC" (click)="deleteDocument(data.documentId,data.programId,data.documentDownloadId)">{{esignLabelDeleted}}
                                                 </label>
                                             </div>
                                             <div class="py-2 d-flex px-4" *ngIf="data.esignFlag == true">
@@ -131,16 +135,16 @@
                                                     class="enableDnC upload-icon mt-1" />
                                                 <label class="textfield-label p-1 enableDnC">{{shareLabel}}</label>
                                             </div>
-                                            <div class=" py-2 d-flex px-4" *ngIf="data.esignFlag == false">
+                                            <div class=" py-2 d-flex px-4" *ngIf="data.esignFlag == false && data.isDownloaded == false">
                                                 <img src="assets/images/icons/download-icon.svg"
                                                     class="enableDnC upload-icon mt-1"
-                                                    (click)="downloadApplicationForm(data.programDocumentId)" />
-                                                <a (click)="downloadApplicationForm(data.programDocumentId)">
+                                                    (click)="downloadApplicationForm(data.programDocumentId,data.documentDownloadId,data.programId)" />
+                                                <a (click)="downloadApplicationForm(data.programDocumentId,data.documentDownloadId,data.programId)">
                                                     <label
                                                         class="textfield-label p-1 enableDnC">{{downloadLabel}}</label>
                                                 </a>
                                             </div>
-                                            <div class="py-2 d-flex px-4" *ngIf="data.esignFlag == false">
+                                            <div class="py-2 d-flex px-4" *ngIf="data.esignFlag == false && data.isDownloaded == true">
                                                 <img (click)="Programfile.click()"
                                                     src="assets/images/icons/upload-icon.svg"
                                                     class="enableDnC upload-icon mt-1" />
@@ -148,7 +152,7 @@
                                                     class="textfield-label p-1 enableDnC">{{uploadFormsLabel}}</label>
                                                 <input hidden type="file"
                                                     id="{{data.programDocumentId}}_{{data.programId}}" #Programfile
-                                                    (change)="HandleProgramDocument($event)" accept=".pdf">
+                                                    (change)="HandleProgramDocument($event,data.programId)" accept=".pdf">
                                             </div>
                                         </div>
                                         <div *ngIf="this.disableFlag[data.programId] == 'false'"
@@ -157,7 +161,7 @@
                                                 <img src="assets/images/icons/esign-icon.svg" class="upload1-icon mt-1 "
                                                     data-bs-toggle="modal" data-bs-target="#formsModal" />
                                                 <label class="textfield-label p-1"
-                                                    (click)="loadDocumentOpen(data.documentName, data.programDocumentId, data.documentId, data.programId)"
+                                                    (click)="loadDocumentOpen(data.documentId)"
                                                     data-bs-toggle="modal" data-bs-target="#formsModal">{{esignLabel}}
                                                 </label>
                                             </div>
@@ -169,8 +173,8 @@
                                             <div class=" py-2 d-flex px-4 disableESign" *ngIf="data.esignFlag == false">
                                                 <img src="assets/images/icons/download-icon.svg"
                                                     class="upload-icon mt-1"
-                                                    (click)="downloadApplicationForm(data.programDocumentId)" />
-                                                <a (click)="downloadApplicationForm(data.programDocumentId)">
+                                                    (click)="downloadApplicationForm(data.programDocumentId,data.documentDownloadId,data.programId)" />
+                                                <a (click)="downloadApplicationForm(data.programDocumentId,data.documentDownloadId,data.programId)">
                                                     <label class="textfield-label p-1">{{downloadLabel}}</label>
                                                 </a>
                                             </div>
@@ -182,7 +186,7 @@
                                                     class="textfield-label p-1">{{uploadFormsLabel}}</label>
                                                 <input hidden type="file"
                                                     id="{{data.programDocumentId}}_{{data.programId}}" #Programfile
-                                                    (change)="HandleProgramDocument($event)" accept=".pdf">
+                                                    (change)="HandleProgramDocument($event,data.programId)" accept=".pdf">
                                             </div>
                                         </div>
                                     </div>

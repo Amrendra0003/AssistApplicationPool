@@ -14,6 +14,7 @@ namespace HealthWare.ActiveASSIST.DTOs
     {
         public long AssessmentId { get; set; }
         public long AssessmentPatientId { get; set; }
+        public long CreatedBy { get; set; }
         public string AssessmentStatus { get; set; }
         public string PatientProfileImage { get; set; }
         public string PatientName { get; set; }

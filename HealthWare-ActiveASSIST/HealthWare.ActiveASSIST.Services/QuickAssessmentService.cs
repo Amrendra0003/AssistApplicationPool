@@ -952,6 +952,22 @@ namespace HealthWare.ActiveASSIST.Services
         public async Task<Result<QuickAssessmentSelfResponse>> GetBasicInfoSelfDetails(long patientId)
         {
             var patient = await _userRepository.GetUserById(patientId);
+            if(patient.ContactDetails == null)
+            {
+                var quickAssessmentSelfResponse1 = new QuickAssessmentSelfResponse()
+                {
+                    Citizenship = "U.S. Citizen",
+                    FirstName = patient.FirstName,
+                    LastName = patient.LastName,
+                    DateOfBirth = patient.DateOfBirth?.ToString("MM/dd/yyyy"),
+                    Gender = patient.Gender,
+                    MaritalStatus = patient.MaritalStatus,
+                    Email = patient.EmailAddress,
+                    Cell = patient.Cell,
+                    CountyCode = patient.CountyCode
+                };
+                return new Result<QuickAssessmentSelfResponse>() { Data = quickAssessmentSelfResponse1 };
+            }
             var homeContactDetails = await _contactDetailsRepository.GetContactDetailsById(patient.ContactDetails.Id);
             var quickAssessmentSelfResponse = new QuickAssessmentSelfResponse()
             {

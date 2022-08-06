@@ -4,6 +4,7 @@ using HealthWare.ActiveASSIST.Entities;
 using HealthWare.ActiveASSIST.Repositories.Base.Connection;
 
 using Healthware.Core.Base;
+using System.Threading;
 
 namespace HealthWare.ActiveASSIST.Repositories
 {

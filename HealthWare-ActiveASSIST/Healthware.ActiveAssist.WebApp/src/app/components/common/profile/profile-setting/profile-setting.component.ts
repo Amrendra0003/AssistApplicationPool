@@ -154,6 +154,7 @@ export class ProfileSettingComponent implements OnInit {
     this.genderval = await this.common.getGenderValues();
   }
   async getPhoneCode(){ //To get country codes
+    
     this.phoneCode = await this.common.getPhoneCode();
   }
   private initForm() {
@@ -174,7 +175,7 @@ export class ProfileSettingComponent implements OnInit {
       'zipcode': new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(5), Validators.maxLength(50)]),
       'homeCellNumber': new FormControl('', [Validators.minLength(10)]),
       'streetName': new FormControl('', [Validators.required, Validators.maxLength(250)]),
-      'homeCountyCode': new FormControl(''),
+      'homeCountyCode': new FormControl('1',[Validators.required]),
       'dynamic': new FormControl('true')
     });
   }
@@ -308,7 +309,11 @@ export class ProfileSettingComponent implements OnInit {
         this.state = result.data.state;
         this.county = result.data.county;
         this.zipcode = result.data.zipCode;
+        
         this.homeCountyCode = result.data.mailingAddressCountyCode;
+        if(this.homeCountyCode == null){
+          this.homeCountyCode = '1';
+        }
         this.homeCellNumber = result.data.mailingAddressCell;
         this.assessmentCount = result.data.assessmentCount;
         this.dynamic = result.data.isDynamic;

@@ -8,6 +8,8 @@ import { DataSharingService } from 'src/app/services/datasharing.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { EsignserviceService } from 'src/app/_services/esignservice.service';
 import { DomSanitizer } from "@angular/platform-browser";
+//import { getDocument} from 'pdfjs-dist';
+import { PDFDocument } from 'pdf-lib';
 
 @Component({
   selector: 'app-esign-document',
@@ -15,85 +17,66 @@ import { DomSanitizer } from "@angular/platform-browser";
   styleUrls: ['./esign-document.component.css']
 })
 export class EsignDocumentComponent implements OnInit {
+  showFinishButton: boolean = false;
+  showLoader: boolean = false;
   response:any;
 	transientres:any;
 	apiAccessPoint:any;
-	filename='';
-  file:any;
 	transientDocumentId='';
 	Agreements:any;
 	AgreementId='';
 	Document:any;
   isOpen=0
   documentId: number = 0;
-  programId: string = '';
-  documentName?: string;
-  currentTheme: any;
-  assessmentId: any;
-  @ViewChild('closeSignModal') 
-  closeModal: ElementRef | any;
-  formValues = [
-    {
-      value: 'aaa'
-    },
-    {
-      value: 'bbb'
-    },
-    {
-      value: 'ccc'
-    }
-  ];
-  sign = "sign";
-  @ViewChild('canvas')
-  public canvasapp: any;
-  public canvas!: ElementRef;
-  log = (value: any) => console.log(value.value);
+  result:any;
+  pagenumber:any;
+  tab:any;
+ 
   constructor(private sanitizer: DomSanitizer, private viewSDKClient: ViewSDKClient, private fileUpload: FileUpload, private route: ActivatedRoute, private toastService: ToastServiceService, private dataSharingService: DataSharingService, private _route:ActivatedRoute,
     private esignserviceObj : EsignserviceService,
     private _http:HttpClient,
     private router:Router) { 
-    this.dataSharingService.changeTheme.subscribe(value => {
-      if (value == "")
-        this.currentTheme = sessionStorage.getItem("themeSettings");
-      else
-        this.currentTheme = value;
-    });
-    this.fileUpload.uploadedDocumentId$.subscribe(response => {
-          //this.toastService.showWarning(StringConstants.toast.submitEform, StringConstants.toast.empty);
-          this.toastService.showSuccess(StringConstants.toast.formUpload, StringConstants.toast.empty);
-          window.location.reload();
-          //this.router.navigate(['esign-document'], { queryParams: { documentId: this.documentId, documentName: this.documentName, programId: this.programId }});
-
-    });
-    this.dataSharingService.esignFileUpload.subscribe(async e =>{
-      if(e !== null && e[0].size > 0 && this.programId !== ""){
-        var saveResponse = await this.fileUpload.UploadProgramDocument(this.assessmentId, e[1], this.programId, e[0], true);
-        
-        this.dataSharingService.esignFileUpload.next([(new File([],"")),""]);
-      }
-      else{
-        console.log('File is empty');
-      }
-    },(error) => {console.log("error"+error); });
   }
-
-  ngOnInit(): void {
+  async ngOnInit(){
     this.route.queryParams.subscribe(params => {
       this.documentId = params['documentId'];
-      this.documentName = params['documentName'];
-      this.programId = params['programId'];
-      this.assessmentId = sessionStorage.getItem("assessmentId");
+      this.tab = params['tab'];
   });
-    this.viewSDKClient.ready().then(() => {
       if(this.documentId){
-        
-          this.fileUpload.getFileDownloadURL(this.documentId.toString()).subscribe(async (filePath: any) => {
-            
-            if (filePath.data!=null) {
-        
-        var sampleArr = this.base64ToArrayBuffer(filePath.data);
-        var blob = new Blob([sampleArr], {type: "application/pdf"});
+        this.showFinishButton = false;
+          this.showLoader = true;
+          var downloadUrl = await this.fileUpload.getDocumentDownloadURL(this.documentId.toString())
+        //var sampleArr = this.base64ToArrayBuffer(filePath.data);
+        let blob = await fetch(downloadUrl).then(r => r.blob());
         var file = new File([blob], "myfile.pdf", {type:"application/pdf", lastModified:new Date().getTime()});
+      
+        //Step 2: Read the file using file reader
+    //var fileReader = new FileReader();  
+ 
+            //Step 3:Read the file as ArrayBuffer
+        //this.result = fileReader.readAsArrayBuffer(file);
+        //Step 4:turn array buffer into typed array
+        //var typedarray = new Uint8Array(this.result);
+        //Step 5:pdfjs should be able to read this
+        //const loadingTask = getDocument(typedarray);
+        //loadingTask.promise.then((pdf:any) => {
+            
+           // this.pagenumber = pdf.numPages
+            // The document is loaded here...
+       // });
+
+      
+      const getNumPages =async (file:any) => {
+        
+        var buffer1 = await this.readFile(file);
+        
+        const pdf = await PDFDocument.load(buffer1);
+      
+        return pdf.getPages();
+      }
+      
+      this.pagenumber = await getNumPages(file);
+      
          const formData = new FormData();
          formData.append("File-Name","myfile");
          formData.append("File", file);
@@ -104,41 +87,45 @@ export class EsignDocumentComponent implements OnInit {
            this.apiAccessPoint = this.response.apiAccessPoint;
            this.getTransitdocument(formData);
          })
-
-
-         console.log(file);
-          }
-          }, (error) => {
-            console.log(error)
-          }); 
-
       }
       else{
         this.toastService.showWarning(StringConstants.toast.notFoundDocument, StringConstants.toast.empty);
       }
-      
+  }
+  readFile(file:any):any{
+
+    return new Promise((resolve, reject) => {
+  
+      const reader = new FileReader();
+  
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+  
+      reader.readAsArrayBuffer(file);
     });
   }
-  base64ToArrayBuffer(base64:any) {
-    var binaryString = window.atob(base64);
-    var binaryLen = binaryString.length;
-    var bytes = new Uint8Array(binaryLen);
-    for (var i = 0; i < binaryLen; i++) {
-       var ascii = binaryString.charCodeAt(i);
-       bytes[i] = ascii;
-    }
-    return bytes;
- }
+//   base64ToArrayBuffer(base64:any) {
+//     var binaryString = window.atob(base64);
+//     var binaryLen = binaryString.length;
+//     var bytes = new Uint8Array(binaryLen);
+//     for (var i = 0; i < binaryLen; i++) {
+//        var ascii = binaryString.charCodeAt(i);
+//        bytes[i] = ascii;
+//     }
+//     return bytes;
+//  }
   async cancelDocument() {
-    this.router.navigate(['detail-assessment'], { queryParams: { tab: 5 } });
-  }
-  async closeDocument() {
-    this.router.navigate(['detail-assessment'], { queryParams: { tab: 5 } });
-
+    this.showLoader = true;
+    const Body={
+      "state": "CANCELLED"
+    }
+    this.esignserviceObj.updateDocumanetform(this.apiAccessPoint,Body,this.AgreementId).subscribe(res => {
+      
+      this.router.navigate(['detail-assessment'], { queryParams: { tab: this.tab } });
+    })
   }
   async finishDocument(){
-    
-    this.router.navigate(['detail-assessment'], { queryParams: { tab: 5 } });
+    this.router.navigate(['detail-assessment'], { queryParams: { tab: this.tab } });
   }
   getTransitdocument(formData:any){
     this.esignserviceObj.transientDocuments(this.apiAccessPoint,formData).subscribe((response:any) => {
@@ -162,7 +149,7 @@ export class EsignDocumentComponent implements OnInit {
         {
         "memberInfos": [
           {
-          "email": "softwaretestuser1234@gmail.com"
+             "email": "softwaretestuser1234@gmail.com",
           }
           ],
           "order": 1,
@@ -175,112 +162,97 @@ export class EsignDocumentComponent implements OnInit {
     this.esignserviceObj.getAgreeMentIdBytransientId(this.apiAccessPoint,Body).subscribe(res => {
       this.Agreements=res;
       this.AgreementId = this.Agreements.id;
-      setTimeout(() => {
-      this.esignserviceObj.getDocumanetformfields(this.apiAccessPoint,this.AgreementId).subscribe(res => {
-        res.fields[50].inputType = "SIGNATURE";
-        res.fields[50].required = "true";
-        delete res.fields[50].conditionalAction;
-        res.fields[52] = 
-          { 
-            "locations": [ 
-                 { 
-                  "height": 22.694992065429688,
-                  "left": 81.47219848632812,
-                  "pageNumber": 2,
-                  "top": 45,
-                  "width": 253.7947998046875 
-                 } 
-               ], 
-               "alignment": "LEFT",
-               "backgroundColor": "",
-               "borderColor": "",
-               "borderStyle": "SOLID",
-               "borderWidth": 1,
-               "calculated": false,
-               "contentType": "DATA",
-               "defaultValue": "",
-               "displayFormat": "",
-               "displayFormatType": "DEFAULT",
-               "displayLabel": "",
-               "fontColor": "#0000ff",
-               "fontName": "Helvetica",
-               "fontSize": -1,
-               "inputType": "SIGNATURE",
-               "masked": false,
-               "maskingText": "*",
-               "maxLength": -1,
-               "maxValue": -1,
-               "minLength": -1,
-               "minValue": -1,
-               "name": "Sign",
-               "origin": "IMPORTED",
-               "radioCheckType": "CIRCLE",
-               "readOnly": false,
-               "required": true,
-               "tooltip": "",
-               "urlOverridable": false,
-               "validation": "NONE",
-               "validationErrMsg": "",
-               "valueExpression": "",
-               "visible": true 
-              
-        }
-        res.fields[53] = 
-          { 
-            "locations": [ 
-                 { 
-                  "height": 22.694992065429688,
-                  "left": 81.47219848632812,
-                  "pageNumber": 1,
-                  "top": 45,
-                  "width": 253.7947998046875 
-                 } 
-               ], 
-               "alignment": "LEFT",
-               "backgroundColor": "",
-               "borderColor": "",
-               "borderStyle": "SOLID",
-               "borderWidth": 1,
-               "calculated": false,
-               "contentType": "DATA",
-               "defaultValue": "",
-               "displayFormat": "",
-               "displayFormatType": "DEFAULT",
-               "displayLabel": "",
-               "fontColor": "#0000ff",
-               "fontName": "Helvetica",
-               "fontSize": -1,
-               "inputType": "SIGNATURE",
-               "masked": false,
-               "maskingText": "*",
-               "maxLength": -1,
-               "maxValue": -1,
-               "minLength": -1,
-               "minValue": -1,
-               "name": "Signature",
-               "origin": "IMPORTED",
-               "radioCheckType": "CIRCLE",
-               "readOnly": false,
-               "required": true,
-               "tooltip": "",
-               "urlOverridable": false,
-               "validation": "NONE",
-               "validationErrMsg": "",
-               "valueExpression": "",
-               "visible": true 
-              
-        }
-        const date = new Date();
-        const month = date.getUTCMonth() + 1;
-        res.fields[51].defaultValue = date.getUTCDate() + '/' + month + '/' + date.getUTCFullYear();
-        this.esignserviceObj.updateDocumanetformfields(this.apiAccessPoint,res,this.AgreementId).subscribe(res => {
-          this.getDocumanetforSign();
+        this.esignserviceObj.getMembers(this.apiAccessPoint,this.AgreementId).subscribe(res => {
+          
+          this.members = res;
+          setTimeout(() => {
+            this.esignserviceObj.getDocumanetformfields(this.apiAccessPoint,this.AgreementId).subscribe(res => {
+              let trueorfalse = true;
+              for(var i=0;i<res.fields.length;i++){
+                if(res.fields[i].inputType == "SIGNATURE"){
+                  res.fields[i].required = "true";
+                  res.fields[i].assignee = this.members.participantSets[0].id;
+                  res.fields[i].contentType = "SIGNATURE";
+                  delete res.fields[i].conditionalAction;
+                  trueorfalse = false;
+                  break;
+                }
+              }
+              if(trueorfalse){
+                for(var i=0;i<res.fields.length;i++){
+                  if(res.fields[i].name == "SignatureImage" || res.fields[i].name == "Signature"){
+                    res.fields[i].required = "true";
+                    res.fields[i].assignee = this.members.participantSets[0].id;
+                    res.fields[i].contentType = "SIGNATURE";
+                    delete res.fields[i].conditionalAction;
+                    res.fields[i].inputType = "SIGNATURE";
+                    trueorfalse = false;
+                  }
+                  if(res.fields[i].name == "SignatureDate"){
+                    const date = new Date();
+                    const month = date.getUTCMonth() + 1;
+                    res.fields[i].defaultValue = date.getUTCDate() + '/' + month + '/' + date.getUTCFullYear();
+                  }
+                }
+              }
+              if(trueorfalse){
+                res.fields[res.fields.length] = 
+                { 
+                  "locations": [ 
+                       { 
+                        "height": 22.694992065429688,
+                        "left": 81.47219848632812,
+                        "pageNumber": this.pagenumber,
+                        "top": 45,
+                        "width": 253.7947998046875 
+                       } 
+                     ], 
+                     "assignee": this.members.participantSets[0].id,
+                     "alignment": "LEFT",
+                     "recipientIndex": 1,
+                     "backgroundColor": "",
+                     "borderColor": "",
+                     "borderStyle": "SOLID",
+                     "borderWidth": 1,
+                     "calculated": false,
+                     "contentType": "SIGNATURE",
+                     "defaultValue": "",
+                     "displayFormat": "",
+                     "displayFormatType": "DEFAULT",
+                     "displayLabel": "",
+                     "fontColor": "#0000ff",
+                     "fontName": "Helvetica",
+                     "fontSize": -1,
+                     "inputType": "SIGNATURE",
+                     "masked": false,
+                     "maskingText": "*",
+                     "maxLength": -1,
+                     "maxValue": -1,
+                     "minLength": -1,
+                     "minValue": -1,
+                     "name": "Sign",
+                     "origin": "IMPORTED",
+                     "radioCheckType": "CIRCLE",
+                     "readOnly": false,
+                     "required": true,
+                     "tooltip": "",
+                     "urlOverridable": false,
+                     "validation": "NONE",
+                     "validationErrMsg": "",
+                     "valueExpression": "",
+                     "visible": true 
+                    
+              }
+              }
+              this.esignserviceObj.updateDocumanetformfields(this.apiAccessPoint,res,this.AgreementId).subscribe(res => {
+                this.getDocumanetforSign();
+              })
+            });
+          }, 2000);
         })
       });
-
-      }, 6000)
-      });
   }
+  members:any;
   displayIframe:any = false;
   documentfinalUrl:any;
   getDocumanetforSign()
@@ -295,17 +267,20 @@ export class EsignDocumentComponent implements OnInit {
            this.documentfinalUrl = this.sanitizer.bypassSecurityTrustResourceUrl(documentfinalUrl);
            //window.open(documentfinalUrl);
            this.displayIframe = true;
+           this.showLoader = false;
+           debugger
            this.fileUpload.UpdateDocumentAgreementIdById(this.documentId, this.AgreementId).subscribe(async event => {
+            debugger
+            if(event){
+              this.showFinishButton = true;
+            }
           },
             (err) => {
               console.log(StringConstants.toast.uploadError, err);
             }, () => {
             }
           )
-           
           return data;
          })
-  }
-
-      
+  }   
 }

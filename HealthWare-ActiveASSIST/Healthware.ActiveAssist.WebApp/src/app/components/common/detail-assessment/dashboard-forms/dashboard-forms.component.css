@@ -1,3 +1,11 @@
+.pdf-view {
+  display: inline-block;
+  position: absolute;
+  width: 98% !important;
+  height: 90% !important;
+  top: 0px !important;
+  box-shadow: 1px 1px 10px 1px #dadada;
+}
 .page {
   display: flex;
   flex-direction: column;
@@ -32,7 +40,7 @@ app-webviewer {
   left: 10% !important;
   right: 10% !important;
   top: 9% !important;
-  height: 80% !important;
+  height: 90% !important;
 }
 .modal.show .modal-dialog {
   width: 100% !important;
@@ -52,6 +60,19 @@ app-webviewer {
   left: 1% !important;
   right: 1% !important;
 }
-.boxshadow-height {
-  height: 100vh !important;
+a {
+  color: #0d6efd !important;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+button#stickyNote {
+  display: none !important;
+}
+.close {
+  border: none;
+  float: right;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #2494ed;
+  text-shadow: 0 1px 0 #fff;
 }

@@ -22,7 +22,7 @@ namespace HealthWare.ActiveASSIST.Services
     }
     public class DocumentMapper : IFileUploadMapper
     {
-        private static string TokenKey = "Bearer 3AAABLblqZhBM3SBjRfXEymJcB8NBtKCrg7BI_wgo2YG6bdKnyhDgbWZ-QUjidhCV8xRCmDO2tTVaaZS7HXcACpHopv0am74_";
+        private static string TokenKey = "Bearer 3AAABLblqZhBQVKfASPxFqDTKPQG40NlIxK1JR81T-GtWKVLgKZWaBzboxoo-wedoGjfejOLDXr9hml1RLcTb0Uxtl_hSYD-k";
         private readonly IFileUploadServiceHelper _fileHelper;
         private readonly IDocumentRepository _documentRepository;
         public DocumentMapper(IFileUploadServiceHelper fileHelper, IDocumentRepository documentRepository)
@@ -94,10 +94,29 @@ namespace HealthWare.ActiveASSIST.Services
             {
                 var isProgramEsgined = _documentRepository.IsProgramDocumentEsigned(assessmentId, detail.Id, isEvaluated).GetAwaiter().GetResult();
                 var document = _documentRepository.GetProgramDocumentEsigned(assessmentId, detail.Id, isEvaluated).GetAwaiter().GetResult();
-                var isSigned = false;
+                bool isSigned = false;
+                var downloadDocument = await _documentRepository.IsDocumentDownloaded(detail.Id, assessmentId);
+                bool isDeleted = false;
+                bool isDownloaded = false;
+                long documentDownloadId = 0;
+                if (downloadDocument != null)
+                {
+                    isDownloaded = (bool)downloadDocument.isDownloaded;
+                    documentDownloadId = downloadDocument.Id;
+                }
+                else
+                {
+                    isDownloaded = false;
+                }
+
                 if (document != 0)
                 {
                     var doc = await _documentRepository.GetDocumentById(document);
+                    long programDocumentID = doc.ProgramDocumentId ?? default(long);
+                    if(doc.isDeleted == true)
+                    {
+                        isDeleted = true;
+                    }
                     if (doc.isDocumentSigned == null)
                     {
                         doc.isDocumentSigned = false;
@@ -128,7 +147,10 @@ namespace HealthWare.ActiveASSIST.Services
                     ProgramId = detail.Program.Id,
                     DocumentId = programDocumentMappingDetail.IsNull() ? document.ToString() : GetDocumentId(programDocumentMappingDetail, detail.Id).ToString(),
                     IsProgramDocumentEsigned = isProgramEsgined,
-                    EsignFlag = isSigned
+                    EsignFlag = isSigned,
+                    IsDeleted = isDeleted,
+                    IsDownloaded = isDownloaded,
+                    DocumentDownloadId = documentDownloadId
                 });
                 programDocumentIds.Add(detail.Id);
             }

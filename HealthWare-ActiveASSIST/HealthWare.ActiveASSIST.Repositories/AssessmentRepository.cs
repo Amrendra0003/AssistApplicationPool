@@ -27,6 +27,7 @@ namespace HealthWare.ActiveASSIST.Repositories
         Task<List<long>> GetTenantIdList();
         Task<bool> UpdateAssessmentIsEvaluated(Assessment assessment);
         Task<string> GetUserRoleOfTheAssessment(long assessmentId);
+        Task<List<FacilityMapping>> GetUserIds(long Id);
     }
     public class AssessmentRepository : IAssessmentRepository
     {
@@ -185,6 +186,12 @@ namespace HealthWare.ActiveASSIST.Repositories
         {
             var assessments = _context.DashboardAssessment.FromSqlRaw($"{Constants.ExecuteStoredProcedure} {Constants.UspGetAssessmentDashboardDetails}  {Constants.UserIdParameter} = '{userId}',{Constants.PartialNameParameter} ='{searchText}', {Constants.TenantIdParameter} = '{tenantId}'").ToList();
             return assessments;
+        }
+        public async Task<List<FacilityMapping>> GetUserIds(long Id)
+        {
+            var document = await _unitOfWork.GetEntityAsync<FacilityMapping>(x => x.UserId == Id);
+            var doc1 = await _unitOfWork.GetAllAsync<FacilityMapping>(x => x.FacilityId == document.FacilityId);
+            return doc1.ToList();
         }
         public IEnumerable<AssessmentInPatientDashboard> GetAssessmentListForPatientDashboard(int userId, string searchText, long tenantId)
         {

@@ -29,7 +29,7 @@ export class FileUpload {
       Esigned: false,
     };
     return this.uploadDocument(fileDetails, file, this.Token).subscribe(async (result: any) => {
-      if (result.body.wasSuccessful)
+      if (result?.body.wasSuccessful)
         this.updateStatus(DocumentCategory, true);
       else
         this.updateStatus(DocumentCategory, false);
@@ -70,6 +70,7 @@ export class FileUpload {
     }
   }
   UploadProgramDocument(AssessmentId: string, ProgramId: string, ProgramDocumentId: string, file: File, eSign: boolean = false) { // Upload program document
+    
     const fileDetails: FileDetails = {
       AssessmentId: AssessmentId,
       UserId: sessionStorage.getItem("patientId"),
@@ -84,7 +85,8 @@ export class FileUpload {
     
     this.uploadDocument(fileDetails, file, this.Token).subscribe(async (result: any) => {
       
-      if (result.body.wasSuccessful) {
+      if (result?.body.wasSuccessful) {
+        
         this.uploadedDocumentId$.next(new ProgramDocumentDetails(ProgramDocumentId, result.body.data));
       }
       else {
@@ -108,7 +110,7 @@ export class FileUpload {
       Esigned: false,
     };
     return this.uploadDocument(fileDetails, file, this.Token).subscribe(async (result: any) => {
-      if (result.body.wasSuccessful)
+      if (result?.body.wasSuccessful)
         this.updateStatus("income", true);
       else
         this.updateStatus("income", false);
@@ -218,8 +220,8 @@ export class FileUpload {
   DeleteDocument(DocumentId: string, householdMemberId: string) { // To delete document
     return this.httpgetRequest(environment.apiBaseUrl + ApiConstants.url.DeleteDocument + "?DocId=" + DocumentId + "&householdMemberId=" + householdMemberId);
   }
-  GetProgramDocumentDownloadURL(programDocumentId: string) { // Program document download
-    return environment.apiBaseUrl + ApiConstants.url.GetProgramDocumentDownloadUrl + programDocumentId;
+  GetProgramDocumentDownloadURL(programDocumentId: string,assessmentId: any,documentDownloadId: any) { // Program document download
+    return environment.apiBaseUrl + ApiConstants.url.GetProgramDocumentDownloadUrl + programDocumentId + "&assessmentId=" + assessmentId + "&documentDownloadId=" + documentDownloadId;
   }
   GetProgramDocumentDetails(ProgramId: string, AssessmentId: string, IsEvaluated: boolean) { // Get program details
     return this.httpgetRequest(environment.apiBaseUrl + ApiConstants.url.GetProgramDocumentDetails + "?PrgmId=" + ProgramId + "&AssessmentId=" + AssessmentId + "&isEvaluated=" + IsEvaluated);
@@ -237,14 +239,16 @@ export class FileUpload {
     const req = new HttpRequest('POST', url, {});
     return this.http.request(req);
   }
+  DeleteeDocumentById(DocumentId: string,documentDownloadId:string): Observable<HttpEvent<any>> { //UPdate document path
+    var url = environment.apiBaseUrl + ApiConstants.url.DeleteeDocumentById + "?docId=" + DocumentId + "&downloadDocId=" + documentDownloadId;
+    const req = new HttpRequest('POST', url, {});
+    return this.http.request(req);
+  }
   httpgetRequestimage(url: string) { // Request image
     return this.http.get(url, { responseType: 'text' });
   }
   getDocumentDownloadURL(documentId: string) { // Document download url
     return environment.apiBaseUrl + ApiConstants.url.PreviewDocument + documentId;
-  }
-  getFileDownloadURL(documentId: string) { // Document download url
-    return this.http.get(environment.apiBaseUrl + ApiConstants.url.PreviewDocumentPath + documentId);
   }
   getProgramDocumentURL(programDocumentId: string) { //Program document download
     return environment.apiBaseUrl + ApiConstants.url.GetProgramDocumentDownloadUrl + programDocumentId;

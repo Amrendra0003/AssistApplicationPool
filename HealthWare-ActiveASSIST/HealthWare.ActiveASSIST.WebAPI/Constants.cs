@@ -93,7 +93,6 @@
         public const string GetAddressVerificationFileDetail = "GetAddressVerificationFileDetail";
         public const string GetOtherVerificationFileDetail = "GetOtherVerificationFileDetail";
         public const string PreviewDocument = "PreviewDocument";
-        public const string PreviewDocumentPath = "PreviewDocumentPath";
         public const string PreviewProgramDocument = "PreviewProgramDocument";
         public const string DownloadProgramDocument = "DownloadProgramDocument";
         public const string GetProgramDocumentDetails = "GetProgramDocumentDetails";
@@ -101,6 +100,7 @@
         public const string UpdateVerificationDocument = "UpdateVerificationDocument";
         public const string UpdateFilePath = "UpdateFilePath";
         public const string UpdateFileAgreementId = "UpdateFileAgreementId";
+        public const string DeleteeDocumentById = "DeleteeDocumentById";
         public const string UploadSignature = "UploadSignature";
         public const string CompleteUploadedDocument = "CompleteUploadedDocument"; 
 

@@ -9,5 +9,8 @@
         public string? DocumentId { get; set; }
         public bool IsProgramDocumentEsigned { get; set; }
         public bool EsignFlag { get; set; }
+        public bool IsDeleted { get; set; } 
+        public bool IsDownloaded { get; set; }
+        public long DocumentDownloadId { get; set; }
     }
 }

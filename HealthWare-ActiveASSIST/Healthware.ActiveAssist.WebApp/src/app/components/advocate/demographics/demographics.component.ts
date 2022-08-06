@@ -132,6 +132,7 @@ export class DemographicsComponent implements OnInit {
   constructor(private common:CommonService,private datepipe: DatePipe, private toastService: ToastServiceService,
     private quickAssessmentService: QuickAssessmentService, private dataSharingService: DataSharingService, private dropdownService: DropdownService) {
     this.dataSharingService.changeTheme.subscribe(value => {
+      
       if (value == "")
         this.currentTheme = sessionStorage.getItem("themeSettings");
       else
@@ -146,10 +147,15 @@ export class DemographicsComponent implements OnInit {
   ngOnInit(): void {
     window.scroll(0, 0);
     this.initForm();
+    
     this.getMartialValues();
+    
     this.getGenderValues();
+    
     this.getRelationValues();
+    
     this.getSelfDetails();
+
     this.getAssessmentDetails();
     this.getPhoneCode();
     this.dataSharingService.getAdvocateDemographicsLoaderState().subscribe(e => {

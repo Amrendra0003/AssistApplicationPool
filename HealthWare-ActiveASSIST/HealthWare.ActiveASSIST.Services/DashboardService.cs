@@ -149,7 +149,18 @@ namespace HealthWare.ActiveASSIST.Services
                 return new Result<IOrderedEnumerable<AdvocateDashboardResponse>>();
 
             var dashboardAssessmentList = _assessmentRepository.GetAssessmentListForDashboard(userId, searchText, tenantId);
-            var dashboardAssessments = dashboardAssessmentList.ToList();
+            var dashboardAssessments1 = dashboardAssessmentList.ToList();
+            List<DashboardAssessment> dashboardAssessments = new List<DashboardAssessment>();
+            var userIDs = _assessmentRepository.GetUserIds(userId);
+            userIDs.Result.RemoveAll(x => x.UserId == userId);
+            dashboardAssessments1.RemoveAll(x => x.CreatedBy != userId);
+            dashboardAssessments.AddRange(dashboardAssessments1);
+            foreach (var item in userIDs.Result)
+            {
+                var dashboardAssessments3 = dashboardAssessmentList.ToList();
+                dashboardAssessments3.RemoveAll(x => x.CreatedBy != item.UserId);
+                dashboardAssessments.AddRange(dashboardAssessments3);
+            }
             foreach (var assessment in dashboardAssessments)
             {
                 assessment.PatientProfileImage = await _documentService.LoadProfileImage(assessment.AssessmentId);
@@ -294,9 +305,9 @@ namespace HealthWare.ActiveASSIST.Services
                 dashboardSummary.NumberOfMembers = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.TotalHouseholdMembers))?[Constants.TotalHouseholdMembers];
                 dashboardSummary.NumberOfMinors = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.TotalHouseholdMembers))?[Constants.TotalHouseholdMembers];
                 //dashboardSummary.IsHouseHoldEmployed = bool.Parse((string)values.FirstOrDefault(x => x.ContainsKey(Constants.IsHouseholdEmployed))?[Constants.IsHouseholdEmployed]);
-                dashboardSummary.ReceivingAny = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.ProgramServices))?[Constants.ProgramServices];
+                //dashboardSummary.ReceivingAny = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.ProgramServices))?[Constants.ProgramServices];
                 dashboardSummary.HouseHoldIncomeMonthly = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.HouseholdIncomeAnswer))?[Constants.HouseholdIncomeAnswer];
-                dashboardSummary.HouseHoldResources = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.ProgramServices))?[Constants.ProgramServices];
+                //dashboardSummary.HouseHoldResources = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.ProgramServices))?[Constants.ProgramServices];
                 //dashboardSummary.GeneralQuestions = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.ServiceProgram))?[Constants.ServiceProgram];
                 //dashboardSummary.HealthConditions = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.HealthCondition))?[Constants.HealthCondition];
                 //dashboardSummary.BeenInjured = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.BeenInjured))?[Constants.BeenInjured];

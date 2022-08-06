@@ -88,6 +88,7 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
   benefitsLabel: any = StringConstants.applicationForms.benefitsTitle;
   formsTitleLabel: any = StringConstants.common.formsTitle;
   esignLabel: any = StringConstants.applicationForms.eSign;
+  esignLabelDeleted: any = StringConstants.applicationForms.eSignDelete;
   esignLabelCompleted: any = StringConstants.applicationForms.eSignComplete;
   shareLabel: any = StringConstants.applicationForms.share;
   downloadLabel: any = StringConstants.applicationForms.download;
@@ -153,11 +154,13 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
     this.dataSharingService.editable.subscribe(value => { // Check assessment is incomplete or under review
       this.isEditAllowed = value;
     });
+    
   }
   ngAfterViewInit(): void {
     this.isAdvocate = this.authService.checkIfUserHasPermission(StringConstants.permissionsConstants.viewComponentAssessmentSummary);
   }
   ngOnInit(): void {
+    
     this.assessmentId = sessionStorage.getItem('assessmentId');
     this.patientId = sessionStorage.getItem('patientId');
     this.initForm();
@@ -181,6 +184,7 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
     });
   }
   @Input() set currentTabUpdate(value: boolean) {//Click event for current tab
+    
     if (value != undefined) {
       this.EsignStatus = {};
       this.dataSharingService.showApplicationFormNext.next("5");
@@ -191,33 +195,18 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
       this.notSigned = false;
     }
   }
-  async downloadApplicationForm(programDocumentId: string) { // To download application forms
+  async downloadApplicationForm(programDocumentId: string,documentDownloadId: string,programId: any) { // To download application forms
     this.showLoader = true;
-    var downloadUrl = await this.fileUpload.GetProgramDocumentDownloadURL(programDocumentId);
+    var downloadUrl = await this.fileUpload.GetProgramDocumentDownloadURL(programDocumentId,this.assessmentId,parseInt(documentDownloadId));
     var FileSaver = require('file-saver');
     var fileName = this.programName + ".pdf";
     let blob = await fetch(downloadUrl).then(r => r.blob());
     FileSaver.saveAs(blob, fileName, { type: 'application/pdf' });
+    this.UpdateProgramDocumentDetail(programId);
     this.showLoader = false;
   }
-  async loadDocumentOpen(documentName: string, programDocumentId: string, documentId: string, programId: string) {// To get program list based on assessment
-    this.CurrentProgramDocumentId = programDocumentId;
-    var data: string;
-    var currentDocumentId;
-    var DocumentId = parseInt(documentId);
-    const fileDetails: FileDetails = {
-      DocumentId:DocumentId,
-      AssessmentId: +(this.assessmentId),
-      UserId: +(sessionStorage.getItem("patientId")!),
-      HouseHoldMemberId: 0,
-      ProgramId: programId,
-      DocumentTitle: "programdocument",
-      DocumentCategory: "Eforms",
-      DocumentType: "Eforms",
-      ProgramDocumentId: +(programDocumentId),
-      DocumentName: documentName
-    };
-    this.showLoader = true;
+  async loadDocumentOpen(documentId: string) {// To get program list based on assessment
+
     
     //var result = await this.http.post<any>(environment.apiBaseUrl + ApiConstants.url.GetAssessmentProgramDocument, fileDetails).toPromise();
     //if (result) {
@@ -231,8 +220,7 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
       //  data = this.fileUpload.getDocumentDownloadURL(documentId);
       //  currentDocumentId = documentId;
       //}
-      this.router.navigate(['esign-document'], { queryParams: { documentId: documentId, documentName: documentName, programId: programId } });
-      this.showLoader = false;
+      this.router.navigate(['esign-document'], { queryParams: { documentId: documentId, tab:5} });
     //}
   }
   async getProgramDocument(assessmentId: string, programId: string, programDocumentId: string, documentName: string) {// Get programs document
@@ -276,6 +264,16 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
         flatten: true,
       });
     }
+  }
+  deleteDocument(docId:any,programId:any,documentDownloadId:any){
+    this.fileUpload.DeleteeDocumentById(docId,documentDownloadId).subscribe(async event => {
+      this.UpdateProgramDocumentDetail(programId);
+    },
+      (err) => {
+        console.log(StringConstants.toast.uploadError, err);
+      }, () => {
+      }
+    )
   }
   getEFormData() { // To get form data
     var patientID: number = +(this.patientId);
@@ -434,10 +432,13 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
     else
       this.ProgramsOnChange(this.activeprogramIdList[++index]);
   }
-  HandleProgramDocument(event: any) { // To handle program documents
+  HandleProgramDocument(event: any,programId:any) { // To handle program documents
     var Id = event.target.id.split("_");
     if (event.target.files.length > 0) {
       this.fileUpload.UploadProgramDocument(this.assessmentId, Id[1], Id[0], event.target.files[0]);
+      setTimeout(() => {
+        this.UpdateProgramDocumentDetail(programId);
+      }, 500);
       this.showLoader = true;
     }
   }
@@ -485,6 +486,8 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
     });
   }
   UpdateProgramDocumentDetail(programId: string) { // Update program document
+    
+    this.showLoader = true;
     var IsEvaluated = (/true/i).test(this.disableFlag[programId]);
     this.fileUpload.GetProgramDocumentDetails(programId, this.assessmentId, IsEvaluated)
       .subscribe(async (result: any) => {
@@ -496,6 +499,7 @@ export class DashboardApplicationFormsComponent implements OnInit, AfterViewInit
         }
         console.log(this.EsignStatus);
         this.disableFlag[programId] = this.programstatusMap.get(programId)!.toString();
+        this.showLoader = false;
       },
         (err) => {
           console.log(StringConstants.toast.error, err);
@@ -555,6 +559,9 @@ export interface ProgramDocument {
   documentId: string;
   isProgramDocumentEsigned: boolean;
   esignFlag: boolean;
+  isDeleted: boolean;
+  isDownloaded: boolean;
+  documentDownloadId: string;
 }
 export interface ProgramsUpdateDto {
   patientId: number;

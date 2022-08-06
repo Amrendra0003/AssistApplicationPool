@@ -393,7 +393,7 @@ export class InsuranceComponent implements OnInit {
     }
   }
   isValidInsuranceDetails() {
-    if (!this.insuranceForm.valid) {
+    if (!this.insuranceForm?.valid) {
       this.emit();
       this.dataSharingService.ADInsurance.next(false);
     }
@@ -464,7 +464,7 @@ export class InsuranceComponent implements OnInit {
     else if (patientDetails.insurance != '' && patientDetails.payerName != '' && patientDetails.groupName != '' && patientDetails.policyNumber != '' && patientDetails.groupNumber != '' && patientDetails.effectiveForm != ''
       && this.terminationErrorMessage == '' && this.effectiveFromErrorMessage == '') {
       this.dataSharingService.validateInsuranceStopForm.next(true);
-      if (this.insuranceForm.valid && (this.terminationErrorMessage == "" || this.terminationErrorMessage == null)) {
+      if (this.insuranceForm?.valid && (this.terminationErrorMessage == "" || this.terminationErrorMessage == null)) {
         this.validatePolicyNumberErrorMessage = false;
         this.insuranceDetailsMessageShow = true;
         patientDetails.effectiveFrom = new Date(patientDetails.effectiveFrom);

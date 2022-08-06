@@ -12,7 +12,11 @@ namespace HealthWare.ActiveASSIST.Repositories
     public interface IDocumentRepository
     {
         Task<long> InsertDocument(Document document);
+        Task<long> UpdateDocumentDownloaded(DownloadDocument document);
+        Task<long> InsertDocumentDownloaded(DownloadDocument document);
         Task<Document> GetDocumentById(long documentId);
+        Task<DownloadDocument> IsDocumentDownloaded(long ProgramDocumentId, long AgreementId);
+        Task<DownloadDocument> GetDocumentDownloaded(long Id);
         Task<bool> DeleteDocument(Document document);
         int GetESignedDocumentCount(long assessmentId);
         int GetESignedDocumentCountForActivePrograms(long assessmentId);
@@ -47,7 +51,28 @@ namespace HealthWare.ActiveASSIST.Repositories
             var document = await _unitOfWork.GetEntityAsync<Document>(x => x.Id == documentId);
             return document;
         }
-
+        public async Task<DownloadDocument> IsDocumentDownloaded(long ProgramDocumentId, long AgreementId)
+        {
+            var document = await _unitOfWork.GetEntityAsync<DownloadDocument>(x => x.ProgramDocumentId == ProgramDocumentId && x.AssessmentId == AgreementId);
+            return document;
+        }
+        public async Task<DownloadDocument> GetDocumentDownloaded(long Id)
+        {
+            var document = await _unitOfWork.GetEntityAsync<DownloadDocument>(x => x.Id == Id);
+            return document;
+        }
+        public async Task<long> UpdateDocumentDownloaded(DownloadDocument document)
+        {
+            _unitOfWork.Update(document);
+            await _unitOfWork.CommitAsync();
+            return document.Id;
+        }
+        public async Task<long> InsertDocumentDownloaded(DownloadDocument document)
+        {
+            await _unitOfWork.AddAsync(document);
+            await _unitOfWork.CommitAsync();
+            return document.Id;
+        }
         public async Task<bool> DeleteDocument(Document document)
         {
             _unitOfWork.Remove(document);

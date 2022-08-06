@@ -75,6 +75,7 @@ export class DashboardProgramsComponent implements OnInit {
   constructor(private toastService: ToastServiceService, private dataSharingService: DataSharingService, private advocateService: AdvocateDashboardService,
     private dashboardService: DashboardService, private router: Router, private formbuilder: FormBuilder, private dataSharing: DataSharingService) {
     this.dataSharingService.changeTheme.subscribe(value => { // Theme settings
+      
       if (value == "")
         this.currentTheme = sessionStorage.getItem("themeSettings");
       else
@@ -261,7 +262,8 @@ export class DashboardProgramsComponent implements OnInit {
           var count: number = 0;
           for (var k of this.selectedprogramsIdList) {
             if (i == k) count++;
-            this.programData[i] = this.allprogramsIsActiveList[i].toString();
+            //this.programData[i] = this.allprogramsIsActiveList[i]!.toString();
+            
           }
         }
       }

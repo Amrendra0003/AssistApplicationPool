@@ -31,6 +31,7 @@ export class QuickAssessmentComponent implements OnInit {
   IComplete: string = "";
   constructor(private quickAssessmentService: QuickAssessmentService,
     private dataSharingService: DataSharingService, private router: Router) {
+      
     this.dataSharingService.changeTheme.subscribe(value => {
       if (value == "")
         this.currentTheme = sessionStorage.getItem("themeSettings");

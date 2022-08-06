@@ -45,7 +45,12 @@ namespace HealthWare.ActiveASSIST.Services
                     DeleteDirectory(fileLocation.FolderBasePath);
             }
             if (fileDetails.DocumentTitle.ToLower().Equals(nameof(_fileUploadConfig.programdocument)) && Directory.Exists(fileLocation.FolderPath))
-                DeleteDirectory(fileLocation.FolderPath);
+            {
+                if(!Directory.Exists(fileLocation.FolderPath + "\\Deleted"))
+                {
+                    DeleteDirectory(fileLocation.FolderPath);
+                }
+            }
         }
 
         public bool DeleteFile(string filePath)

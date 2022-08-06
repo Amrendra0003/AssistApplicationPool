@@ -3,28 +3,34 @@ import { MatDialog } from '@angular/material/dialog';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { DataSharingService } from 'src/app/services/datasharing.service';
 import { FileUpload } from 'src/app/services/fileupload.service';
-import { FormDialogComponent } from '../../form-dialog/form-dialog.component';
+import { Router } from '@angular/router';
 import { Component, ViewChild, OnInit, Output, EventEmitter, ElementRef, AfterViewInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ToastServiceService } from 'src/app/services/toast-service.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { StringConstants } from 'src/assets/constants/string.constants';
+import { environment } from 'src/environments/environment';
+import { ApiConstants } from 'src/assets/constants/url';
+import { HttpClient } from '@angular/common/http';
+import { Identifiers } from '@angular/compiler';
 import { AuthService } from 'src/app/services/auth.service';
 const FileSaver = require('file-saver');
-declare var $: any;
 declare const WebViewer: any;
+declare var $: any;
 @Component({
   selector: 'app-dashboard-forms',
   templateUrl: './dashboard-forms.component.html',
   styleUrls: ['./dashboard-forms.component.css']
 })
-export class DashboardFormsComponent implements OnInit {
+export class DashboardFormsComponent implements OnInit, AfterViewInit {
   applicationForm: any;
-  panelOpenStateForms: boolean = true;
+  panelOpenStateForms: boolean = false;
+  panelOpenStateBenefits: boolean = false;
   veteransAdminFlag: boolean = true;
   financialAssistanceFlag: boolean = false;
-  closeModal: any;
+  @ViewChild('closeModal')
+  closeModal: ElementRef | any;
   patientId: any;
   assessmentId: any;
   activeReviewProgramDetails: ActiveProgramsResponse[] = {} as ActiveProgramsResponse[];
@@ -45,7 +51,6 @@ export class DashboardFormsComponent implements OnInit {
   homeCell: any;
   workCell: any;
   ProgramsUpdateDetails: ProgramsUpdateDto[] = [];
-  documentInstance: any;
   annonationInstance: any;
   documentName: string = "";
   firstName: any;
@@ -76,42 +81,48 @@ export class DashboardFormsComponent implements OnInit {
   closeResult = '';
   isEditAllowed: any;
   assessmentStatus: any;
-  isFormSigned: string = "";
-  programId: any;
+  isFormSigned: any;
+  eSignDone: string = "";
+  callApplication: any;
   currentTheme: any;
-  programIdData: any;
-  fromViewForm: boolean = false;
+  benefitsLabel: any = StringConstants.applicationForms.benefitsTitle;
+  formsTitleLabel: any = StringConstants.common.formsTitle;
+  esignLabel: any = StringConstants.applicationForms.eSign;
+  esignLabelDeleted: any = StringConstants.applicationForms.eSignDelete;
+  esignLabelCompleted: any = StringConstants.applicationForms.eSignComplete;
+  shareLabel: any = StringConstants.applicationForms.share;
+  downloadLabel: any = StringConstants.applicationForms.download;
+  uploadFormsLabel: any = StringConstants.applicationForms.uploadForms;
+  closeLabel: any = StringConstants.applicationForms.close;
+  saveAndCloseLabel: any = StringConstants.applicationForms.saveClose;
+  programsNotApplied: any = StringConstants.applicationForms.programsNotApplied;
+  noLabel: any = StringConstants.common.no;
+  applyLabel: any = StringConstants.common.apply;
+  topHeaderLabel: any = StringConstants.applicationForms.topHeader;
+  topTitleLabel: any = StringConstants.applicationForms.topTilte;
+  messageInfo: any = StringConstants.applicationForms.messageInfo;
+  scheduleAppointment: any = StringConstants.common.scheduleAppointment;
+  moreInformation: any = StringConstants.applicationForms.moreInformation;
   EsignStatus: any = {};
   notSigned: any;
-  DashboardFormInfo1 = StringConstants.DashboardForm.DashboardFormInfo1;
-  DashboardFormInfo2 = StringConstants.DashboardForm.DashboardFormInfo2;
-  EligibilityExperts = StringConstants.DashboardForm.EligibilityExperts;
-  scheduleAppointment = StringConstants.common.scheduleAppointment;
-  KindlyReview = StringConstants.DashboardForm.KindlyReview;
-  Forms = StringConstants.common.formsTitle;
+  signed: any;
+  formattedDocumentId: any;
+  previousFile: any;
+  benefitsUrl: string = "";
+  disableFlag: any = {};
+  Uploaded = StringConstants.applicationForms.Uploaded;
   NotUploaded = StringConstants.applicationForms.NotUploaded;
-  ESign = StringConstants.Common.ESign;
-  Share = StringConstants.Common.Share;
-  download = StringConstants.applicationForms.download;
-  uploadForms = StringConstants.applicationForms.uploadForms;
-  saveClose = StringConstants.applicationForms.saveClose;
-  close = StringConstants.applicationForms.close;
+  programID: any;
   constructor(private toastService: ToastServiceService, private dataSharingService: DataSharingService, private modalService: NgbModal, private dialog: MatDialog,
-    private dashboardService: DashboardService, private fileUpload: FileUpload, private authService: AuthService) {
+    private dashboardService: DashboardService, private fileUpload: FileUpload, private http: HttpClient, private authService: AuthService, private router: Router) {
     this.documentLoaded$ = new Subject<void>();
-    this.dataSharingService.changeTheme.subscribe(value => { // To change theme
-      if (value == "")
-        this.currentTheme = sessionStorage.getItem("themeSettings");
-      else
-        this.currentTheme = value;
-    });
-    this.fileUpload.uploadedDocumentId$.subscribe(response => { // To upload documents
+    this.fileUpload.uploadedDocumentId$.subscribe(response => {
       let programDocumentId = response.ProgramDocumentId;
       let documentId = response.DocumentId;
       var index = this.programDocumentDetails.findIndex(val => val.programDocumentId == programDocumentId);
       this.programDocumentDetails[index].documentId = documentId;
-      if (this.isSavedForm) {
-        // Reset the form status flag
+      if (this.isSavedForm) { // Reset the form status flag
+        this.getTabStatus();
         this.isSavedForm = false;
       }
       else {
@@ -120,213 +131,130 @@ export class DashboardFormsComponent implements OnInit {
         else (documentId != "0")
         {
           this.showLoader = false;
+          this.previousFile = null;
+          this.closeModal.nativeElement.click()
+          this.toastService.showSuccess(StringConstants.toast.formUpload, StringConstants.toast.empty);
+          this.getTabStatus();
           this.EsignStatus[programDocumentId] = true;
         }
       }
     });
-    this.dataSharingService.MoveToForms.subscribe(value => { // Go to Forms
+    this.dataSharingService.MoveToForms.subscribe(value => {//To go next forms
       this.fromVerification = value;
     });
-    this.dataSharingService.sendProgramID.subscribe(value => { // Send program Id
-      this.programIdData = value;
-      if (value != "" && this.fromViewForm == false) {
-        this.fromViewForm = true;
-      }
+    this.dataSharingService.ShowFormsTab.subscribe(value => {//To show next application
+      this.callApplication = value;
     });
-    this.dataSharingService.editable.subscribe(value => { // Check assessment status incomplete or under review
+    this.dataSharingService.changeTheme.subscribe(value => { //To Change theme
+      if (value == "")
+        this.currentTheme = sessionStorage.getItem("themeSettings");
+      else
+        this.currentTheme = value;
+    });
+    this.dataSharingService.editable.subscribe(value => { // Check assessment is incomplete or under review
       this.isEditAllowed = value;
     });
+    
   }
   ngAfterViewInit(): void {
     this.isAdvocate = this.authService.checkIfUserHasPermission(StringConstants.permissionsConstants.viewComponentAssessmentSummary);
-    if (this.viewerInstance == null) {
-      this.loadDocument();
-    }
   }
   ngOnInit(): void {
+    
     this.assessmentId = sessionStorage.getItem('assessmentId');
     this.patientId = sessionStorage.getItem('patientId');
     this.initForm();
+    if (this.callApplication == "6") {
+      this.GetActiveReviewPrograms();
+      this.getEFormData();
+      this.programActiveStatus = 'true';
+      this.getTabStatus();
+      this.notSigned = false;
+    }
+  }
+  valueChange(event: any, id: any) {
+    this.disableFlag[id] = event.value;
+  }
+  previewDocument(documentId: string) { // To preview application document
+    window.open(this.fileUpload.getDocumentDownloadURL(documentId), "_blank");
   }
   private initForm() {
     this.applicationForm = new FormGroup({
       'programStatus': new FormControl('')
     });
   }
-  @Input() set currentTabUpdate(value: boolean) { // To get current tab details
+  @Input() set currentTabUpdate(value: boolean) {//Click event for current tab
+    
     if (value != undefined) {
       this.EsignStatus = {};
       this.dataSharingService.ShowFormsTab.next("6");
       this.GetActiveReviewPrograms();
       this.getEFormData();
-      this.applicationForm.controls['programStatus'].setValue('true');
       this.programActiveStatus = 'true';
+      this.getTabStatus();
+      this.notSigned = false;
     }
   }
-  async saveApplication() { // To save application
-    var programId = this.programDocumentDetails.find(val => val.programDocumentId == this.CurrentProgramDocumentId)?.programId!;
-    var documentName = this.programDocumentDetails.find(val => val.programDocumentId == this.CurrentProgramDocumentId)?.documentName!;
-    const doc = this.documentInstance.getDocument();
-    const xfdfString = await this.annonationInstance.exportAnnotations();
-    const options = { xfdfString, flatten: true };
-    const data = await doc.getFileData(options);
-    const arr = new Uint8Array(data);
-    const blob = new Blob([arr], { type: 'application/pdf' });
-    var myFile = new File([blob], documentName + ".pdf");
-    this.isSavedForm = true;
-    var response = await this.fileUpload.UploadProgramDocument(this.assessmentId, programId, this.CurrentProgramDocumentId, myFile);
-    this.formsModal.hide();
-  }
-  async downloadApplicationForm(programDocumentId: string) { // To download application
-    var downloadUrl = this.fileUpload.GetProgramDocumentDownloadURL(programDocumentId);
+  async downloadApplicationForm(programDocumentId: string,documentDownloadId: string,programId: any) { // To download application forms
+    this.showLoader = true;
+    var downloadUrl = await this.fileUpload.GetProgramDocumentDownloadURL(programDocumentId,this.assessmentId,parseInt(documentDownloadId));
     var FileSaver = require('file-saver');
     var fileName = this.programName + ".pdf";
     let blob = await fetch(downloadUrl).then(r => r.blob());
     FileSaver.saveAs(blob, fileName, { type: 'application/pdf' });
+    this.UpdateProgramDocumentDetail(programId);
+    this.showLoader = false;
   }
-  loadDocumentOpen(documentName: string, ProgramDocumentId: string, documentId: string) { // To open loaded document 
-    this.CurrentProgramDocumentId = ProgramDocumentId;
-    var data;
-    var currentDocumentId;
-    if (documentId == "0") {  //Get call to fetch the document using ProgramDocumentId
-      data = this.fileUpload.GetProgramDocumentDownloadURL(ProgramDocumentId);
-      currentDocumentId = ProgramDocumentId;
-    }
-    else { //Get call to fetch the document using documentId
-      data = this.fileUpload.getDocumentDownloadURL(documentId);
-      currentDocumentId = documentId;
-    }
-    this.documentInstance.loadDocument(data, { extension: 'pdf', documentId: currentDocumentId });
-    if (this.annonationInstance && documentId != "0") {
-      this.annonationInstance.enableReadOnlyMode();
-      this.annonationInstance.disableFreeTextEditing();
-      this.annonationInstance.flatten = true;
-    }
-    this.documentName = documentName;
+  async loadDocumentOpen(documentId: string) {// To get program list based on assessment
+
+    
+    //var result = await this.http.post<any>(environment.apiBaseUrl + ApiConstants.url.GetAssessmentProgramDocument, fileDetails).toPromise();
+    //if (result) {
+    //  this.formattedDocumentId = result.data;
+     // this.previousFile = result.nextAction;
+     // if (documentId == "0") {
+     //   data = this.fileUpload.GetProgramDocumentDownloadURL(programDocumentId);
+     //   currentDocumentId = programDocumentId;
+     // }
+     // else {
+      //  data = this.fileUpload.getDocumentDownloadURL(documentId);
+      //  currentDocumentId = documentId;
+      //}
+      this.router.navigate(['esign-document'], { queryParams: { documentId: documentId, tab:6} });
+    //}
   }
-  loadDocument() { // To load document
-    if (this.viewerInstance != null)
-      return;
-    WebViewer({
-      path: '../HealthwareApp/wv-resources/lib',
-    }, this.viewerRef.nativeElement).then((instance: { UI: { disableElements: (arg0: string[]) => void; disableTools: (arg0: string[]) => void; FitMode: any; setFitMode: (arg0: any) => void; }; Core: { documentViewer: any; annotationManager: any; }; }) => {
-      this.viewerInstance = instance;
-      instance.UI.disableElements(['toolbarGroup-Edit']);
-      instance.UI.disableElements(['toolbarGroup-View']);
-      instance.UI.disableElements(['toolbarGroup-Annotate']);
-      instance.UI.disableElements(['toolbarGroup-Insert']);
-      instance.UI.disableElements(['toolbarGroup-Shapes']);
-      instance.UI.disableElements(['toolbarGroup-Forms']);
-      instance.UI.disableTools(['AnnotationCreateFreeText', 'AnnotationCreateFreeText']);
-      var FitMode = instance.UI.FitMode;
-      instance.UI.setFitMode(FitMode.FitWidth);
-      const { documentViewer, annotationManager } = instance.Core;
-      this.documentInstance = documentViewer;
-      this.annonationInstance = annotationManager;
-      documentViewer.addEventListener('documentLoaded', () => {
-        documentViewer.getAnnotationsLoadedPromise().then(() => {
-          const fieldManager = annotationManager.getFieldManager();
-          //Veteran document
-          const nameOfVeteran = fieldManager.getField("PATLastFirst");
-          if (nameOfVeteran) {
-            nameOfVeteran.setValue(this.fullName);
-          }
-          const relationship = fieldManager.getField("Check Box99");
-          if (relationship) {
-            relationship.setValue('Yes');
-          }
-          const homeCell = fieldManager.getField("PATHomePhone");
-          if (homeCell) {
-            homeCell.setValue(this.homeCell);
-          }
-          const workCell = fieldManager.getField("PATWorkPhone");
-          if (workCell) {
-            workCell.setValue(this.workCell);
-          }
-          const address = fieldManager.getField("6 MY ADDRESS IS Number Street or losl Oflice Rox City State  ZIP ode");
-          if (address) {
-            address.setValue(this.fullAddress);
-          }
-          //Memorial Hospital Document 1
-          const nameOfVictim = fieldManager.getField("PATFullName");
-          if (nameOfVictim) {
-            nameOfVictim.setValue(this.fullName);
-          }
-          const victimAddress = fieldManager.getField("PATAddressBothLines");
-          if (victimAddress) {
-            victimAddress.setValue(this.fullAddress);
-          }
-          const city = fieldManager.getField("PATCity");
-          if (city) {
-            city.setValue(this.city);
-          }
-          const state = fieldManager.getField("PATState");
-          if (state) {
-            state.setValue(this.state);
-          }
-          const zipcode = fieldManager.getField("PATZip");
-          if (zipcode) {
-            zipcode.setValue(this.zipcode);
-          }
-          const dateOfBirth = fieldManager.getField("PATDOB");
-          if (dateOfBirth) {
-            dateOfBirth.setValue(this.dateOfBirth);
-          }
-          const victimCounty = fieldManager.getField("Country of Birth  National Origin");
-          if (victimCounty) {
-            victimCounty.setValue(this.county);
-          }
-          const gender = fieldManager.getField("PATGender");
-          if (gender) {
-            if (this.gender == "Male") {
-              gender.setValue("Choice1");
-            }
-            else if (this.gender == "Female") {
-              gender.setValue("Choice3");
-            }
-          }
-          const maritalStatus = fieldManager.getField("PATMaritalStatus");
-          if (maritalStatus) {
-            if (this.maritalStatus == "Single") {
-              maritalStatus.setValue("S");
-            }
-            else if (this.maritalStatus == "Married") {
-              maritalStatus.setValue("M");
-            }
-            else if (this.maritalStatus == "Separated") {
-              maritalStatus.setValue("X");
-            }
-            else if (this.maritalStatus == "Divorced") {
-              maritalStatus.setValue("D");
-            }
-            else if (this.maritalStatus == "Widowed") {
-              maritalStatus.setValue("W");
-            }
-          }
-          //Memorial Hospital Document 1
-          const individualName = fieldManager.getField("PATFirstName");
-          if (individualName) {
-            individualName.setValue(this.firstName);
-          }
-          const middlename = fieldManager.getField("PATMiddleName");
-          if (middlename) {
-            middlename.setValue(this.middleName);
-          }
-          const lastname = fieldManager.getField("PATLastNameSuffix");
-          if (lastname) {
-            lastname.setValue(this.lastName);
-          }
-          const county = fieldManager.getField("Text6");
-          if (county) {
-            county.setValue(this.county);
-          }
-        });
-      });
-    })
+  async getProgramDocument(assessmentId: string, programId: string, programDocumentId: string, documentName: string) {// Get programs document
+    const fileDetails: FileDetails = {
+      DocumentId: 0,
+      AssessmentId: +(assessmentId),
+      UserId: +(sessionStorage.getItem("patientId")!),
+      HouseHoldMemberId: 0,
+      ProgramId: programId,
+      DocumentTitle: "programdocument",
+      DocumentCategory: "Eforms",
+      DocumentType: "Eforms",
+      ProgramDocumentId: +(programDocumentId),
+      DocumentName: documentName
+    };
+    this.fileUpload.createProgramDocument(fileDetails).subscribe(async (result: any) => {
+      if (result.wasSuccessful) {
+        this.formattedDocumentId = result.data;
+      }
+    }, (error) => {
+      console.log(error)
+    });
   }
-  closeDocument() { // To close document
-    if (this.documentInstance)
-      this.documentInstance.dispose()
+  async closeDocument() { // To close document
+    if (this.formattedDocumentId > 0 && this.previousFile != null) {
+      await this.fileUpload.UpdateDocumentPathById(this.formattedDocumentId, this.previousFile).subscribe(async event => {
+        this.previousFile = null;
+      },
+        (err) => {
+          console.log(StringConstants.toast.uploadError, err);
+        }, () => {
+        }
+      )
+    }
   }
   downloadDocument() { // To download document
     var instance = this.viewerInstance;
@@ -337,7 +265,17 @@ export class DashboardFormsComponent implements OnInit {
       });
     }
   }
-  getEFormData() { // Get form details
+  deleteDocument(docId:any,programId:any,documentDownloadId:any){
+    this.fileUpload.DeleteeDocumentById(docId,documentDownloadId).subscribe(async event => {
+      this.UpdateProgramDocumentDetail(programId);
+    },
+      (err) => {
+        console.log(StringConstants.toast.uploadError, err);
+      }, () => {
+      }
+    )
+  }
+  getEFormData() { // To get form data
     var patientID: number = +(this.patientId);
     var assessmentId: number = +(this.assessmentId);
     const eformRequest: any = {
@@ -365,35 +303,39 @@ export class DashboardFormsComponent implements OnInit {
       console.log(error)
     });
   }
-  SaveReviewProgram() { // To save review programs
+  SaveReviewProgram() { // To update review program details
     this.assessmentId = +(sessionStorage.getItem('assessmentId')!);
     this.patientId = +(sessionStorage.getItem('patientId')!);
     var data: ProgramsUpdateDto = {
       patientId: this.patientId,
       assessmentId: this.assessmentId,
       programId: this.currentselectedProgram,
-      isActive: (/true/i).test(this.programStatus!)
+      isActive: (/true/i).test(this.applicationForm.get('programStatus').value!),
+      isEvaluated: true
     }
     this.ProgramsUpdateDetails.push(data);
     this.dashboardService.UpdatePatientReviewPrograms(this.ProgramsUpdateDetails)
       .subscribe(async (result: any) => {
         this.ProgramsUpdateDetails.pop();
+        this.getTabStatus();
       }, (error) => {
         console.log(error)
       });
   }
-  ProgramsOnChange(programId: string) { // Programs change event
+  ProgramsOnChange(programId: string) { // To change program status
     this.ChangeBackground(programId);
     var result = this.getProgramDetail(programId);
     this.programName = result.programName;
+    this.programID = programId;
     this.benefitsDescription = result.benefits;
+    this.benefitsUrl = result.benefitsUrl;
     this.UpdateProgramDocumentDetail(programId);
-    this.panelOpenStateForms = true;
+    this.panelOpenStateBenefits = false;
+    this.panelOpenStateForms = false;
     this.currentselectedProgram = programId;
     this.applicationForm.controls['programStatus'].setValue(this.programstatusMap.get(programId)!.toString());
   }
-
-  ChangeBackground(programId: string) { // To show side bar div
+  ChangeBackground(programId: string) { // To change current page div
     this.programMenuDivClass[programId] = "dasboard-side-div";
     this.programMenuLabelClass[programId] = "dashboard-side-div-label";
     this.inactiveprogramIds = [];
@@ -411,7 +353,7 @@ export class DashboardFormsComponent implements OnInit {
       this.programMenuLabelClass[inactiveprogramId] = "";
     });
   }
-  getTabStatus() { // To get tab status
+  getTabStatus() { // To get current tab status
     var assessmentId: number = +(this.assessmentId);
     const tabRequest = {
       assessmentID: assessmentId,
@@ -419,53 +361,88 @@ export class DashboardFormsComponent implements OnInit {
     }
     this.dashboardService.TabStatus(tabRequest).subscribe(async (result: any) => {
       if (result.wasSuccessful == true) {
+        this.isFormSigned = result.data.isApplicationFormsComplete;
         switch (result.data.isApplicationFormsComplete) {
-          case true: this.isFormSigned = "true"; break;
-          case false: this.isFormSigned = "false"; break;
-          case null: this.isFormSigned = "";
+          case true: this.eSignDone = "true"; this.signed = true; break;
+          case false: this.eSignDone = "false"; this.signed = false; break;
+          default: this.eSignDone = ""; this.signed = false;
         }
-        this.dataSharingService.SaveApplicationForms.next(this.isFormSigned);
+        this.dataSharingService.SaveApplicationForms.next(this.eSignDone);
+        if (result.data.canEvaluate == true && result.data.isApplicationFormsComplete == true) {
+          this.dataSharingService.EnableDocumentation.next('true');
+        }
       }
     }, (error) => {
       console.log(error)
     });
   }
-  navBackward(programId: string) { // To navigate backward
+  async getFinalTab() { // To get current tab status
+    var assessmentId: number = +(this.assessmentId);
+    const tabRequest = {
+      assessmentID: assessmentId,
+      tabStatus: false
+    }
+    this.showLoader = true;
+    this.dashboardService.TabStatus(tabRequest).subscribe(async (result: any) => {
+      if (result.wasSuccessful == true) {
+        await this.isFormSigned;
+        this.isFormSigned = result.data.isApplicationFormsComplete;
+        switch (this.isFormSigned) {
+          case true: this.eSignDone = "true"; this.signed = true; break;
+          case false: this.eSignDone = "false"; this.signed = false; break;
+          default: this.eSignDone = ""; this.signed = false;
+        }
+        this.dataSharingService.SaveApplicationForms.next(this.eSignDone);
+        if (result.data.canEvaluate == true && result.data.isApplicationFormsComplete == true) {
+          this.dataSharingService.EnableDocumentation.next('true');
+        }
+        setTimeout(() => {
+          if (this.signed == true) {
+            this.dataSharingService.ShowVerificationTab.next("6");
+            this.notSigned = false;
+            this.showLoader = false;
+          }
+          else if (this.signed == false) {
+            this.toastService.showWarning(StringConstants.toast.submitOrUploadForm, StringConstants.toast.empty);
+            this.notSigned = true;
+            this.dataSharingService.SaveApplicationForms.next("false");
+            this.showLoader = false;
+          }
+        }, 500);
+      }
+    }, (error) => {
+      console.log(error)
+    });
+  }
+  navBackward(programId: string) {// To navigate backward
     var index = this.activeprogramIdList.indexOf(programId);
     if (index == 0)
-      this.dataSharingService.showHouseholdTab.next("5");
+      this.dataSharingService.showHouseholdTab.next("4");
     else
       this.ProgramsOnChange(this.activeprogramIdList[--index]);
   }
   navForward(programId: string) { // To navigate forward
     this.SaveReviewProgram();
+    this.getTabStatus();
     this.programstatusMap.set(programId, (/true/i).test(this.applicationForm.controls['programStatus'].value));
     var index = this.activeprogramIdList.indexOf(programId);
-    // To check if the active program is the last program or there is only one program.
-    if (index == (this.activeprogramIdList.length - 1) || this.activeprogramIdList.length == 1) {
-      if (this.isAdvocate) {
-        this.getTabStatus();
-        this.dataSharingService.ShowVerificationTab.next("7");
-      }
-      else {
-        this.getTabStatus();
-        this.dataSharingService.ShowVerificationTab.next("6");
-      }
+    if (index == (this.activeprogramIdList.length - 1)) {
+      this.getFinalTab();
     }
     else
       this.ProgramsOnChange(this.activeprogramIdList[++index]);
   }
-  HandleProgramDocument(event: any) { // To handle document
+  HandleProgramDocument(event: any,programId:any) { // To handle program documents
     var Id = event.target.id.split("_");
     if (event.target.files.length > 0) {
       this.fileUpload.UploadProgramDocument(this.assessmentId, Id[1], Id[0], event.target.files[0]);
+      setTimeout(() => {
+        this.UpdateProgramDocumentDetail(programId);
+      }, 500);
       this.showLoader = true;
     }
   }
-  previewDocument(documentId: string) { // To preview document
-    window.open(this.fileUpload.getDocumentDownloadURL(documentId), "_blank");
-  }
-  GetActiveReviewPrograms() { //To get active review programs
+  GetActiveReviewPrograms() { // To get active program list
     this.showLoader = true;
     var patientID: number = +(this.patientId);
     var assessmentId: number = +(this.assessmentId);
@@ -473,29 +450,26 @@ export class DashboardFormsComponent implements OnInit {
       patientId: patientID,
       assessmentId: assessmentId
     }
-    this.dashboardService.GetActiveReviewPrograms(request)
+    this.dashboardService.GetEvaluatedReviewPrograms(request)
       .subscribe(async (result: any) => {
-        this.activeReviewProgramDetails = result.data.reviewPrograms.filter
-          ((reviewProgram: { status: string; }) => reviewProgram.status == 'Application Submitted');
+        this.activeReviewProgramDetails = result.data.reviewPrograms;
         this.showLoader = false;
         if (this.activeReviewProgramDetails.length == 0) {
           this.toShowActivePrograms = false;
         }
         else if (this.activeReviewProgramDetails.length != 0) {
-          this.toShowActivePrograms = true;
-          this.saveAllProgramIds(this.activeReviewProgramDetails);
-          if (this.fromViewForm == true) {
-            this.ProgramsOnChange(this.programIdData);
-            this.fromViewForm = false;
-            this.dataSharingService.sendProgramID.next("");
+          for (let data of this.activeReviewProgramDetails) {
+            this.disableFlag[data.programId] = (data.isActive.toString());
+            this.programstatusMap.set(data.programId, data.isActive)
           }
-          else if (this.fromVerification == true) {
+          this.toShowActivePrograms = true;
+          this.saveAllProgramIds(this.activeReviewProgramDetails); 
+          if (this.fromVerification == true) {
             this.ProgramsOnChange(this.activeReviewProgramDetails[this.activeReviewProgramDetails.length - 1].programId);
             this.dataSharingService.MoveToForms.next(false);
           }
           else
             this.ProgramsOnChange(this.activeReviewProgramDetails[0].programId);
-          this.programStatus = 'true';
         }
       },
         (err) => {
@@ -508,22 +482,31 @@ export class DashboardFormsComponent implements OnInit {
     this.activeprogramIdList = [];
     activeReviewProgramDetails.forEach(detail => {
       this.activeprogramIdList.push(detail.programId);
-      this.programstatusMap.set(detail.programId, true);
+      this.programstatusMap.set(detail.programId, detail.isActive);
     });
   }
-  UpdateProgramDocumentDetail(programId: string) { //Update document details
-    var IsEvaluated = true;
+  UpdateProgramDocumentDetail(programId: string) { // Update program document
+    
+    this.showLoader = true;
+    var IsEvaluated = (/true/i).test(this.disableFlag[programId]);
     this.fileUpload.GetProgramDocumentDetails(programId, this.assessmentId, IsEvaluated)
       .subscribe(async (result: any) => {
+        
         this.programDocumentDetails = result.data;
-        this.EsignStatus[result.data.programDocumentId] = result.data.isProgramDocumentEsigned;
+        for (let data of this.programDocumentDetails) {
+          
+          this.EsignStatus[data.programDocumentId] = data.isProgramDocumentEsigned;
+        }
+        console.log(this.EsignStatus);
+        this.disableFlag[programId] = this.programstatusMap.get(programId)!.toString();
+        this.showLoader = false;
       },
         (err) => {
           console.log(StringConstants.toast.error, err);
         }, () => {
         })
   }
-  getProgramDetail(programId: string) { // To get program details
+  getProgramDetail(programId: string) {// Get program details
     var data: ActiveProgramsResponse = {} as ActiveProgramsResponse;
     this.activeReviewProgramDetails.forEach(element => {
       if (element.programId == programId) data = element;
@@ -547,7 +530,7 @@ export class DashboardFormsComponent implements OnInit {
           `Dismissed ${this.getDismissReason(reason)}`;
       });
   }
-  private getDismissReason(reason: any): string { // To close modal
+  private getDismissReason(reason: any): string { // To dismiss modal
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
@@ -556,7 +539,7 @@ export class DashboardFormsComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
-  getDocumentLoadedObservable() { // To get loaed document
+  getDocumentLoadedObservable() { // To load document
     return this.documentLoaded$.asObservable();
   }
 }
@@ -564,6 +547,9 @@ export interface ActiveProgramsResponse {
   programId: string;
   programName: string;
   benefits: string;
+  status: any;
+  benefitsUrl: string;
+  isActive: boolean;
 }
 export interface ProgramDocument {
   programId: string;
@@ -572,11 +558,27 @@ export interface ProgramDocument {
   documentDescription: string;
   documentId: string;
   isProgramDocumentEsigned: boolean;
+  esignFlag: boolean;
+  isDeleted: boolean;
+  isDownloaded: boolean;
+  documentDownloadId: string;
 }
 export interface ProgramsUpdateDto {
   patientId: number;
   assessmentId: number;
   programId: number;
   isActive: boolean;
+  isEvaluated: boolean;
 }
-
+export interface FileDetails {
+  DocumentId: any
+  AssessmentId: any
+  UserId: any
+  HouseHoldMemberId: any
+  ProgramId: string
+  DocumentTitle: string
+  DocumentCategory: string
+  DocumentType: string
+  ProgramDocumentId: any
+  DocumentName?: string
+}

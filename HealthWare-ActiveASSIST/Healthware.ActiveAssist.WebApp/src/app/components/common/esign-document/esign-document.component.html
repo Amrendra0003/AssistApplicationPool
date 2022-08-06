@@ -1,11 +1,13 @@
-<div class="col-xs-12 col-md-12 col-sm-12" style="overflow: hidden;position: absolute;top: 100px;height: 560px;" [ngClass]=this.currentTheme>
-  <div class="container-fluid" style="height: 480px;">
+<div class="col-xs-12 col-md-12 col-sm-12" style="overflow: hidden;position: absolute;top: 100px;height: 560px;">
+  <div class="container-fluid" *ngIf="this.showLoader == false" style="height: 480px;">
     <div class="col-md-7 float-left">
     <button class="btn btn-primary white-color mx-3 login-button-label" style="width: fit-content" (click)="cancelDocument()" data-bs-dismiss="modal">Cancel</button>
-    <button class="btn btn-primary white-color mx-3 login-button-label" style="width: fit-content;" (click)="finishDocument()" data-bs-dismiss="modal">Finish</button>
+    <button class="btn btn-primary white-color mx-3 login-button-label" *ngIf="this.showFinishButton == true" style="width: fit-content;" (click)="finishDocument()" data-bs-dismiss="modal">Finish</button>
   </div>
 <div style="margin-top: 20px;"> 
   <iframe *ngIf="this.displayIframe" id="iframe" [src]="this.documentfinalUrl" style="width: 100%; position:fixed; height: 80%;"></iframe>
 </div>
 </div>
+<app-spinner-overlay *ngIf="this.showLoader == true">
+</app-spinner-overlay>
 </div>

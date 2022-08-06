@@ -1,0 +1,35 @@
+2022-05-30 11:02:19 [INFO]<1> [] ====================================================================
+2022-05-30 11:02:19 [INFO]<1> [] Application Starts. Version: 1.0.0.0
+2022-05-30 11:02:19 [INFO]<1> [] Application Directory: D:\ActivaAssist\SourceCode\AssistApplicationPool\HealthWare.ActiveASSIST.FileListener\HealthWare.ActiveASSIST.FileListener\bin\Debug\netcoreapp3.1\
+2022-05-30 11:02:20 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Service Starting
+2022-05-30 11:02:20 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Binding Events from Input Folder: C:\inetpub\wwwroot\ActiveASSISTUserImport\1
+2022-05-30 11:04:25 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Stopping Service
+2022-05-30 11:04:25 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Disposing Service
+2022-05-30 11:10:06 [INFO]<1> [] ====================================================================
+2022-05-30 11:10:06 [INFO]<1> [] Application Starts. Version: 1.0.0.0
+2022-05-30 11:10:06 [INFO]<1> [] Application Directory: D:\ActivaAssist\SourceCode\AssistApplicationPool\HealthWare.ActiveASSIST.FileListener\HealthWare.ActiveASSIST.FileListener\bin\Debug\netcoreapp3.1\
+2022-05-30 11:11:09 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Service Starting
+2022-05-30 11:11:36 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Binding Events from Input Folder: C:\inetpub\wwwroot\ActiveASSISTUserImport\1
+2022-05-30 11:12:32 [INFO]<7> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Stopping Service
+2022-05-30 11:12:32 [INFO]<7> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Disposing Service
+2022-05-30 11:15:46 [INFO]<1> [] ====================================================================
+2022-05-30 11:15:47 [INFO]<1> [] Application Starts. Version: 1.0.0.0
+2022-05-30 11:15:47 [INFO]<1> [] Application Directory: D:\ActivaAssist\SourceCode\AssistApplicationPool\HealthWare.ActiveASSIST.FileListener\HealthWare.ActiveASSIST.FileListener\bin\Debug\netcoreapp3.1\
+2022-05-30 11:16:23 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Service Starting
+2022-05-30 11:16:23 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Binding Events from Input Folder: C:\inetpub\wwwroot\ActiveASSISTUserImport\1
+2022-05-30 11:17:50 [INFO]<6> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Stopping Service
+2022-05-30 11:17:50 [INFO]<6> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Disposing Service
+2022-05-30 21:28:04 [INFO]<1> [] ====================================================================
+2022-05-30 21:28:04 [INFO]<1> [] Application Starts. Version: 1.0.0.0
+2022-05-30 21:28:04 [INFO]<1> [] Application Directory: D:\ActivaAssist\SourceCode\AssistApplicationPool\HealthWare.ActiveASSIST.FileListener\HealthWare.ActiveASSIST.FileListener\bin\Debug\netcoreapp3.1\
+2022-05-30 21:28:05 [INFO]<9> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Service Starting
+2022-05-30 21:28:05 [INFO]<9> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Binding Events from Input Folder: C:\inetpub\wwwroot\ActiveASSISTUserImport\1
+2022-05-30 22:07:55 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Stopping Service
+2022-05-30 22:07:55 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Disposing Service
+2022-05-30 22:07:55 [INFO]<1> [] ====================================================================
+
+2022-05-30 22:08:58 [INFO]<1> [] ====================================================================
+2022-05-30 22:08:58 [INFO]<1> [] Application Starts. Version: 1.0.0.0
+2022-05-30 22:08:58 [INFO]<1> [] Application Directory: D:\ActivaAssist\SourceCode\AssistApplicationPool\HealthWare.ActiveASSIST.FileListener\HealthWare.ActiveASSIST.FileListener\bin\Debug\netcoreapp3.1\
+2022-05-30 22:08:58 [INFO]<9> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Service Starting
+2022-05-30 22:08:58 [INFO]<9> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Binding Events from Input Folder: C:\inetpub\wwwroot\ActiveASSISTUserImport\1

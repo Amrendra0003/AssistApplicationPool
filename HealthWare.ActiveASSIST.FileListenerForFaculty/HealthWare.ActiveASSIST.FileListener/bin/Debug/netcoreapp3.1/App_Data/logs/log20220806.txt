@@ -1,0 +1,7 @@
+2022-08-06 09:40:08 [INFO]<7> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Stopping Service
+2022-08-06 09:40:08 [INFO]<7> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Disposing Service
+2022-08-06 18:59:48 [INFO]<1> [] ====================================================================
+2022-08-06 18:59:48 [INFO]<1> [] Application Starts. Version: 1.0.0.0
+2022-08-06 18:59:48 [INFO]<1> [] Application Directory: D:\ActivaAssist\SourceCode\AssistApplicationPool\HealthWare.ActiveASSIST.FileListenerForFaculty\HealthWare.ActiveASSIST.FileListener\bin\Debug\netcoreapp3.1\
+2022-08-06 18:59:50 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Service Starting
+2022-08-06 18:59:50 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Binding Events from Input Folder: C:\inetpub\wwwroot\ActiveASSISTUserImportForFaculty\1

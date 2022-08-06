@@ -1,0 +1,47 @@
+2022-07-28 09:53:56 [INFO]<1> [] ====================================================================
+2022-07-28 09:53:56 [INFO]<1> [] Application Starts. Version: 1.0.0.0
+2022-07-28 09:53:56 [INFO]<1> [] Application Directory: D:\ActivaAssist\SourceCode\AssistApplicationPool\HealthWare.ActiveASSIST.FileListener\HealthWare.ActiveASSIST.FileListener\bin\Debug\netcoreapp3.1\
+2022-07-28 09:53:56 [INFO]<9> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Service Starting
+2022-07-28 09:53:56 [INFO]<9> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Binding Events from Input Folder: C:\inetpub\wwwroot\ActiveASSISTUserImport\1
+2022-07-28 09:58:24 [INFO]<6> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\ProcessedFiles
+2022-07-28 09:58:24 [INFO]<6> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 10:53:02 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 10:53:03 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 10:53:03 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 10:53:03 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 10:53:03 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 10:53:03 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 10:53:03 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 10:53:03 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 10:53:03 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\FailedFiles
+2022-07-28 10:53:03 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 10:58:37 [INFO]<12> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 10:58:38 [INFO]<12> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 10:58:38 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 10:58:38 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 10:58:38 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 10:58:38 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 10:58:38 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 10:58:38 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 10:58:38 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\FailedFiles
+2022-07-28 10:58:38 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 11:00:26 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 11:00:27 [INFO]<11> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 11:00:27 [INFO]<14> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 11:00:27 [INFO]<14> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 11:00:27 [INFO]<14> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 11:00:27 [INFO]<14> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 11:00:27 [INFO]<14> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 11:00:27 [INFO]<14> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 11:00:27 [INFO]<14> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\FailedFiles
+2022-07-28 11:00:27 [INFO]<14> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 11:00:51 [INFO]<14> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 11:00:52 [INFO]<14> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 11:00:52 [INFO]<13> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 11:00:52 [INFO]<13> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 11:00:52 [INFO]<13> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 11:00:52 [INFO]<13> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 11:00:52 [INFO]<13> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\Untitled spreadsheet - Sheet1 (2) - Copy.csv20220531114429513
+2022-07-28 11:00:52 [INFO]<13> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-07-28 11:00:52 [INFO]<13> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImport\1\FailedFiles
+2022-07-28 11:00:52 [INFO]<13> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event

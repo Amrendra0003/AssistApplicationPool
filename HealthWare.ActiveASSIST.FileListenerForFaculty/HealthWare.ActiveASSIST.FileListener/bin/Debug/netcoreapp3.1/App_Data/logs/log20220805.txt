@@ -1,0 +1,27 @@
+2022-08-05 18:56:15 [INFO]<1> [] ====================================================================
+2022-08-05 18:56:15 [INFO]<1> [] Application Starts. Version: 1.0.0.0
+2022-08-05 18:56:15 [INFO]<1> [] Application Directory: D:\ActivaAssist\SourceCode\AssistApplicationPool\HealthWare.ActiveASSIST.FileListenerForFaculty\HealthWare.ActiveASSIST.FileListener\bin\Debug\netcoreapp3.1\
+2022-08-05 18:56:16 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Service Starting
+2022-08-05 18:56:16 [WARN]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Please make sure the InputFolder [C:\inetpub\wwwroot\ActiveASSISTUserImportForFaculty\1] exists, then restart the service.
+2022-08-05 19:02:05 [INFO]<6> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Stopping Service
+2022-08-05 19:02:13 [INFO]<1> [] ====================================================================
+2022-08-05 19:02:13 [INFO]<1> [] Application Starts. Version: 1.0.0.0
+2022-08-05 19:02:13 [INFO]<1> [] Application Directory: D:\ActivaAssist\SourceCode\AssistApplicationPool\HealthWare.ActiveASSIST.FileListenerForFaculty\HealthWare.ActiveASSIST.FileListener\bin\Debug\netcoreapp3.1\
+2022-08-05 19:02:16 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Service Starting
+2022-08-05 19:02:16 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Binding Events from Input Folder: C:\inetpub\wwwroot\ActiveASSISTUserImportForFaculty\1
+2022-08-05 19:03:09 [INFO]<7> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImportForFaculty\1\facility - Copy.csv
+2022-08-05 19:05:00 [INFO]<1> [] ====================================================================
+2022-08-05 19:05:00 [INFO]<1> [] Application Starts. Version: 1.0.0.0
+2022-08-05 19:05:00 [INFO]<1> [] Application Directory: D:\ActivaAssist\SourceCode\AssistApplicationPool\HealthWare.ActiveASSIST.FileListenerForFaculty\HealthWare.ActiveASSIST.FileListener\bin\Debug\netcoreapp3.1\
+2022-08-05 19:05:02 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Service Starting
+2022-08-05 19:05:02 [INFO]<1> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Binding Events from Input Folder: C:\inetpub\wwwroot\ActiveASSISTUserImportForFaculty\1
+2022-08-05 19:05:27 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImportForFaculty\1\facility.csv
+2022-08-05 19:06:40 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-08-05 19:06:40 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImportForFaculty\1\facility.csv
+2022-08-05 19:06:40 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-08-05 19:06:40 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImportForFaculty\1\facility.csv
+2022-08-05 19:06:40 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-08-05 19:06:40 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImportForFaculty\1\facility.csv
+2022-08-05 19:06:40 [INFO]<5> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event
+2022-08-05 19:06:40 [INFO]<6> [HealthWare.ActiveASSIST.FileListener.Services.Worker] InBound Change Event Triggered byC:\inetpub\wwwroot\ActiveASSISTUserImportForFaculty\1\ProcessedFiles
+2022-08-05 19:06:40 [INFO]<6> [HealthWare.ActiveASSIST.FileListener.Services.Worker] Done with Inbound Change Event

@@ -362,6 +362,8 @@ export class StringConstants {
   }
   public static dashboardAdvocate={
     PriorSubmissions:"Prior Submissions",
+    AdvocateAssessment: "Advocate Assessments",
+    OtherAssessment: "Other Assessments",
     SelectDate:"Select Date",
     Last7Days:"Last 7 Days",
     Today:"Today",

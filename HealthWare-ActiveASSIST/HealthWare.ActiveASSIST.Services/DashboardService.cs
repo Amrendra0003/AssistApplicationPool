@@ -26,7 +26,7 @@ namespace HealthWare.ActiveASSIST.Services
         Task<Result<AdvocateDashboardSummary>> GetAssessmentSummary(BasePatientAssessment basePatientAssessment);
         Result<long> GetEstimatedCostForVisit(int patientId);
 
-        Task<Result<IOrderedEnumerable<AdvocateDashboardResponse>>>
+        Task<Result<List<IOrderedEnumerable<AdvocateDashboardResponse>>>>
             GetAdvocateDashboardDetailsList(int userId, string filterByDays, string orderBy, string partialName,
                 string localDateTime, long tenantId);
     }
@@ -138,7 +138,7 @@ namespace HealthWare.ActiveASSIST.Services
         }
 
 
-        public async Task<Result<IOrderedEnumerable<AdvocateDashboardResponse>>>
+        public async Task<Result<List<IOrderedEnumerable<AdvocateDashboardResponse>>>>
            GetAdvocateDashboardDetailsList(int userId, string filterByDays, string orderBy, string searchText, string localDateTime, long tenantId)
         {
             if (searchText.isNullOrEmpty()) searchText = string.Empty;
@@ -146,35 +146,32 @@ namespace HealthWare.ActiveASSIST.Services
             var isDescending = !orderBy.Equals(Constants.OldestFirst);
 
             if (ContainsInvalidCharacters(searchText))
-                return new Result<IOrderedEnumerable<AdvocateDashboardResponse>>();
+                return new Result<List<IOrderedEnumerable<AdvocateDashboardResponse>>>();
 
             var dashboardAssessmentList = _assessmentRepository.GetAssessmentListForDashboard(userId, searchText, tenantId);
             var dashboardAssessments1 = dashboardAssessmentList.ToList();
-            List<DashboardAssessment> dashboardAssessments = new List<DashboardAssessment>();
+            List<DashboardAssessment> dashboardAssessmentsForAdvocate = new List<DashboardAssessment>();
+            List<DashboardAssessment> dashboardAssessmentsForOthers = new List<DashboardAssessment>();
             var userIDs = _assessmentRepository.GetUserIds(userId);
-            if(userIDs.Result.Count != 0)
+            userIDs.Result.RemoveAll(x => x.UserId == userId);
+            if (userIDs.Result.Count != 0)
             {
-                if(dashboardAssessments1.Count != 0)
+                dashboardAssessments1.RemoveAll(x => x.CreatedBy != userId);
+                dashboardAssessmentsForAdvocate.AddRange(dashboardAssessments1);
+                foreach (var item in userIDs.Result)
                 {
-                    userIDs.Result.RemoveAll(x => x.UserId == userId);
-                    dashboardAssessments1.RemoveAll(x => x.CreatedBy != userId);
-                    dashboardAssessments.AddRange(dashboardAssessments1);
-                    if(userIDs.Result.Count != 0)
-                    {
-                        foreach (var item in userIDs.Result)
-                        {
-                            var dashboardAssessments3 = dashboardAssessmentList.ToList();
-                            dashboardAssessments3.RemoveAll(x => x.CreatedBy != item.UserId);
-                            dashboardAssessments.AddRange(dashboardAssessments3);
-                        }
-                    }
+                    var dashboardAssessments3 = dashboardAssessmentList.ToList();
+                    dashboardAssessments3.RemoveAll(x => x.CreatedBy != item.UserId);
+                    dashboardAssessmentsForOthers.AddRange(dashboardAssessments3);
                 }
             }
             else
             {
-                dashboardAssessments = dashboardAssessments1;
+                dashboardAssessments1.RemoveAll(x => x.CreatedBy != userId);
+                dashboardAssessmentsForAdvocate.AddRange(dashboardAssessments1);
             }
-            foreach (var assessment in dashboardAssessments)
+            dashboardAssessmentList = dashboardAssessmentsForAdvocate;
+            foreach (var assessment in dashboardAssessmentsForAdvocate)
             {
                 assessment.PatientProfileImage = await _documentService.LoadProfileImage(assessment.AssessmentId);
             }
@@ -187,35 +184,35 @@ namespace HealthWare.ActiveASSIST.Services
                 //Get timezone difference
                 var diffTimeZone = localDateTimeOffset.DateTime - DateTime.UtcNow;
                 //Convert the local time string to date time
-                for (var index = 0; index < dashboardAssessments.Count; index++)
+                for (var index = 0; index < dashboardAssessmentsForAdvocate.Count; index++)
                 {
-                    dashboardAssessments[index].CreatedDate =
-                        dashboardAssessments[index].CreatedDate.Add(diffTimeZone);
+                    dashboardAssessmentsForAdvocate[index].CreatedDate =
+                        dashboardAssessmentsForAdvocate[index].CreatedDate.Add(diffTimeZone);
                 }
             }
 
             switch (filterByDays)
             {
                 case Constants.Today:
-                    dashboardAssessmentList = dashboardAssessments.Where(x => x.CreatedDate.Date == filterDate.Date).ToList();
+                    dashboardAssessmentList = dashboardAssessmentsForAdvocate.Where(x => x.CreatedDate.Date == filterDate.Date).ToList();
                     break;
 
                 case Constants.Yesterday:
-                    dashboardAssessmentList = dashboardAssessments.Where(x => x.CreatedDate.Date == filterDate.Date.AddDays(-1)).ToList();
+                    dashboardAssessmentList = dashboardAssessmentsForAdvocate.Where(x => x.CreatedDate.Date == filterDate.Date.AddDays(-1)).ToList();
                     break;
 
                 case Constants.LastThreeDays:
-                    dashboardAssessmentList = dashboardAssessments.Where(x => x.CreatedDate.Date >= filterDate.Date.AddDays(-2)).ToList();
+                    dashboardAssessmentList = dashboardAssessmentsForAdvocate.Where(x => x.CreatedDate.Date >= filterDate.Date.AddDays(-2)).ToList();
                     break;
 
                 case Constants.MonthFilter:
                     //filterDate will be point to the start date of the current month.
-                    dashboardAssessmentList = dashboardAssessments.Where
+                    dashboardAssessmentList = dashboardAssessmentsForAdvocate.Where
                         (x => x.CreatedDate.Year == filterDate.Year && x.CreatedDate.Month == filterDate.Month).ToList();
                     break;
 
                 default:
-                    dashboardAssessmentList = dashboardAssessments.Where(x => x.CreatedDate.Date >= filterDate.Date.AddDays(-6)).ToList();
+                    dashboardAssessmentList = dashboardAssessmentsForAdvocate.Where(x => x.CreatedDate.Date >= filterDate.Date.AddDays(-6)).ToList();
                     break;
             }
             var result = new List<AdvocateDashboardResponse>();
@@ -231,9 +228,71 @@ namespace HealthWare.ActiveASSIST.Services
                 };
                 result.Add(advocateDashboardResponse);
             }
+            var resForAdvocate = isDescending ? result.OrderByDescending(x => x.AssessmentCreatedDate) : result.OrderBy(x => x.AssessmentCreatedDate) ;
 
+            dashboardAssessmentsForAdvocate = dashboardAssessmentsForOthers;
+            dashboardAssessmentList = dashboardAssessmentsForAdvocate;
+            foreach (var assessment in dashboardAssessmentsForAdvocate)
+            {
+                assessment.PatientProfileImage = await _documentService.LoadProfileImage(assessment.AssessmentId);
+            }
 
-            return isDescending ? new Result<IOrderedEnumerable<AdvocateDashboardResponse>> { Data = result.OrderByDescending(x => x.AssessmentCreatedDate) } : new Result<IOrderedEnumerable<AdvocateDashboardResponse>> { Data = result.OrderBy(x => x.AssessmentCreatedDate) };
+            if (!string.IsNullOrEmpty(localDateTime))
+            {
+                var localDateTimeOffset = DateTimeOffset.Parse(localDateTime, CultureInfo.InvariantCulture);
+                filterDate = localDateTimeOffset.DateTime;
+                //Get timezone difference
+                var diffTimeZone = localDateTimeOffset.DateTime - DateTime.UtcNow;
+                //Convert the local time string to date time
+                for (var index = 0; index < dashboardAssessmentsForAdvocate.Count; index++)
+                {
+                    dashboardAssessmentsForAdvocate[index].CreatedDate =
+                        dashboardAssessmentsForAdvocate[index].CreatedDate.Add(diffTimeZone);
+                }
+            }
+
+            switch (filterByDays)
+            {
+                case Constants.Today:
+                    dashboardAssessmentList = dashboardAssessmentsForAdvocate.Where(x => x.CreatedDate.Date == filterDate.Date).ToList();
+                    break;
+
+                case Constants.Yesterday:
+                    dashboardAssessmentList = dashboardAssessmentsForAdvocate.Where(x => x.CreatedDate.Date == filterDate.Date.AddDays(-1)).ToList();
+                    break;
+
+                case Constants.LastThreeDays:
+                    dashboardAssessmentList = dashboardAssessmentsForAdvocate.Where(x => x.CreatedDate.Date >= filterDate.Date.AddDays(-2)).ToList();
+                    break;
+
+                case Constants.MonthFilter:
+                    //filterDate will be point to the start date of the current month.
+                    dashboardAssessmentList = dashboardAssessmentsForAdvocate.Where
+                        (x => x.CreatedDate.Year == filterDate.Year && x.CreatedDate.Month == filterDate.Month).ToList();
+                    break;
+
+                default:
+                    dashboardAssessmentList = dashboardAssessmentsForAdvocate.Where(x => x.CreatedDate.Date >= filterDate.Date.AddDays(-6)).ToList();
+                    break;
+            }
+            result = new List<AdvocateDashboardResponse>();
+            dashboardAssessmentList = isDescending ? dashboardAssessmentList.OrderByDescending(x => x.CreatedDate) : dashboardAssessmentList.OrderBy(x => x.CreatedDate);
+            dateEnumerable = dashboardAssessmentList.GroupBy(x => x.CreatedDate.Date);
+            foreach (var date in dateEnumerable)
+            {
+                var advocateDashboardResponse = new AdvocateDashboardResponse()
+                {
+                    AssessmentCreatedDate = date.Key,
+                    CreateDate = date.Key.ToLongDateString(),
+                    DashboardAssessments = date.ToList()
+                };
+                result.Add(advocateDashboardResponse);
+            }
+            var resForOthers = isDescending ? result.OrderByDescending(x => x.AssessmentCreatedDate)  : result.OrderBy(x => x.AssessmentCreatedDate) ;
+            List<IOrderedEnumerable<AdvocateDashboardResponse>> results = new List<IOrderedEnumerable<AdvocateDashboardResponse>>();
+            results.Add(resForAdvocate);
+            results.Add(resForOthers);
+            return new Result<List<IOrderedEnumerable<AdvocateDashboardResponse>>> { Data = results };
 
 
         }

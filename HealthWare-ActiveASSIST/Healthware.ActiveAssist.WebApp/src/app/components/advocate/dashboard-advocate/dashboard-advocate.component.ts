@@ -31,13 +31,18 @@ export class DashboardAdvocateComponent implements OnInit {
   showLoader: boolean = false;
   assessmentMoreOptions: any = {};
   isMenuOn = false;
-  showEmptyMessage: boolean = false;
+  showEmptyMessageForAdvocate: boolean = false;
+  showEmptyMessageForOthers: boolean = false;
   search: any;
   deleteAssessmentId: any;
   currentTheme: any;
+  resultForAdvocate:any;
+  resultForOthers:any;
   searchText: any = "";
   unamePattern = "^[a-z0-9_-]{8,15}$";
   PriorSubmissions = StringConstants.dashboardAdvocate.PriorSubmissions;
+  OtherAssessment = StringConstants.dashboardAdvocate.OtherAssessment;
+  AdvocateAssessment = StringConstants.dashboardAdvocate.AdvocateAssessment;
   SelectDate = StringConstants.dashboardAdvocate.SelectDate;
   Last7Days = StringConstants.dashboardAdvocate.Last7Days;
   Today = StringConstants.dashboardAdvocate.Today;
@@ -58,6 +63,7 @@ export class DashboardAdvocateComponent implements OnInit {
   logoutMsg = StringConstants.dashboardAdvocate.logoutMsg;
   No = StringConstants.dashboardAdvocate.No;
   Yes = StringConstants.dashboardAdvocate.Yes;
+  count = false;
   advocateResult: any;
   constructor(private httpClient: HttpClient, private dataSharingService: DataSharingService,
     private toastService: ToastServiceService, private advocateDashboardService: AdvocateDashboardService,
@@ -116,21 +122,53 @@ export class DashboardAdvocateComponent implements OnInit {
     this.advocateDashboardService.getAdvocateDashboardDetails(patientID, this.filterLabel, this.orderByLabel, searchWord, browserDate).subscribe(async (result: any) => {
       if (result.wasSuccessful) {
         this.showLoader = false;
-        if (result.data == null || result.data.length == 0) {
-          this.showEmptyMessage = true;
+        if (result.data[0] == null || result.data[0].length == 0) {
+          this.showEmptyMessageForAdvocate = true;
         }
-        else {
-          this.showEmptyMessage = false;
+        else{
+          this.showEmptyMessageForAdvocate = false;
           this.result = result.data;
-          this.advocateResult = result.data[0].dashboardAssessments;
-          sessionStorage.setItem('patientEmail', result.data[0].dashboardAssessments[0].email);
+          this.resultForAdvocate = this.result[0];
+          sessionStorage.setItem('patientEmail', this.resultForAdvocate[0].dashboardAssessments[0].email);
           if(sessionStorage.getItem("tokenForEmail") != null){
-            
             const assessmentId = sessionStorage.getItem("assessmentIdFromUrl");
-            const advocateResult = this.advocateResult.filter((e:any) => e.assessmentId == assessmentId);
-            const index = advocateResult.length - 1;
-            this.dashboardInfo(advocateResult[index].assessmentId,advocateResult[index].gender,advocateResult[index].age,advocateResult[index].patientName,advocateResult[index].assessmentStatus,advocateResult[index].assessmentPatientId,advocateResult[index].userId,advocateResult[index].submittedOn,'0');
+            for(let i =0; i < this.resultForAdvocate.length; i++){
+              for(let j=0; this.resultForAdvocate[i].dashboardAssessments.length; j++){
+                if(this.resultForAdvocate[i].dashboardAssessments[j].assessmentId == assessmentId){
+                  this.count = true;
+                  const advocateResult = this.resultForAdvocate[i].dashboardAssessments[j];
+                  const index = advocateResult.length - 1;
+                  this.dashboardInfo(advocateResult[index].assessmentId,advocateResult[index].gender,advocateResult[index].age,advocateResult[index].patientName,advocateResult[index].assessmentStatus,advocateResult[index].assessmentPatientId,advocateResult[index].userId,advocateResult[index].submittedOn,'0');
+                }
+              }
+            }
           }
+        }
+        if(result.data[1] == null || result.data[1].length == 0){
+          this.showEmptyMessageForOthers = true;
+        }
+        else{
+          this.showEmptyMessageForOthers = false;
+          this.result = result.data;
+          this.resultForOthers = this.result[1];
+          if(this.showEmptyMessageForAdvocate == true){
+            sessionStorage.setItem('patientEmail', this.resultForAdvocate[0].dashboardAssessments[0].email);
+          }
+          
+          if(sessionStorage.getItem("tokenForEmail") != null){
+            const assessmentId = sessionStorage.getItem("assessmentIdFromUrl");
+          if(this.count == false){
+            for(let i =0; i < this.resultForOthers.length; i++){
+              for(let j=0; this.resultForOthers[i].dashboardAssessments.length; j++){
+                if(this.resultForOthers[i].dashboardAssessments[j].assessmentId == assessmentId){
+                  const advocateResult = this.resultForOthers[i].dashboardAssessments[j];
+                  const index = advocateResult.length - 1;
+                  this.dashboardInfo(advocateResult[index].assessmentId,advocateResult[index].gender,advocateResult[index].age,advocateResult[index].patientName,advocateResult[index].assessmentStatus,advocateResult[index].assessmentPatientId,advocateResult[index].userId,advocateResult[index].submittedOn,'0');
+                }
+              }
+            }
+          }
+        }
         }
       }
     }, (error) => {
@@ -202,7 +240,7 @@ export class DashboardAdvocateComponent implements OnInit {
         sessionStorage.setItem('assessmentPatientFullName', fullName);
         sessionStorage.setItem('assessmentUserId', userId);
         this.dataSharingService.isGuarantorData.next("");
-        let e = this.advocateResult.filter((e: any) => e.assessmentId === assessmentId)[0]?.isEditable;
+        let e = this.advocateResult?.filter((e: any) => e.assessmentId === assessmentId)[0]?.isEditable;
         sessionStorage.setItem('isEditable', e);
       }
     });

@@ -191,8 +191,6 @@ namespace HealthWare.ActiveASSIST.Repositories
         {
             var document = await _unitOfWork.GetAllAsync<FacilityMapping>(x => x.UserId == Id);
             List<FacilityMapping> list1 = new List<FacilityMapping>();
-            if(document.ToList().Count != 0)
-            {
                 foreach (var documentItem in document)
                 {
                     var doc1 = await _unitOfWork.GetAllAsync<FacilityMapping>(x => x.FacilityId == documentItem.FacilityId);
@@ -205,12 +203,8 @@ namespace HealthWare.ActiveASSIST.Repositories
                             continue;
                         }
                     }
-                    if (list1.Count != 0)
-                    {
                         foreach (var item in list1)
                         {
-                            if (doc.Count != 0)
-                            {
                                 foreach (var item1 in doc)
                                 {
                                     if (item.UserId == item1.UserId)
@@ -219,13 +213,13 @@ namespace HealthWare.ActiveASSIST.Repositories
                                         break;
                                     }
                                 }
-                            }
+                            
                         }
-                    }
+                    
                     if (doc.Count != 0)
                         list1.AddRange(doc);
                 }
-            }
+            
             return list1;
         }
         public IEnumerable<AssessmentInPatientDashboard> GetAssessmentListForPatientDashboard(int userId, string searchText, long tenantId)

@@ -5,8 +5,8 @@
 export const environment = {
   production: true,
   name: 'local',
-  apiBaseUrl: 'http://localhost/ActiveAssistAPI/',
-  serverUrl: 'http://localhost/ActiveAssistAPI/',
+  apiBaseUrl: 'http://localhost:21021/',
+  serverUrl: 'http://localhost:21021/',
   IdleTimeOutSeconds: 600,
   PdfViewerPath:'../wv-resources/lib',
   PDFSDKClientID: '8c0cd670273d451cbc9b351b11d22318'

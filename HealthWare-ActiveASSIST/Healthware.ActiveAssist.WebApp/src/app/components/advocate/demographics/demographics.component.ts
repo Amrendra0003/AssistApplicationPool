@@ -186,6 +186,7 @@ export class DemographicsComponent implements OnInit {
           this.citizenshipStatus = this.citizenshipQuestionAndAnswer[0].value;
         }
       }
+      
       this.demographicsQuestionAndAnswer = this.getQuestionAndAnswer.filter(word => word.screenId == 4);
       if (this.demographicsQuestionAndAnswer.length != 0) {
         this.firstName = this.demographicsQuestionAndAnswer[0].value;
@@ -395,14 +396,35 @@ export class DemographicsComponent implements OnInit {
             this.state = result.data.state;
             this.zipCode = result.data.zipCode;
           }
-          this.gender = result.data.gender;
-          this.cellNumber = result.data.cell;
-          this.citizenshipStatus = result.data.citizenship;
-          this.email = result.data.email;
-          this.maritalStatus = result.data.maritalStatus;
-          this.countyCode = result.data.countyCode;
-          sessionStorage.setItem('CountyCode', this.countyCode);
-          sessionStorage.setItem('AssessmentStateCode', result.data.stateCode);
+          
+          this.getQuestionAndAnswer = JSON.parse(sessionStorage.getItem('QuestionAndAnswer')!);
+          if(this.getQuestionAndAnswer !=null){
+            this.demographicsQuestionAndAnswer = this.getQuestionAndAnswer.filter(word => word.screenId == 4);
+            if (this.demographicsQuestionAndAnswer.length != 0) {
+              this.firstName = this.demographicsQuestionAndAnswer[0].value;
+              this.middleName = this.demographicsQuestionAndAnswer[1].value;
+              this.lastName = this.demographicsQuestionAndAnswer[2].value;
+              this.dob = this.demographicsQuestionAndAnswer[3].value;
+              this.gender = this.demographicsQuestionAndAnswer[4].value;
+              this.maritalStatus = this.demographicsQuestionAndAnswer[5].value;
+              this.email = this.demographicsQuestionAndAnswer[6].value;
+              this.cellNumber = this.demographicsQuestionAndAnswer[7].value;
+              this.citizenshipQuestionAndAnswer = this.getQuestionAndAnswer.filter(word => word.screenId == 3);
+              if (this.citizenshipQuestionAndAnswer.length != 0) {
+                this.citizenshipStatus = this.citizenshipQuestionAndAnswer[0].value;
+              }   
+            }
+          }
+          else{
+            this.gender = result.data.gender;
+            this.cellNumber = result.data.cell;
+            this.citizenshipStatus = result.data.citizenship;
+            this.email = result.data.email;
+            this.maritalStatus = result.data.maritalStatus;
+            this.countyCode = result.data.countyCode;
+            sessionStorage.setItem('CountyCode', this.countyCode);
+            sessionStorage.setItem('AssessmentStateCode', result.data.stateCode);
+          }
         }
         else {
           this.firstName = " ";
@@ -441,6 +463,7 @@ export class DemographicsComponent implements OnInit {
     }
   }
   saveDemographicsDetails(patientDetails: any) {
+    
     if (!this.demographicsForm.valid) {
       this.emit();
     } else {
@@ -497,7 +520,7 @@ export class DemographicsComponent implements OnInit {
           screenQuestionMappingId: +(this.citizenshipMappingId),
           optionId: this.citizenshipOptionId,
           questionId: +(this.citizenshipQuestionId),
-          value: patientDetails.citizenship,
+          value: patientDetails.citizenshipStatus,
           screenId: 3
         },
         {

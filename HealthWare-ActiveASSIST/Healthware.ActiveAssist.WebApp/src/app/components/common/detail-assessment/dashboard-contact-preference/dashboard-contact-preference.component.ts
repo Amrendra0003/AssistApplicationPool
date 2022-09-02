@@ -301,6 +301,7 @@ export class DashboardContactPreferenceComponent implements OnInit {
       assessmentId: assessmentId
     }
     this.dropdownService.GetPreferredEmail(addressData).subscribe(async (result: any) => {
+      
       if (result.wasSuccessful) {
         this.preferredEmailDropdownValueList = result.data.preferredEmailDropdownValueList;
       }

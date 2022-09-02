@@ -79,7 +79,7 @@
       </div>
       <div class="col-md-4">
         <div style="position: relative;">
-          <select class="form-select form-select-sm dropdown-select-label mdb-select md-form disabledDiv" id="gender"
+          <select class="form-select form-select-sm dropdown-select-label mdb-select md-form " id="gender"
             [(ngModel)]="gender" aria-label="form-select-sm example" formControlName="gender" [disabled]="true"
             tabindex="-1" required>
             <option value="" hidden disabled>{{Gender}}</option>
@@ -94,7 +94,7 @@
       </div>
       <div class="col-md-4">
         <div style="position: relative;">
-          <select class="form-select form-select-sm dropdown-select-label disabledDiv" [disabled]=true
+          <select class="form-select form-select-sm dropdown-select-label " [disabled]=true
             id="maritalStatus" aria-label="form-select-sm example" [(ngModel)]="maritalStatus"
             formControlName="maritalStatus" [disabled]="true" tabindex="-1" required>
             <option value=" " hidden>{{Marital}}</option>
@@ -154,7 +154,7 @@
       <label class="col-md-12 dashboard-p1 ps-2">{{ConfirmCitizenshipStatus}}</label>
       <div class="col-md-4">
         <div style="position: relative;">
-          <select class="form-select form-select-sm dropdown-select-label mdb-select md-form disabledDiv"
+          <select class="form-select form-select-sm dropdown-select-label mdb-select md-form "
             id="citizenshipStatus" [(ngModel)]="citizenshipStatus" (change)="onChangeRelationValue($event)"
             aria-label="form-select-sm example" formControlName="citizenshipStatus" [disabled]="true" tabindex="-1"
             required>
@@ -197,7 +197,7 @@
         </div>
         <div style="position: relative;">
           <div class="mt-2" style="position:absolute; padding-left: 58px;" include="form-input-select()">
-            <select class="dropdown-select-label disabledDiv" style="border:none; outline:none;width:48px;"
+            <select class="dropdown-select-label " style="border:none; outline:none;width:48px;"
               id="countyCode" [(ngModel)]="countyCode" formControlName="countyCode" [disabled]="true" tabindex="-1"
               required>
               <option value="" hidden disabled>+1</option>
@@ -209,7 +209,7 @@
         </div>
         <span>
           <input type="text" mask="(000) 000-0000" style="padding-left: 110px;"
-            class="form-control textfield-label disabledDiv" tabindex="-1" readonly id="cellNumber"
+            class="form-control textfield-label" tabindex="-1" id="cellNumber"
             [(ngModel)]="cellNumber" placeholder="Cell Number" formControlName="cellNumber">
           <div *ngIf="demographicsForm.get('cellNumber').hasError('required')&& myform.submitted"
             class="small text-danger mt-1">{{CellNumReq}}</div>

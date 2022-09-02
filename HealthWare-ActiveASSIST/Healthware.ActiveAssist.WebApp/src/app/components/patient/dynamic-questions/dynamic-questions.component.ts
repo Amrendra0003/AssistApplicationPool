@@ -1949,6 +1949,7 @@ export class DynamicQuestionsComponent implements OnInit {
       }
       this.quickAssessmentService.updateAssessmentDetails(assessmentData).subscribe(async (result: any) => {
         if (result.wasSuccessful) {
+          
           this.showLoader = false;
           this.router.navigate(['preliminary-results']);
           sessionStorage.setItem("assessmentId", result.data.assessmentId);

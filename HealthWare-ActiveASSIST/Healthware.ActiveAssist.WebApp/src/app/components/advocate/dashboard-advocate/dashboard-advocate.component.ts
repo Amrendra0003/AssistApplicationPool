@@ -122,6 +122,7 @@ export class DashboardAdvocateComponent implements OnInit {
     this.advocateDashboardService.getAdvocateDashboardDetails(patientID, this.filterLabel, this.orderByLabel, searchWord, browserDate).subscribe(async (result: any) => {
       if (result.wasSuccessful) {
         this.showLoader = false;
+        
         if (result.data[0] == null || result.data[0].length == 0) {
           this.showEmptyMessageForAdvocate = true;
         }
@@ -129,6 +130,7 @@ export class DashboardAdvocateComponent implements OnInit {
           this.showEmptyMessageForAdvocate = false;
           this.result = result.data;
           this.resultForAdvocate = this.result[0];
+          this.advocateResult = this.resultForAdvocate;
           sessionStorage.setItem('patientEmail', this.resultForAdvocate[0].dashboardAssessments[0].email);
           if(sessionStorage.getItem("tokenForEmail") != null){
             const assessmentId = sessionStorage.getItem("assessmentIdFromUrl");
@@ -144,32 +146,32 @@ export class DashboardAdvocateComponent implements OnInit {
             }
           }
         }
-        if(result.data[1] == null || result.data[1].length == 0){
-          this.showEmptyMessageForOthers = true;
-        }
-        else{
-          this.showEmptyMessageForOthers = false;
-          this.result = result.data;
-          this.resultForOthers = this.result[1];
-          if(this.showEmptyMessageForAdvocate == true){
-            sessionStorage.setItem('patientEmail', this.resultForAdvocate[0].dashboardAssessments[0].email);
-          }
+         if(result.data[1] == null || result.data[1].length == 0){
+           this.showEmptyMessageForOthers = true;
+         }
+         else{
+           this.showEmptyMessageForOthers = false;
+           this.result = result.data;
+           this.resultForOthers = this.result[1];
+           if(this.showEmptyMessageForAdvocate == true){
+             sessionStorage.setItem('patientEmail', this.resultForAdvocate[0].dashboardAssessments[0].email);
+           }
           
-          if(sessionStorage.getItem("tokenForEmail") != null){
-            const assessmentId = sessionStorage.getItem("assessmentIdFromUrl");
-          if(this.count == false){
-            for(let i =0; i < this.resultForOthers.length; i++){
-              for(let j=0; this.resultForOthers[i].dashboardAssessments.length; j++){
-                if(this.resultForOthers[i].dashboardAssessments[j].assessmentId == assessmentId){
-                  const advocateResult = this.resultForOthers[i].dashboardAssessments[j];
-                  const index = advocateResult.length - 1;
-                  this.dashboardInfo(advocateResult[index].assessmentId,advocateResult[index].gender,advocateResult[index].age,advocateResult[index].patientName,advocateResult[index].assessmentStatus,advocateResult[index].assessmentPatientId,advocateResult[index].userId,advocateResult[index].submittedOn,'0');
-                }
-              }
-            }
-          }
-        }
-        }
+           if(sessionStorage.getItem("tokenForEmail") != null){
+             const assessmentId = sessionStorage.getItem("assessmentIdFromUrl");
+           if(this.count == false){
+             for(let i =0; i < this.resultForOthers.length; i++){
+               for(let j=0; this.resultForOthers[i].dashboardAssessments.length; j++){
+                 if(this.resultForOthers[i].dashboardAssessments[j].assessmentId == assessmentId){
+                   const advocateResult = this.resultForOthers[i].dashboardAssessments[j];
+                   const index = advocateResult.length - 1;
+                   this.dashboardInfo(advocateResult[index].assessmentId,advocateResult[index].gender,advocateResult[index].age,advocateResult[index].patientName,advocateResult[index].assessmentStatus,advocateResult[index].assessmentPatientId,advocateResult[index].userId,advocateResult[index].submittedOn,'0');
+                 }
+               }
+             }
+           }
+         }
+         }
       }
     }, (error) => {
       console.log(error)
@@ -240,8 +242,7 @@ export class DashboardAdvocateComponent implements OnInit {
         sessionStorage.setItem('assessmentPatientFullName', fullName);
         sessionStorage.setItem('assessmentUserId', userId);
         this.dataSharingService.isGuarantorData.next("");
-        let e = this.advocateResult?.filter((e: any) => e.assessmentId === assessmentId)[0]?.isEditable;
-        sessionStorage.setItem('isEditable', e);
+        sessionStorage.setItem('isEditable', 'true');
       }
     });
   }

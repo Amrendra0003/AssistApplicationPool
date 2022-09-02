@@ -106,33 +106,38 @@ namespace HealthWare.ActiveASSIST.Services
             var contactCountyCode = "1";
             var contactEmail = (string)values.FirstOrDefault(x => x.ContainsKey(Constants.Email))?[Constants.Email];
             var partialAssessmentSubmittedByUser = await _userRepository.GetUserById(userId);
-            var homeContactDetail = await _contactDetailsRepository.GetContactDetailsById(partialAssessmentSubmittedByUser.ContactDetails.Id);
-
-            var partialAssessment = new PartialAssessment()
+            if (partialAssessmentSubmittedByUser.ContactDetails != null)
             {
-                FullName = firstName + " " + lastName,
-                Gender = gender,
-                Age = age,
-                SubmittedBy = new SubmittedBy()
+
+
+                var homeContactDetail = await _contactDetailsRepository.GetContactDetailsById(partialAssessmentSubmittedByUser.ContactDetails.Id);
+
+                var partialAssessment = new PartialAssessment()
                 {
-                    Name = partialAssessmentSubmittedByUser.ContactDetails?.Name,
-                    SubmittedOn = partialAssessmentEntity.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
-                    CreatedDate = partialAssessmentEntity.CreatedDate,
-                    HospitalName = null,
-                    City = homeContactDetail.City
+                    FullName = firstName + " " + lastName,
+                    Gender = gender,
+                    Age = age,
+                    SubmittedBy = new SubmittedBy()
+                    {
+                        Name = partialAssessmentSubmittedByUser.ContactDetails?.Name,
+                        SubmittedOn = partialAssessmentEntity.CreatedDate.ToString("MM/dd/yyyy hh:mm:ss tt"),
+                        CreatedDate = partialAssessmentEntity.CreatedDate,
+                        HospitalName = null,
+                        City = homeContactDetail.City
 
-                },
-                ContactDetails = new ContactDetails()
-                {
-                    CellNumber = contactCell.IsNotNullOrEmpty() ? $"({contactCell.Substring(0, 3)}) {contactCell.Substring(3, 3)}-{contactCell.Substring(6)}" : null,
-                    CountryCode = contactCountyCode,
-                    EmailAddress = contactEmail,
-                },
-                PartialAssessmentId = partialAssessmentEntity.Id
+                    },
+                    ContactDetails = new ContactDetails()
+                    {
+                        CellNumber = contactCell.IsNotNullOrEmpty() ? $"({contactCell.Substring(0, 3)}) {contactCell.Substring(3, 3)}-{contactCell.Substring(6)}" : null,
+                        CountryCode = contactCountyCode,
+                        EmailAddress = contactEmail,
+                    },
+                    PartialAssessmentId = partialAssessmentEntity.Id
 
-            };
+                };
 
-            dashboardResponse.PartialAssessment = partialAssessment;
+                dashboardResponse.PartialAssessment = partialAssessment;
+            }
             return new Result<DashboardResponse> { Data = dashboardResponse };
 
         }

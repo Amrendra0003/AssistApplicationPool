@@ -1423,7 +1423,8 @@ namespace HealthWare.ActiveASSIST.Services
                     }
                     else
                     {
-                        contactIdList.Add(assessmentCreator?.SecondaryEmailContactDetails.Id ?? 0);
+                        if(assessmentCreator.SecondaryEmailContactDetails != null)
+                            contactIdList.Add(assessmentCreator?.SecondaryEmailContactDetails.Id ?? 0);
                         contactIdList.Add(assessmentCreator?.ContactDetails?.Id ?? 0);
                     }
 
